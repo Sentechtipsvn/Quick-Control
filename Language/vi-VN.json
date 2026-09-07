@@ -1,20 +1,17 @@
 {
   "app_title": "Quick Control",
   "settings_title": "⚙️ Cài đặt",
-  
   "btn_list": "Danh sách",
   "btn_grid": "Lưới",
   "btn_export": "Xuất",
   "btn_import": "Nhập",
   "btn_edit_layout": "Sắp xếp",
-
   "lbl_theme_presets": "🪄 Giao diện",
   "opt_preset_none": "Tự do tùy chỉnh",
   "opt_preset_vn": "🇻🇳 Cờ Việt Nam",
   "opt_preset_neon": "🤖 Neon",
   "opt_preset_dark": "🖤 Dark",
   "opt_preset_gold": "👑 Gold",
-
   "lbl_title_adjust": "Sửa tiêu đề",
   "lbl_title_size": "💫 Cỡ chữ chính",
   "lbl_title_spacing": "📐 Dãn chữ chính",
@@ -23,22 +20,18 @@
   "lbl_hide_labels": "Ẩn tên",
   "lbl_list_frame": "Theme cho Danh sách",
   "lbl_list_bg_opacity": "Đậm nhạt màu nút",
-
   "lbl_audio_feedback": "🎚️ Âm thanh",
   "lbl_parallax": "🧭 Gia tốc kế 3D",
   "lbl_bg_image": "📱 Hình nền tự chọn",
   "lbl_glassmorphism": "Bật Kính mờ",
-
   "info_title": "Quick Control",
   "info_dev_prefix": "Phát triển bởi",
   "info_desc": "Webclip điều khiển đa năng, tích hợp giao diện kính mờ và hệ thống Live Knobs tuỳ biến sống động chuyên nghiệp dành riêng cho iOS.",
-
   "lbl_bg_main": "🏳️‍🌈 Màu Nền Chính",
   "lbl_text_color": "🏳️‍🌈 Màu Chữ Hệ Thống",
   "lbl_list_bg": "Màu nền Danh sách",
   "lbl_list_text": "Màu chữ Danh sách",
   "lbl_list_svg": "Màu SVG Danh sách",
-
   "lbl_theme_frame": "💠 Theme SVG",
   "opt_frame_none": "Không khung",
   "opt_frame_black": "⚫️",
@@ -52,32 +45,28 @@
   "opt_frame_glass3": "⚪️",
   "opt_frame_siri": "👩‍💻",
   "opt_frame_custom": "SVG Tùy chỉnh",
-  
   "lbl_frame_svg_size": "🖼️ Khung Icon & SVG",
   "lbl_svg_opacity": "Độ đậm SVG",
   "lbl_frame_radius": "Bo góc",
   "lbl_frame_color": "Nền khung",
   "lbl_frame_bg_opacity": "Độ đậm nền",
   "lbl_svg_color": "Màu SVG",
-  
   "lbl_shadow_section": "🔘 Đổ Bóng",
   "shadow_inset": "⚪️ Bóng Chìm",
   "shadow_outer": "⚪️ Bóng Ngoài",
   "shadow_soft": "⚪️ Mờ Diện Rộng",
   "shadow_hard": "⚪️ Nổi Khối 3D",
   "shadow_glow": "⚪️ Phát Sáng",
-  
+  "shadow_neumorphic": "⚪️ Dập Nổi 3D",
   "slider_x": "Trục X",
   "slider_y": "Trục Y",
   "slider_blur": "Độ mờ",
   "slider_spread": "Lan rộng",
   "slider_color": "Màu Bóng",
   "slider_opacity": "Độ đậm bóng",
-  
   "lbl_layout_mode": "Danh sách/Lưới",
   "msg_copy_success": "Đã sao chép mã cấu hình (22 Biến)!",
   "msg_prompt_import": "📥 Dán mã cấu hình vào đây:",
-
   "lang_wifi": "Wi-Fi",
   "lang_bluetooth": "Bluetooth",
   "lang_cellular": "Di động",
