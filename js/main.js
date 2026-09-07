@@ -1,26 +1,29 @@
 const SUPPORTED_LANGS = ['ar', 'en-GB', 'en-US', 'vi-VN', 'zh-CN', 'zh-TW'];
 
-async function loadLanguageData(langCode) {
-    try {
-        const response = await fetch(`Language/${langCode}.json`);
-        if (!response.ok) throw new Error("Tệp không tồn tại");
-        return await response.json();
-    } catch (error) {
-        if (langCode !== 'en-GB') {
-            try { const fallbackRes = await fetch(`Language/en-GB.json`); return await fallbackRes.json(); } catch(e) {}
-        }
-        return {};
-    }
-}
-
 document.addEventListener("DOMContentLoaded", async () => {
     let userLang = navigator.language || navigator.userLanguage;
-    if (!SUPPORTED_LANGS.includes(userLang)) userLang = 'en-GB';
-    const translations = await loadLanguageData(userLang);
+    if (!SUPPORTED_LANGS.includes(userLang)) userLang = 'en-US';
+
+    // 1. Tải ngôn ngữ Fallback Tiếng Anh (Làm gốc chuẩn ngữ pháp)
+    let fallbackTranslations = {};
+    try {
+        const fbRes = await fetch(`Language/en-US.json`);
+        if (fbRes.ok) fallbackTranslations = await fbRes.json();
+    } catch (e) { console.warn("Missing English fallback"); }
+
+    // 2. Tải ngôn ngữ theo thiết bị người dùng (vi-VN)
+    let userTranslations = {};
+    try {
+        const res = await fetch(`Language/${userLang}.json`);
+        if (res.ok) userTranslations = await res.json();
+    } catch (e) { console.warn(`Missing language: ${userLang}`); }
+
+    // 3. Hợp nhất: Ưu tiên ngôn ngữ thiết bị, nếu thiếu khóa nào tự động dùng Tiếng Anh
+    window.i18nData = { ...fallbackTranslations, ...userTranslations };
 
     document.querySelectorAll('[data-i18n]').forEach(element => {
         const key = element.getAttribute('data-i18n');
-        if(translations[key]) element.innerText = translations[key];
+        if(window.i18nData[key]) element.innerText = window.i18nData[key];
     });
 
     try {
@@ -47,13 +50,13 @@ document.addEventListener("DOMContentLoaded", async () => {
                 btn.href = item.action;
                 btn.dataset.id = item.id;
                 
-                const localizedTitle = translations[item.title_key] || item.title || 'Phím tắt';
+                const localizedTitle = window.i18nData[item.title_key] || item.title || 'Phím tắt';
                 btn.innerHTML = `<div class="icon-box">${item.svg}</div><span class="label">${localizedTitle}</span>`;
                 container.appendChild(btn);
             });
         }
 
-        // --- HỆ THỐNG KÉO THẢ CẢM ỨNG (TOUCH DRAG & DROP CHO iOS) ---
+        // --- HỆ THỐNG KÉO THẢ CẢM ỨNG (TOUCH DRAG & DROP) CHO LƯỚI 2D ---
         const btnEditLayout = document.getElementById('btn-edit-layout');
         let editMode = false;
         
@@ -70,18 +73,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         let draggedItem = null;
         let ghostEl = null;
 
-        function getDragAfterElement(y, x) {
-            const draggableElements = [...container.querySelectorAll('.glass-btn:not(.dragging)')];
-            return draggableElements.reduce((closest, child) => {
-                const box = child.getBoundingClientRect();
-                const offsetY = y - box.top - box.height / 2;
-                const offsetX = x - box.left - box.width / 2;
-                const distance = Math.sqrt(offsetY*offsetY + offsetX*offsetX);
-                if (offsetY < 0 && distance < closest.distance) { return { distance: distance, element: child }; } 
-                else { return closest; }
-            }, { distance: Number.POSITIVE_INFINITY }).element;
-        }
-
         // Bắt sự kiện chạm ngón tay
         container.addEventListener('touchstart', (e) => {
             if (!editMode) return;
@@ -91,13 +82,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             draggedItem = target;
             draggedItem.classList.add('dragging');
             
-            // Tạo phần tử ảo bay theo ngón tay
             ghostEl = draggedItem.cloneNode(true);
             ghostEl.style.position = 'absolute';
             ghostEl.style.zIndex = 1000;
             ghostEl.style.opacity = '0.8';
             ghostEl.style.transform = 'scale(1.1)';
-            ghostEl.style.pointerEvents = 'none'; // Ngăn lỗi che khuất element
+            ghostEl.style.pointerEvents = 'none'; // Phải có để elementFromPoint nhìn xuyên qua bóng mờ
             document.body.appendChild(ghostEl);
             
             const touch = e.touches[0];
@@ -105,30 +95,39 @@ document.addEventListener("DOMContentLoaded", async () => {
             ghostEl.style.top = (touch.pageY - ghostEl.offsetHeight / 2) + 'px';
         }, {passive: false});
         
-        // Bắt sự kiện di chuyển ngón tay
+        // Bắt sự kiện di chuyển ngón tay (Thuật toán sắp xếp ma trận 2D)
         container.addEventListener('touchmove', (e) => {
             if (!editMode || !draggedItem || !ghostEl) return;
-            e.preventDefault(); // Ngăn cuộn trang khi đang kéo
+            e.preventDefault(); 
             const touch = e.touches[0];
             
-            // Di chuyển bóng mờ
             ghostEl.style.left = (touch.pageX - ghostEl.offsetWidth / 2) + 'px';
             ghostEl.style.top = (touch.pageY - ghostEl.offsetHeight / 2) + 'px';
             
-            // Sắp xếp lại lưới DOM
-            const afterElement = getDragAfterElement(touch.clientY, touch.clientX);
-            if (afterElement == null) { container.appendChild(draggedItem); } 
-            else { container.insertBefore(draggedItem, afterElement); }
+            // Tìm nút thực tế ngón tay đang đè lên (nhìn xuyên qua ghostEl nhờ pointerEvents none)
+            const targetEl = document.elementFromPoint(touch.clientX, touch.clientY);
+            const dropZone = targetEl ? targetEl.closest('.glass-btn:not(.dragging)') : null;
+            
+            if (dropZone && dropZone !== draggedItem) {
+                const allElements = [...container.querySelectorAll('.glass-btn')];
+                const draggedIndex = allElements.indexOf(draggedItem);
+                const dropIndex = allElements.indexOf(dropZone);
+                
+                // Thuật toán Đổi chỗ: Kéo xuôi chèn sau, kéo ngược chèn trước
+                if (draggedIndex < dropIndex) {
+                    dropZone.after(draggedItem);
+                } else {
+                    dropZone.before(draggedItem);
+                }
+            }
         }, {passive: false});
         
-        // Bắt sự kiện thả ngón tay
         container.addEventListener('touchend', () => {
             if (!editMode || !draggedItem) return;
             if (ghostEl) { document.body.removeChild(ghostEl); ghostEl = null; }
             draggedItem.classList.remove('dragging');
             draggedItem = null;
             
-            // Lưu mảng ID mới vào LocalStorage
             const newOrder = Array.from(container.querySelectorAll('.glass-btn')).map(b => b.dataset.id);
             localStorage.setItem('sttv_iconOrder', JSON.stringify(newOrder));
         });
