@@ -4,7 +4,6 @@ const SHADOW_MODES = [
     { id: 'soft', nameKey: 'shadow_soft', name: 'Mờ Diện Rộng', template: '{x}px {y}px {b}px {s}px {c}' },
     { id: 'hard', nameKey: 'shadow_hard', name: 'Nổi Khối 3D', template: '{x}px {y}px {b}px {s}px {c}' },
     { id: 'glow', nameKey: 'shadow_glow', name: 'Phát Sáng', template: '0px 0px {b}px {s}px {c}' },
-    { id: 'neumorphic', nameKey: 'shadow_neumorphic', name: 'Dập Nổi (Neumorphism)', template: '-{x}px -{y}px {b}px {s}px rgba(255,255,255,0.3), {x}px {y}px {b}px {s}px {c}' }
 ];
 
 document.addEventListener("DOMContentLoaded", () => {
