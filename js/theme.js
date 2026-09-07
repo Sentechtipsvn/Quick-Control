@@ -3,7 +3,8 @@ const SHADOW_MODES = [
     { id: 'outer', nameKey: 'shadow_outer', name: 'Bóng Ngoài', template: '{x}px {y}px {b}px {s}px {c}' },
     { id: 'soft', nameKey: 'shadow_soft', name: 'Mờ Diện Rộng', template: '{x}px {y}px {b}px {s}px {c}' },
     { id: 'hard', nameKey: 'shadow_hard', name: 'Nổi Khối 3D', template: '{x}px {y}px 0px {s}px {c}' },
-    { id: 'glow', nameKey: 'shadow_glow', name: 'Phát Sáng', template: '0px 0px {b}px {s}px {c}' }
+    { id: 'glow', nameKey: 'shadow_glow', name: 'Phát Sáng', template: '0px 0px {b}px {s}px {c}' },
+    { id: 'neumorphic', nameKey: 'shadow_neumorphic', name: 'Dập Nổi (Neumorphism)', template: '-{x}px -{y}px {b}px {s}px rgba(255,255,255,0.3), {x}px {y}px {b}px {s}px {c}' }
 ];
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -160,7 +161,7 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem('sttv_svgOpacity', document.getElementById('val-svg-opacity').value);
         localStorage.setItem('sttv_frameRadius', document.getElementById('val-frame-radius').value);
         localStorage.setItem('sttv_frameColor', document.getElementById('val-frame-color').value);
-        localStorage.setItem('sttv_frameBgOpacity', document.getElementById('val-frame-bg-opacity').value); // Lưu độ đậm nền khung
+        localStorage.setItem('sttv_frameBgOpacity', document.getElementById('val-frame-bg-opacity').value);
         localStorage.setItem('sttv_svgColor', document.getElementById('val-svg-color').value);
         
         localStorage.setItem('sttv_hideLabels', document.getElementById('toggle-hide-labels').checked);
@@ -203,7 +204,7 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById('val-frame-radius').value, document.getElementById('val-frame-color').value, document.getElementById('val-svg-color').value,
             sData, document.getElementById('toggle-hide-labels').checked, document.getElementById('val-title-size').value, document.getElementById('val-title-spacing').value,
             document.getElementById('toggle-list-frame').checked, document.getElementById('val-icon-size').value, document.getElementById('val-icon-spacing').value,
-            document.getElementById('val-list-bg-opacity').value, document.getElementById('val-frame-bg-opacity').value // Bổ sung biến thứ 22
+            document.getElementById('val-list-bg-opacity').value, document.getElementById('val-frame-bg-opacity').value
         ];
         return btoa(JSON.stringify(dataArr)).replace(/=/g, ''); 
     }
@@ -251,7 +252,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch(e) { alert("Mã cấu hình không hợp lệ!"); }
     }
 
-        document.getElementById('btn-export').onclick = () => { 
+    document.getElementById('btn-export').onclick = () => { 
         navigator.clipboard.writeText(packConfig()).then(() => {
             const msg = window.i18nData?.['msg_copy_success'] || "Đã sao chép mã cấu hình (22 Biến)!";
             alert(msg);
@@ -301,8 +302,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const frameSelect = document.getElementById('val-theme-frame').value;
         const frameColorHex = document.getElementById('val-frame-color').value;
-        const frameColorOpacity = document.getElementById('val-frame-bg-opacity').value; // Lấy độ đậm nền khung
-        const frameColorRgba = hexToRgba(frameColorHex, frameColorOpacity); // Đổi sang RGBA
+        const frameColorOpacity = document.getElementById('val-frame-bg-opacity').value;
+        const frameColorRgba = hexToRgba(frameColorHex, frameColorOpacity);
         
         const customContainer = document.getElementById('custom-svg-container');
         
@@ -314,7 +315,7 @@ document.addEventListener("DOMContentLoaded", () => {
             customContainer.style.display = 'none';
             if (frameSelect === 'none') { 
                 root.style.setProperty('--frame-bg', 'none'); 
-                root.style.setProperty('--frame-bg-color', frameColorRgba); // Áp dụng RGBA trong suốt thay vì solid 100%
+                root.style.setProperty('--frame-bg-color', frameColorRgba);
             } 
             else { 
                 root.style.setProperty('--frame-bg', `url('../${frameSelect}')`); 
@@ -344,7 +345,7 @@ document.addEventListener("DOMContentLoaded", () => {
         safeSet('val-svg-size', 'svgSize', '28'); safeSet('val-svg-opacity', 'svgOpacity', '100');
         safeSet('val-svg-color', 'svgColor', '#ffffff'); safeSet('val-frame-radius', 'frameRadius', '22');
         safeSet('val-frame-color', 'frameColor', '#000000');
-        safeSet('val-frame-bg-opacity', 'frameBgOpacity', '100'); // Load độ đậm nền khung
+        safeSet('val-frame-bg-opacity', 'frameBgOpacity', '100');
         
         safeSet('toggle-hide-labels', 'hideLabels', false, true);
         safeSet('toggle-list-frame', 'listFrame', false, true);
