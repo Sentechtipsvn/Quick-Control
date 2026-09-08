@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-title" content="Control Panel">
     <link rel="apple-touch-icon" href="icon.png">
     <title>Trung tâm điều khiển - Sentechtipvn</title>
-    <link rel="stylesheet" href="CSS/style.css?v=8.0">
+    <link rel="stylesheet" href="CSS/style.css?v=9.0">
 </head>
 <body>
     <div class="app-container grid-mode" id="main-container">
@@ -39,7 +39,9 @@
             </div>
         </div>
 
-        <button class="settings-fab" id="open-settings">⚙️</button>
+        <button class="settings-fab" id="open-settings">
+            <img src="Theme/icon_setting.png" alt="Settings">
+        </button>
     </div>
 
     <div class="settings-overlay" id="settings-overlay"></div>
@@ -115,22 +117,25 @@
                 <label style="margin-top: 10px;"><input type="checkbox" id="toggle-list-frame"> <span data-i18n="lbl_list_frame">Theme cho Danh sách</span></label>
             </div>
             
+            <!-- THEME GRID PICKER -->
             <div class="setting-group">
                 <label data-i18n="lbl_theme_frame">💠 Theme SVG</label>
-                <select id="val-theme-frame">
-                    <option value="none" data-i18n="opt_frame_none">Không khung</option>
-                    <option value="Theme/Black-Colour.png" data-i18n="opt_frame_black">⚫️</option>
-                    <option value="Theme/Red-Colour.png" data-i18n="opt_frame_red">🔴</option>
-                    <option value="Theme/Green-colour.png" data-i18n="opt_frame_green">🟢</option>
-                    <option value="Theme/Orange-colour.png" data-i18n="opt_frame_orange">🟠</option>
-                    <option value="Theme/Purple-colour.png" data-i18n="opt_frame_purple">🟣</option>
-                    <option value="Theme/Moss-green.png" data-i18n="opt_frame_moss">🔵</option>
-                    <option value="Theme/icon-Glass.png" data-i18n="opt_frame_glass">⚪️</option>
-                    <option value="Theme/icon-Glass2.png" data-i18n="opt_frame_glass2">⚪️</option>
-                    <option value="Theme/icon-Glass3.png" data-i18n="opt_frame_glass3">⚪️</option>
-                    <option value="Theme/icon-Siri.png" data-i18n="opt_frame_siri">👩‍💻</option>
-                    <option value="custom" data-i18n="opt_frame_custom">SVG Tùy chỉnh</option>
-                </select>
+                <div class="theme-grid-picker" id="theme-grid-picker">
+                    <div class="theme-chip active" data-value="none">❌</div>
+                    <div class="theme-chip" data-value="Theme/Black-Colour.png"><img src="Theme/Black-Colour.png" alt="Black"></div>
+                    <div class="theme-chip" data-value="Theme/Red-Colour.png"><img src="Theme/Red-Colour.png" alt="Red"></div>
+                    <div class="theme-chip" data-value="Theme/Green-colour.png"><img src="Theme/Green-colour.png" alt="Green"></div>
+                    <div class="theme-chip" data-value="Theme/Orange-colour.png"><img src="Theme/Orange-colour.png" alt="Orange"></div>
+                    <div class="theme-chip" data-value="Theme/Purple-colour.png"><img src="Theme/Purple-colour.png" alt="Purple"></div>
+                    <div class="theme-chip" data-value="Theme/Moss-green.png"><img src="Theme/Moss-green.png" alt="Moss"></div>
+                    <div class="theme-chip" data-value="Theme/icon-Glass.png"><img src="Theme/icon-Glass.png" alt="Glass"></div>
+                    <div class="theme-chip" data-value="Theme/icon-Glass2.png"><img src="Theme/icon-Glass2.png" alt="Glass 2"></div>
+                    <div class="theme-chip" data-value="Theme/icon-Glass3.png"><img src="Theme/icon-Glass3.png" alt="Glass 3"></div>
+                    <div class="theme-chip" data-value="Theme/icon-Siri.png"><img src="Theme/icon-Siri.png" alt="Siri"></div>
+                    <div class="theme-chip" data-value="custom" style="font-size: 11px; text-align: center;">SVG</div>
+                </div>
+                <input type="hidden" id="val-theme-frame" value="none">
+
                 <div id="custom-svg-container" style="display: none;">
                     <textarea id="custom-svg-code" placeholder="Dán mã SVG..." style="width: 100%; height: 80px; margin-top: 10px; border-radius: 8px; padding: 10px; background: rgba(0,0,0,0.1); color: inherit;"></textarea>
                     <button type="button" id="apply-custom-svg" style="margin-top: 10px; padding: 8px 15px; border-radius: 8px; background: #007aff; color: white; border: none;">Áp dụng SVG</button>
@@ -151,7 +156,6 @@
             
             <div class="setting-group"><label data-i18n="lbl_svg_color">Màu SVG</label><input type="color" id="val-svg-color" value="#ffffff"></div>
 
-            <!-- BỘ ĐIỀU KHIỂN TRÌNH PHÁT NHẠC -->
             <div class="setting-group highlight-box">
                 <label data-i18n="lbl_media_widget">🎵 Trình Phát Nhạc</label>
                 <div class="slider-item"><span class="slider-label" data-i18n="lbl_media_width">Kích thước khung</span><input type="range" id="val-media-width" min="50" max="100" value="90"></div>
@@ -176,13 +180,15 @@
             <div class="mac-dot max-dot"></div>
         </div>
         <div class="macos-body">
-            <h3 data-i18n="info_title">Quick Control</h3>
-            <p><span class="dev-text"><span data-i18n="info_dev_prefix">Phát triển bởi</span></span> <a href="https://browse.shortcuty.app/user/Sentechtipsvn" target="_blank">Sentechtipsvn</a></p>
-            <p class="info-desc" data-i18n="info_desc">Webclip điều khiển đa năng, tích hợp giao diện kính mờ và hệ thống Live Knobs tuỳ biến sống động chuyên nghiệp dành riêng cho iOS.</p>
+            <!-- INFO CHUYÊN NGHIỆP TRỌNG TÂM -->
+            <h3 style="margin-bottom: 12px; font-size: 26px;">
+                <a href="https://browse.shortcuty.app/user/Sentechtipsvn" target="_blank" style="color: #000; text-decoration: none;">Sentechtipsvn</a>
+            </h3>
+            <p class="info-desc" style="font-weight: 500; color: #444;">Bảng điều khiển Webclip nâng cao tích hợp giao diện kính mờ và hệ thống Live Knobs tuỳ biến, mang lại trải nghiệm chuyên nghiệp và đồng bộ tuyệt đối trên hệ sinh thái iOS.</p>
         </div>
     </div>
     
-    <script src="js/theme.js?v=8.0"></script>
-    <script src="js/main.js?v=8.0"></script>
+    <script src="js/theme.js?v=9.0"></script>
+    <script src="js/main.js?v=9.0"></script>
 </body>
 </html>
