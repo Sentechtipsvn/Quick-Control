@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-title" content="Control Panel">
     <link rel="apple-touch-icon" href="icon.png">
     <title>Trung tâm điều khiển - Sentechtipvn</title>
-    <link rel="stylesheet" href="CSS/style.css?v=9.0">
+    <link rel="stylesheet" href="CSS/style.css?v=9.1">
 </head>
 <body>
     <div class="app-container grid-mode" id="main-container">
@@ -117,11 +117,11 @@
                 <label style="margin-top: 10px;"><input type="checkbox" id="toggle-list-frame"> <span data-i18n="lbl_list_frame">Theme cho Danh sách</span></label>
             </div>
             
-            <!-- THEME GRID PICKER -->
+            <!-- THEME GRID PICKER - LOẠI BỎ NỀN THEO Ý SẾP -->
             <div class="setting-group">
                 <label data-i18n="lbl_theme_frame">💠 Theme SVG</label>
                 <div class="theme-grid-picker" id="theme-grid-picker">
-                    <div class="theme-chip active" data-value="none">❌</div>
+                    <div class="theme-chip active" data-value="none"><span style="font-size: 20px;">❌</span></div>
                     <div class="theme-chip" data-value="Theme/Black-Colour.png"><img src="Theme/Black-Colour.png" alt="Black"></div>
                     <div class="theme-chip" data-value="Theme/Red-Colour.png"><img src="Theme/Red-Colour.png" alt="Red"></div>
                     <div class="theme-chip" data-value="Theme/Green-colour.png"><img src="Theme/Green-colour.png" alt="Green"></div>
@@ -132,7 +132,7 @@
                     <div class="theme-chip" data-value="Theme/icon-Glass2.png"><img src="Theme/icon-Glass2.png" alt="Glass 2"></div>
                     <div class="theme-chip" data-value="Theme/icon-Glass3.png"><img src="Theme/icon-Glass3.png" alt="Glass 3"></div>
                     <div class="theme-chip" data-value="Theme/icon-Siri.png"><img src="Theme/icon-Siri.png" alt="Siri"></div>
-                    <div class="theme-chip" data-value="custom" style="font-size: 11px; text-align: center;">SVG</div>
+                    <div class="theme-chip" data-value="custom" style="font-size: 11px; text-align: center; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px;">SVG</div>
                 </div>
                 <input type="hidden" id="val-theme-frame" value="none">
 
@@ -180,15 +180,15 @@
             <div class="mac-dot max-dot"></div>
         </div>
         <div class="macos-body">
-            <!-- INFO CHUYÊN NGHIỆP TRỌNG TÂM -->
+            <!-- INFO CHUYÊN NGHIỆP TRỌNG TÂM - CẬP NHẬT MÀU XANH DƯƠNG -->
             <h3 style="margin-bottom: 12px; font-size: 26px;">
-                <a href="https://browse.shortcuty.app/user/Sentechtipsvn" target="_blank" style="color: #000; text-decoration: none;">Sentechtipsvn</a>
+                <a href="https://browse.shortcuty.app/user/Sentechtipsvn" target="_blank" style="color: #007aff; text-decoration: none;">Sentechtipsvn</a>
             </h3>
             <p class="info-desc" style="font-weight: 500; color: #444;">Bảng điều khiển Webclip nâng cao tích hợp giao diện kính mờ và hệ thống Live Knobs tuỳ biến, mang lại trải nghiệm chuyên nghiệp và đồng bộ tuyệt đối trên hệ sinh thái iOS.</p>
         </div>
     </div>
     
-    <script src="js/theme.js?v=9.0"></script>
-    <script src="js/main.js?v=9.0"></script>
+    <script src="js/theme.js?v=9.1"></script>
+    <script src="js/main.js?v=9.1"></script>
 </body>
 </html>
