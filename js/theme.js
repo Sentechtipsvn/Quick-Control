@@ -31,6 +31,23 @@ document.addEventListener("DOMContentLoaded", () => {
         shadowContainer.appendChild(div);
     });
 
+    // Sự kiện chọn Theme Visual Grid
+    document.querySelectorAll('.theme-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+            document.querySelectorAll('.theme-chip').forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+            document.getElementById('val-theme-frame').value = chip.dataset.value;
+            updateLiveVariables();
+        });
+    });
+
+    function syncThemePickerVisuals(val) {
+        document.querySelectorAll('.theme-chip').forEach(c => {
+            if (c.dataset.value === val) c.classList.add('active');
+            else c.classList.remove('active');
+        });
+    }
+
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     let audioCtx;
     function playTick() {
@@ -43,7 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
         osc.connect(gain); gain.connect(audioCtx.destination);
         osc.start(); osc.stop(audioCtx.currentTime + 0.05);
     }
-    document.addEventListener('click', (e) => { if (e.target.tagName === 'BUTTON' || e.target.type === 'checkbox') playTick(); });
+    document.addEventListener('click', (e) => { if (e.target.tagName === 'BUTTON' || e.target.type === 'checkbox' || e.target.closest('.theme-chip')) playTick(); });
     document.getElementById('settings-drawer').addEventListener('input', (e) => { if (e.target.type === 'range') playTick(); });
 
     function handleOrientation(e) {
@@ -180,7 +197,6 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem('sttv_glassMode', document.getElementById('toggle-glass').checked);
         localStorage.setItem('sttv_audioFeedback', document.getElementById('toggle-audio').checked);
 
-        // Lưu cài đặt Media Widget
         localStorage.setItem('sttv_mediaWidth', document.getElementById('val-media-width').value);
         localStorage.setItem('sttv_mediaBgOpacity', document.getElementById('val-media-bg-opacity').value);
         localStorage.setItem('sttv_mediaBtnSize', document.getElementById('val-media-btn-size').value);
@@ -234,7 +250,12 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById('val-bg-main').value = arr[0]; document.getElementById('val-text-color').value = arr[1];
             setLayoutMode(arr[2]);
             document.getElementById('val-list-bg').value = arr[3]; document.getElementById('val-list-text').value = arr[4]; document.getElementById('val-list-svg').value = arr[5];
-            document.getElementById('val-theme-frame').value = arr[6]; document.getElementById('val-frame-size').value = arr[7];
+            
+            const frameVal = arr[6];
+            document.getElementById('val-theme-frame').value = frameVal;
+            syncThemePickerVisuals(frameVal);
+
+            document.getElementById('val-frame-size').value = arr[7];
             document.getElementById('val-svg-size').value = arr[8]; document.getElementById('val-svg-opacity').value = arr[9];
             document.getElementById('val-frame-radius').value = arr[10]; document.getElementById('val-frame-color').value = arr[11]; document.getElementById('val-svg-color').value = arr[12];
             
@@ -256,10 +277,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 document.getElementById('val-icon-size').value = arr[18];
                 document.getElementById('val-icon-spacing').value = arr[19];
             }
-            if(arr.length >= 21) {
-                document.getElementById('val-list-bg-opacity').value = arr[20];
-            } else { document.getElementById('val-list-bg-opacity').value = 10; }
-            
+            if(arr.length >= 21) { document.getElementById('val-list-bg-opacity').value = arr[20]; } else { document.getElementById('val-list-bg-opacity').value = 10; }
             if(arr.length >= 22) { document.getElementById('val-frame-bg-opacity').value = arr[21]; } else { document.getElementById('val-frame-bg-opacity').value = 100; }
             
             if(arr.length >= 28) {
@@ -345,7 +363,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const glassMode = document.getElementById('toggle-glass').checked;
         if(glassMode) mainContainer.classList.add('glass-active'); else mainContainer.classList.remove('glass-active');
 
-        // ÁP DỤNG BIẾN MEDIA WIDGET
         const mediaBgColor = document.getElementById('val-media-bg-color').value;
         root.style.setProperty('--media-bg-rgb', hexToRgb(mediaBgColor));
         root.style.setProperty('--media-bg-opacity', document.getElementById('val-media-bg-opacity').value / 100);
@@ -371,7 +388,14 @@ document.addEventListener("DOMContentLoaded", () => {
         safeSet('val-bg-main', 'bgMain', '#121b22'); safeSet('val-text-color', 'textColor', '#ffffff');
         safeSet('val-list-bg', 'listBg', '#1a1a1a'); safeSet('val-list-bg-opacity', 'listBgOpacity', '10');
         safeSet('val-list-text', 'listText', '#ffffff'); safeSet('val-list-svg', 'listSvg', '#ffffff');
-        safeSet('val-theme-frame', 'themeFrame', 'none'); safeSet('val-frame-size', 'frameSize', '60');
+        
+        // Load Theme Frame & Đồng bộ Visual
+        const savedFrame = localStorage.getItem('sttv_themeFrame') || 'none';
+        const frameEl = document.getElementById('val-theme-frame');
+        if(frameEl) frameEl.value = savedFrame;
+        syncThemePickerVisuals(savedFrame);
+
+        safeSet('val-frame-size', 'frameSize', '60');
         safeSet('val-svg-size', 'svgSize', '28'); safeSet('val-svg-opacity', 'svgOpacity', '100');
         safeSet('val-svg-color', 'svgColor', '#ffffff'); safeSet('val-frame-radius', 'frameRadius', '22');
         safeSet('val-frame-color', 'frameColor', '#000000'); safeSet('val-frame-bg-opacity', 'frameBgOpacity', '100');
@@ -382,13 +406,9 @@ document.addEventListener("DOMContentLoaded", () => {
         safeSet('toggle-glass', 'glassMode', false, true); safeSet('toggle-audio', 'audioFeedback', false, true);
         safeSet('toggle-parallax', 'parallax', false, true);
 
-        // Load cài đặt Media Widget
-        safeSet('val-media-width', 'mediaWidth', '90');
-        safeSet('val-media-bg-opacity', 'mediaBgOpacity', '3');
-        safeSet('val-media-btn-size', 'mediaBtnSize', '50');
-        safeSet('val-media-bg-color', 'mediaBgColor', '#ffffff');
-        safeSet('val-media-btn-color', 'mediaBtnColor', '#ffffff');
-        safeSet('val-media-svg-color', 'mediaSvgColor', '#ffffff');
+        safeSet('val-media-width', 'mediaWidth', '90'); safeSet('val-media-bg-opacity', 'mediaBgOpacity', '3');
+        safeSet('val-media-btn-size', 'mediaBtnSize', '50'); safeSet('val-media-bg-color', 'mediaBgColor', '#ffffff');
+        safeSet('val-media-btn-color', 'mediaBtnColor', '#ffffff'); safeSet('val-media-svg-color', 'mediaSvgColor', '#ffffff');
 
         const initLayout = localStorage.getItem('sttv_layoutMode') || 'grid';
         const btnList = document.getElementById('btn-layout-list');
