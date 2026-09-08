@@ -1,4 +1,11 @@
-const SUPPORTED_LANGS = ['ar', 'en-GB', 'en-US', 'vi-VN', 'zh-CN', 'zh-TW'];
+// Hỗ trợ chuẩn 37 ngôn ngữ theo bảng mã Sếp cung cấp
+const SUPPORTED_LANGS = [
+    'ar', 'bn-BD', 'cs-CZ', 'da-DK', 'de-DE', 'el-GR', 'en-GB', 'en-US', 
+    'es-ES', 'es-MX', 'fa-IR', 'fi-FI', 'fil-PH', 'fr-CA', 'fr-FR', 'hi-IN', 
+    'hu-HU', 'id-ID', 'it-IT', 'ja', 'ko-KR', 'ms-MY', 'nb-NO', 'nl-NL', 
+    'pl-PL', 'pt-BR', 'pt-PT', 'ro-RO', 'ru', 'sv-SE', 'sw-KE', 'th-TH', 
+    'tr-TR', 'uk-UA', 'vi-VN', 'zh-CN', 'zh-TW'
+]; //[span_1](start_span)[span_1](end_span)
 
 document.addEventListener("DOMContentLoaded", async () => {
     let userLang = navigator.language || navigator.userLanguage;
@@ -28,10 +35,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         const data = await dataRes.json();
         const container = document.getElementById('control-panel');
         
-        if (document.getElementById('open-settings') && data.config && data.config.settings_icon) {
-            document.getElementById('open-settings').innerHTML = data.config.settings_icon;
-        }
-
         let renderArray = data.buttons;
         const savedOrder = localStorage.getItem('sttv_iconOrder');
         if (savedOrder) {
@@ -53,7 +56,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             });
         }
 
-        // --- SẮP XẾP BẰNG CÁCH CHẠM HOÁN ĐỔI (TAP-TO-SWAP) ---
         const btnEditLayout = document.getElementById('btn-edit-layout');
         let editMode = false;
         let selectedSwapNode = null;
@@ -80,15 +82,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (!target) return;
             
             if (!selectedSwapNode) {
-                // Chọn nút đầu tiên
                 selectedSwapNode = target;
                 target.classList.add('selected-swap');
             } else if (selectedSwapNode === target) {
-                // Hủy chọn nếu bấm lại chính nó
                 target.classList.remove('selected-swap');
                 selectedSwapNode = null;
             } else {
-                // Hoán đổi 2 nút trong DOM
                 const temp = document.createElement('div');
                 target.parentNode.insertBefore(temp, target);
                 selectedSwapNode.parentNode.insertBefore(target, selectedSwapNode);
@@ -98,7 +97,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 selectedSwapNode.classList.remove('selected-swap');
                 selectedSwapNode = null;
                 
-                // Lưu trạng thái mới
                 const newOrder = Array.from(container.querySelectorAll('.glass-btn')).map(b => b.dataset.id);
                 localStorage.setItem('sttv_iconOrder', JSON.stringify(newOrder));
             }
