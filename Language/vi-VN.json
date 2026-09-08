@@ -88,8 +88,8 @@
   "lang_assistivetouch": "AssistiveTouch",
   "lang_location": "Vị Trí",
   "lang_bell": "Tắt Âm",
-  "lang_battery-low": "Pin yếu",
-  "lang_bxs:leaf": "Tết kiệm pin",
-  "lang_arrows-lock-bold": "Khoá hướng",
-  "lang_dark-light": "Sáng & Tối"
+  "lang_battery_low": "Pin yếu",
+  "lang_bxs_leaf": "Tết kiệm pin",
+  "lang_arrows_lock_bold": "Khoá hướng",
+  "lang_dark_light": "Sáng & Tối"
 }
