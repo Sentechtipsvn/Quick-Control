@@ -8,14 +8,13 @@
     <meta name="apple-mobile-web-app-title" content="Control Panel">
     <link rel="apple-touch-icon" href="icon.png">
     <title>Trung tâm điều khiển - Sentechtipvn</title>
-    <link rel="stylesheet" href="CSS/style.css?v=7.1">
+    <link rel="stylesheet" href="CSS/style.css?v=8.0">
 </head>
 <body>
     <div class="app-container grid-mode" id="main-container">
         <div class="app-header" data-i18n="app_title">Quick Control</div>
         <div class="grid-layout" id="control-panel"></div>
         
-        <!-- MEDIA & SYSTEM WIDGET NEUMORPHISM -->
         <div class="media-player-widget">
             <div class="media-controls">
                 <button class="media-btn" id="btn-media-prev" onclick="location.href='shortcuts://run-shortcut?name=QuickControl&input=text&text=media_prev'">
@@ -67,7 +66,6 @@
                     <option value="WyIjMDAwMDAwIiwiI2ZmZmZmZiIsImdyaWQiLCIjMWExYTFhIiwiI2ZmZmZmZiIsIiNmZmZmZmYiLCJub25lIiwiNjAiLCIyOCIsIjEwMCIsIjIyIiwiIzFjMWMxZSIsIiNmZmZmZmYiLFsib3V0ZXIiLCIwIiwiMCIsIjAiLCIwIiwiIzAwMDAwMCIsIjEwMCJdLGZhbHNlLDIyLDAuNSxmYWxzZSwxNCwwLDEwLDEwMF0=" data-i18n="opt_preset_dark">🖤 Dark</option>
                     <option value="WyIjMTExMTExIiwiI2ZmZDcwMCIsImdyaWQiLCIjMWExYTFhIiwiI2ZmZDcwMCIsIiNmZmQ3MDAiLCJub25lIiwiNjAiLCIzMCIsIjEwMCIsIjUwIiwiIzIyMjIyMiIsIiNmZmQ3MDAiLFsib3V0ZXIiLCIwIiwiNCIsIjEwIiwiMCIsIiMwMDAwMDAiLCI4MCJdLGZhbHNlLDIyLDAuNSx0cnVlLDE0LDAsMTAsMTAwXQ==" data-i18n="opt_preset_gold">👑 Gold</option>
                 </select>
-                
                 <div class="feature-toggles">
                     <label><span data-i18n="lbl_audio_feedback">🎚️ Âm thanh</span><input type="checkbox" id="toggle-audio"></label>
                     <label><span data-i18n="lbl_parallax">🧭 Gia tốc kế 3D</span><input type="checkbox" id="toggle-parallax"></label>
@@ -146,28 +144,36 @@
                 <div class="slider-item"><span class="slider-label">SVG</span><input type="range" id="val-svg-size" min="16" max="60" value="28"></div>
                 <div class="slider-item"><span class="slider-label" data-i18n="lbl_svg_opacity">Độ đậm SVG</span><input type="range" id="val-svg-opacity" min="0" max="100" value="100"></div>
                 <div class="slider-item"><span class="slider-label" data-i18n="lbl_frame_color">Nền khung</span><input type="color" id="val-frame-color" value="#000000"></div>
-                
                 <div class="slider-item" style="margin-top: 5px;">
-                    <span class="slider-label" data-i18n="lbl_frame_bg_opacity">Độ đậm nền</span>
-                    <input type="range" id="val-frame-bg-opacity" min="0" max="100" value="100">
+                    <span class="slider-label" data-i18n="lbl_frame_bg_opacity">Độ đậm nền</span><input type="range" id="val-frame-bg-opacity" min="0" max="100" value="100">
                 </div>
             </div>
             
             <div class="setting-group"><label data-i18n="lbl_svg_color">Màu SVG</label><input type="color" id="val-svg-color" value="#ffffff"></div>
 
+            <!-- BỘ ĐIỀU KHIỂN TRÌNH PHÁT NHẠC -->
+            <div class="setting-group highlight-box">
+                <label data-i18n="lbl_media_widget">🎵 Trình Phát Nhạc</label>
+                <div class="slider-item"><span class="slider-label" data-i18n="lbl_media_width">Kích thước khung</span><input type="range" id="val-media-width" min="50" max="100" value="90"></div>
+                <div class="slider-item"><span class="slider-label" data-i18n="lbl_media_bg_opacity">Độ mờ khung</span><input type="range" id="val-media-bg-opacity" min="0" max="100" value="3"></div>
+                <div class="slider-item"><span class="slider-label" data-i18n="lbl_media_btn_size">Cỡ nút bấm</span><input type="range" id="val-media-btn-size" min="30" max="70" value="50"></div>
+                <div class="slider-item"><span class="slider-label" data-i18n="lbl_media_bg_color">Màu khung</span><input type="color" id="val-media-bg-color" value="#ffffff"></div>
+                <div class="slider-item"><span class="slider-label" data-i18n="lbl_media_btn_color">Màu nút</span><input type="color" id="val-media-btn-color" value="#ffffff"></div>
+                <div class="slider-item"><span class="slider-label" data-i18n="lbl_media_svg_color">Màu SVG</span><input type="color" id="val-media-svg-color" value="#ffffff"></div>
+            </div>
+
             <h3 class="section-title" data-i18n="lbl_shadow_section">🔘 Đổ Bóng</h3>
             <div id="shadow-controls"></div>
         </div>
-
         <button id="btn-info" class="info-btn">ℹ️</button>
     </div>
 
     <div class="info-overlay" id="info-overlay"></div>
     <div id="info-modal" class="info-modal macos-window">
         <div class="macos-header">
-            <img src="Theme/icon-close.png" class="macos-btn close-btn" id="close-info" alt="Close">
-            <img src="Theme/icon-zoom.png" class="macos-btn" alt="Zoom">
-            <img src="Theme/icon-full.png" class="macos-btn" alt="Full">
+            <div class="mac-dot close-dot" id="close-info"></div>
+            <div class="mac-dot min-dot"></div>
+            <div class="mac-dot max-dot"></div>
         </div>
         <div class="macos-body">
             <h3 data-i18n="info_title">Quick Control</h3>
@@ -176,7 +182,7 @@
         </div>
     </div>
     
-    <script src="js/theme.js?v=7.1"></script>
-    <script src="js/main.js?v=7.1"></script>
+    <script src="js/theme.js?v=8.0"></script>
+    <script src="js/main.js?v=8.0"></script>
 </body>
 </html>
