@@ -4,6 +4,7 @@ const SHADOW_MODES = [
     { id: 'soft', nameKey: 'shadow_soft', name: 'Mờ Diện Rộng', template: '{x}px {y}px {b}px {s}px {c}' },
     { id: 'hard', nameKey: 'shadow_hard', name: 'Nổi Khối 3D', template: '{x}px {y}px {b}px {s}px {c}' },
     { id: 'glow', nameKey: 'shadow_glow', name: 'Phát Sáng', template: '0px 0px {b}px {s}px {c}' },
+    { id: 'neumorphic', nameKey: 'shadow_neumorphic', name: 'Dập Nổi (Neumorphism)', template: '-{x}px -{y}px {b}px {s}px rgba(255,255,255,0.3), {x}px {y}px {b}px {s}px {c}' }
 ];
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -128,6 +129,13 @@ document.addEventListener("DOMContentLoaded", () => {
         return `rgba(${r}, ${g}, ${b}, ${alpha / 100})`;
     }
 
+    function hexToRgb(hex) {
+        let r = 0, g = 0, b = 0;
+        if (hex.length === 4) { r = parseInt(hex[1] + hex[1], 16); g = parseInt(hex[2] + hex[2], 16); b = parseInt(hex[3] + hex[3], 16); }
+        else if (hex.length === 7) { r = parseInt(hex.substring(1, 3), 16); g = parseInt(hex.substring(3, 5), 16); b = parseInt(hex.substring(5, 7), 16); }
+        return `${r}, ${g}, ${b}`;
+    }
+
     function updateShadow() {
         const activeShadows = document.querySelectorAll('input[name="active_shadow"]:checked');
         let combinedShadow = '';
@@ -172,6 +180,14 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem('sttv_glassMode', document.getElementById('toggle-glass').checked);
         localStorage.setItem('sttv_audioFeedback', document.getElementById('toggle-audio').checked);
 
+        // Lưu cài đặt Media Widget
+        localStorage.setItem('sttv_mediaWidth', document.getElementById('val-media-width').value);
+        localStorage.setItem('sttv_mediaBgOpacity', document.getElementById('val-media-bg-opacity').value);
+        localStorage.setItem('sttv_mediaBtnSize', document.getElementById('val-media-btn-size').value);
+        localStorage.setItem('sttv_mediaBgColor', document.getElementById('val-media-bg-color').value);
+        localStorage.setItem('sttv_mediaBtnColor', document.getElementById('val-media-btn-color').value);
+        localStorage.setItem('sttv_mediaSvgColor', document.getElementById('val-media-svg-color').value);
+
         const shadowState = {};
         SHADOW_MODES.forEach(mode => {
             const drawer = document.getElementById(`drawer-${mode.id}`);
@@ -203,7 +219,10 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById('val-frame-radius').value, document.getElementById('val-frame-color').value, document.getElementById('val-svg-color').value,
             sData, document.getElementById('toggle-hide-labels').checked, document.getElementById('val-title-size').value, document.getElementById('val-title-spacing').value,
             document.getElementById('toggle-list-frame').checked, document.getElementById('val-icon-size').value, document.getElementById('val-icon-spacing').value,
-            document.getElementById('val-list-bg-opacity').value, document.getElementById('val-frame-bg-opacity').value
+            document.getElementById('val-list-bg-opacity').value, document.getElementById('val-frame-bg-opacity').value,
+            document.getElementById('val-media-width').value, document.getElementById('val-media-bg-opacity').value,
+            document.getElementById('val-media-btn-size').value, document.getElementById('val-media-bg-color').value,
+            document.getElementById('val-media-btn-color').value, document.getElementById('val-media-svg-color').value
         ];
         return btoa(JSON.stringify(dataArr)).replace(/=/g, ''); 
     }
@@ -239,13 +258,17 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             if(arr.length >= 21) {
                 document.getElementById('val-list-bg-opacity').value = arr[20];
-            } else {
-                document.getElementById('val-list-bg-opacity').value = 10;
-            }
-            if(arr.length >= 22) {
-                document.getElementById('val-frame-bg-opacity').value = arr[21];
-            } else {
-                document.getElementById('val-frame-bg-opacity').value = 100;
+            } else { document.getElementById('val-list-bg-opacity').value = 10; }
+            
+            if(arr.length >= 22) { document.getElementById('val-frame-bg-opacity').value = arr[21]; } else { document.getElementById('val-frame-bg-opacity').value = 100; }
+            
+            if(arr.length >= 28) {
+                document.getElementById('val-media-width').value = arr[22];
+                document.getElementById('val-media-bg-opacity').value = arr[23];
+                document.getElementById('val-media-btn-size').value = arr[24];
+                document.getElementById('val-media-bg-color').value = arr[25];
+                document.getElementById('val-media-btn-color').value = arr[26];
+                document.getElementById('val-media-svg-color').value = arr[27];
             }
             updateLiveVariables();
         } catch(e) { alert("Mã cấu hình không hợp lệ!"); }
@@ -253,7 +276,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById('btn-export').onclick = () => { 
         navigator.clipboard.writeText(packConfig()).then(() => {
-            const msg = window.i18nData?.['msg_copy_success'] || "Đã sao chép mã cấu hình (22 Biến)!";
+            const msg = window.i18nData?.['msg_copy_success'] || "Đã sao chép mã cấu hình!";
             alert(msg);
         }); 
     };
@@ -278,7 +301,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         root.style.setProperty('--title-size', document.getElementById('val-title-size').value + 'px');
         root.style.setProperty('--title-spacing', document.getElementById('val-title-spacing').value + 'px');
-        
         root.style.setProperty('--icon-font-size', document.getElementById('val-icon-size').value + 'px');
         root.style.setProperty('--icon-spacing', document.getElementById('val-icon-spacing').value + 'px');
         root.style.setProperty('--label-display', document.getElementById('toggle-hide-labels').checked ? 'none' : 'block');
@@ -295,7 +317,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const listBgOpacity = document.getElementById('val-list-bg-opacity').value;
         root.style.setProperty('--list-bg-color', listBgHex); 
         root.style.setProperty('--list-bg-rgba', hexToRgba(listBgHex, listBgOpacity)); 
-
         root.style.setProperty('--list-text-color', document.getElementById('val-list-text').value);
         root.style.setProperty('--list-svg-color', document.getElementById('val-list-svg').value);
 
@@ -305,7 +326,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const frameColorRgba = hexToRgba(frameColorHex, frameColorOpacity);
         
         const customContainer = document.getElementById('custom-svg-container');
-        
         if (frameSelect === 'custom') {
             customContainer.style.display = 'block'; root.style.setProperty('--frame-bg-color', 'transparent'); 
             const savedCustom = localStorage.getItem('sttv_customSvg') || document.getElementById('custom-svg-code').value;
@@ -325,6 +345,17 @@ document.addEventListener("DOMContentLoaded", () => {
         const glassMode = document.getElementById('toggle-glass').checked;
         if(glassMode) mainContainer.classList.add('glass-active'); else mainContainer.classList.remove('glass-active');
 
+        // ÁP DỤNG BIẾN MEDIA WIDGET
+        const mediaBgColor = document.getElementById('val-media-bg-color').value;
+        root.style.setProperty('--media-bg-rgb', hexToRgb(mediaBgColor));
+        root.style.setProperty('--media-bg-opacity', document.getElementById('val-media-bg-opacity').value / 100);
+        root.style.setProperty('--media-width', document.getElementById('val-media-width').value + '%');
+        root.style.setProperty('--media-btn-color', document.getElementById('val-media-btn-color').value);
+        root.style.setProperty('--media-svg-color', document.getElementById('val-media-svg-color').value);
+        const mediaBtnSize = document.getElementById('val-media-btn-size').value;
+        root.style.setProperty('--media-btn-size', mediaBtnSize + 'px');
+        root.style.setProperty('--media-btn-play', (parseInt(mediaBtnSize) + 15) + 'px');
+
         updateShadow();
         saveSettingsToLocal();
     }
@@ -343,16 +374,21 @@ document.addEventListener("DOMContentLoaded", () => {
         safeSet('val-theme-frame', 'themeFrame', 'none'); safeSet('val-frame-size', 'frameSize', '60');
         safeSet('val-svg-size', 'svgSize', '28'); safeSet('val-svg-opacity', 'svgOpacity', '100');
         safeSet('val-svg-color', 'svgColor', '#ffffff'); safeSet('val-frame-radius', 'frameRadius', '22');
-        safeSet('val-frame-color', 'frameColor', '#000000');
-        safeSet('val-frame-bg-opacity', 'frameBgOpacity', '100');
+        safeSet('val-frame-color', 'frameColor', '#000000'); safeSet('val-frame-bg-opacity', 'frameBgOpacity', '100');
         
-        safeSet('toggle-hide-labels', 'hideLabels', false, true);
-        safeSet('toggle-list-frame', 'listFrame', false, true);
+        safeSet('toggle-hide-labels', 'hideLabels', false, true); safeSet('toggle-list-frame', 'listFrame', false, true);
         safeSet('val-title-size', 'titleSize', '22'); safeSet('val-title-spacing', 'titleSpacing', '0.5');
         safeSet('val-icon-size', 'iconSize', '14'); safeSet('val-icon-spacing', 'iconSpacing', '0');
-        
         safeSet('toggle-glass', 'glassMode', false, true); safeSet('toggle-audio', 'audioFeedback', false, true);
         safeSet('toggle-parallax', 'parallax', false, true);
+
+        // Load cài đặt Media Widget
+        safeSet('val-media-width', 'mediaWidth', '90');
+        safeSet('val-media-bg-opacity', 'mediaBgOpacity', '3');
+        safeSet('val-media-btn-size', 'mediaBtnSize', '50');
+        safeSet('val-media-bg-color', 'mediaBgColor', '#ffffff');
+        safeSet('val-media-btn-color', 'mediaBtnColor', '#ffffff');
+        safeSet('val-media-svg-color', 'mediaSvgColor', '#ffffff');
 
         const initLayout = localStorage.getItem('sttv_layoutMode') || 'grid';
         const btnList = document.getElementById('btn-layout-list');
