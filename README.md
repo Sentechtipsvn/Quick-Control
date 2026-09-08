@@ -15,7 +15,7 @@
 
 ## 🌟 Giới Thiệu Tổng Quan
 
-**Quick Control** không đơn thuần là một lối tắt web thông thường; đây là một công trình thiết kế giao diện di động được tinh chỉnh công phu, mang lại trải nghiệm điều khiển mượt mà, trực quan và đẳng cấp ngay trên chính thiết bị Apple của bạn. 
+**Quick Control** Webclip kết hợp phím tắt (Shortcus) không đơn thuần là một lối tắt web thông thường; đây là một công trình thiết kế giao diện di động được tinh chỉnh công phu, mang lại trải nghiệm điều khiển mượt mà, trực quan và đẳng cấp ngay trên chính thiết bị Apple của bạn. 
 
 Được định hình để trở thành chuẩn mực mới cho phong cách **Soft UI (Neumorphism)** kết hợp cùng không gian kính mờ thời thượng, Quick Control đặt toàn bộ quyền năng tùy biến vào trong lòng bàn tay người sử dụng.
 
@@ -40,16 +40,16 @@
 * Tùy chỉnh vị trí các phím chức năng theo ý thích chỉ bằng những cú chạm đơn giản. Bảng điều khiển luôn ghi nhớ và lưu trữ mọi thiết lập cá nhân của bạn một cách an toàn.
 
 ### 🌍 Hỗ Trợ Đa Ngôn Ngữ Toàn Cầu
-* Tự động nhận diện và chuyển đổi linh hoạt hơn **37 ngôn ngữ phổ biến trên thế giới**[span_0](start_span)[span_0](end_span), mang lại trải nghiệm thân thiện cho người dùng ở bất kỳ quốc gia nào.
+* Tự động nhận diện và áp dụng ngôn ngữ theo hệ thống trên thiết bị người dùng lên đến 37 ngôn ngữ phổ biến nhất trên thế giới,mang lại trải nghiệm thân thiện cho người dùng ở bất kỳ quốc gia nào.
 
 ---
 
 ## 📲 Trải Nghiệm Ngay Lập Tức
 
-1. Mở trình duyệt **Safari** trên thiết bị iOS của bạn.
-2. Truy cập địa chỉ chính thức: [Sentechtipsvn.github.io/Quick-Control/](https://sentechtipsvn.github.io/Quick-Control/)
-3. Nhấn vào nút **Chia sẻ (Share)** trên Safari và chọn **"Thêm vào Màn hình chính" (Add to Home Screen)**.
-4. Tận hưởng ngay trung tâm điều khiển đẳng cấp của riêng bạn!
+• Lấy phím tắt **Tại đây**
+• Thêm hồ sơ cấu hình [**Tại đây**](https://sentechtipsvn.github.io/Quick-Control/Quick-Control.mobileconfig)
+
+. Tận hưởng ngay trung tâm điều khiển đẳng cấp của riêng bạn!
 
 ---
 
