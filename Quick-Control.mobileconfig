@@ -7,7 +7,7 @@
     <key>PayloadDescription</key>
     <string>Webclip Control Center giả lập bộ điều khiển cho các tác vụ nhanh trên iPhone iPad không cần jailbreak cũng có thể tuỳ chỉnh màu sắc kích thước các nút bấm mỗi bộ một phong cách riêng.!</string>
     <key>PayloadIdentifier</key>
-    <string>com.sentechtipsvn.Quick Control.profile</string>
+    <string>com.sentechtipsvn.Quick-Control.profile</string>
     <key>PayloadOrganization</key>
     <string>Sentechtipsvn</string>
     <key>PayloadType</key>
@@ -22,7 +22,7 @@
             <key>PayloadType</key>
             <string>com.apple.webClip.managed</string>
             <key>PayloadIdentifier</key>
-            <string>com.sentechtipsvn.Quick Control.webclip</string>
+            <string>com.sentechtipsvn.Quick-Control.webclip</string>
             <key>PayloadUUID</key>
             <string>3E664666-8DAE-44C6-9D1B-3D67C7ADBD0B</string>
             <key>PayloadVersion</key>
