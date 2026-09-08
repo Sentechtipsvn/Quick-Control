@@ -4,7 +4,7 @@
 
 [![Platform iOS](https://img.shields.io/badge/Platform-iOS%2015%2B-blue?style=for-the-badge&logo=apple)](https://apple.com)
 [![No Jailbreak](https://img.shields.io/badge/Jailbreak-Not%20Required-success?style=for-the-badge&logo=uncheck)](https://github.com/Sentechtipsvn)
-[![No Third-Party Apps](https://img.shields.io/badge/App-Zero%20Install-orange?style=for-the-badge&logo=safari)](https://github.com/Sentechtipsvn)
+[![No Third-Party Apps](https://img.shields.io/badge/App-Zero%20Install-orange?style=for-the-badge&logo=safari)](sentechtipsvn.github.io/Quick-Control/)
 [![Localized](https://img.shields.io/badge/Languages-37%2B%20Global-purple?style=for-the-badge&logo=i18next)](https://github.com/Sentechtipsvn)
 
 *Biến hóa màn hình chính iPhone và iPad của bạn thành một trung tâm điều khiển chuyên nghiệp, cá nhân hóa đỉnh cao mà không cần can thiệp hệ thống.*
