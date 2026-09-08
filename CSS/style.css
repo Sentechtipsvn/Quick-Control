@@ -70,7 +70,7 @@ body { background-color: var(--bg-main); background-size: cover; background-posi
 .settings-fab img { width: 100%; height: 100%; object-fit: contain; }
 .settings-fab:active { transform: scale(0.9); }
 
-/* THIẾT LẬP SLIDER THUMB (Đảm bảo Full góc & Đổ bóng xịn xò) */
+/* THIẾT LẬP SLIDER THUMB */
 input[type=range]::-webkit-slider-thumb, .sys-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     height: 25px !important; 
@@ -82,7 +82,7 @@ input[type=range]::-webkit-slider-thumb, .sys-slider::-webkit-slider-thumb {
     border-radius: 0 !important;
     border: none !important;
     box-shadow: none !important;
-    filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.4)); /* Đổ bóng chuẩn theo viền PNG, không bị lỗi khối vuông */
+    filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.4));
     cursor: pointer;
 }
 input[type=range]::-webkit-slider-thumb {
@@ -96,15 +96,20 @@ input[type=range]::-webkit-slider-thumb {
 
 input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; background: rgba(255,255,255,0.2); border-radius: 3px; }
 
-/* THEME GRID PICKER CSS */
+/* THEME GRID PICKER CSS - ĐÃ XÓA NỀN THEO Ý SẾP */
 .theme-grid-picker { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-top: 10px; }
 .theme-chip {
-    width: 100%; aspect-ratio: 1; border-radius: 8px; background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center;
-    cursor: pointer; overflow: hidden; transition: all 0.2s ease;
+    width: 100%; aspect-ratio: 1; border-radius: 10px; 
+    background: transparent; border: 2px solid transparent; 
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.2s ease; padding: 2px;
 }
-.theme-chip img { width: 75%; height: 75%; object-fit: contain; pointer-events: none; }
-.theme-chip.active { border-color: var(--accent-color); box-shadow: 0 0 10px rgba(0, 122, 255, 0.5); background: rgba(0, 122, 255, 0.2); }
+.theme-chip img { width: 100%; height: 100%; object-fit: contain; pointer-events: none; border-radius: inherit; }
+.theme-chip.active { 
+    border-color: var(--accent-color); 
+    box-shadow: 0 0 12px rgba(0, 122, 255, 0.4); 
+    background: rgba(0, 122, 255, 0.1); 
+}
 
 /* Bảng Setting */
 .settings-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); opacity: 0; visibility: hidden; transition: opacity 0.3s ease; z-index: 998; }
@@ -162,5 +167,7 @@ select { width: 100%; padding: 10px; border-radius: 8px; background: rgba(0,0,0,
     .shadow-item { border: 1px solid rgba(0,0,0,0.1); }
     .shadow-header { background: rgba(0,0,0,0.03); border-bottom: 1px solid rgba(0,0,0,0.05); }
     .shadow-drawer { background: rgba(0,0,0,0.01); }
-    .theme-chip { background: rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.1); }
+    /* Giữ nguyên nền trong suốt cho chip ở Light Mode */
+    .theme-chip { background: transparent; border: 2px solid transparent; }
+    .theme-chip.active { border-color: var(--accent-color); background: rgba(0, 122, 255, 0.1); }
 }
