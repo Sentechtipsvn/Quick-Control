@@ -66,7 +66,7 @@ body { background-color: var(--bg-main); background-size: cover; background-posi
 .sys-slider { -webkit-appearance: none; flex: 1; height: 8px !important; border-radius: 4px; background: rgba(0, 0, 0, 0.3) !important; box-shadow: inset 1px 1px 3px rgba(0,0,0,0.5), inset -1px -1px 3px rgba(255,255,255,0.1) !important; outline: none; }
 
 /* Nút Settings Trong suốt Cập Nhật */
-.settings-fab { position: fixed; bottom: 25px; right: 25px; width: 55px; height: 55px; border-radius: 50%; background: transparent; border: none; box-shadow: none; z-index: 100; cursor: pointer; overflow: hidden; padding: 0; transition: transform 0.2s ease; }
+.settings-fab { position: fixed; bottom: 25px; right: 25px; width: 48px; height: 48px; border-radius: 50%; background: transparent; border: none; box-shadow: none; z-index: 100; cursor: pointer; overflow: hidden; padding: 0; transition: transform 0.2s ease; }
 .settings-fab img { width: 100%; height: 100%; object-fit: contain; }
 .settings-fab:active { transform: scale(0.9); }
 
