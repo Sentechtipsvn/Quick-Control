@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-title" content="Control Panel">
     <link rel="apple-touch-icon" href="icon.png">
     <title>Trung tâm điều khiển - Sentechtipvn</title>
-    <link rel="stylesheet" href="CSS/style.css?v=9.8">
+    <link rel="stylesheet" href="CSS/style.css?v=9.9">
 </head>
 <body>
     <div class="app-container grid-mode" id="main-container">
@@ -53,6 +53,7 @@
         </div>
         
         <div class="settings-body">
+            <!-- Xóa class dev-only để 3 nút Nhập/Xuất/Sắp xếp luôn hiện -->
             <div class="config-actions">
                 <button id="btn-export" class="action-btn">📤 <span data-i18n="btn_export">Xuất</span></button>
                 <button id="btn-import" class="action-btn">📥 <span data-i18n="btn_import">Nhập</span></button>
@@ -103,9 +104,12 @@
                 <label><input type="checkbox" id="toggle-glass"> <span data-i18n="lbl_glassmorphism">Bật Kính mờ</span></label>
             </div>
 
+            <!-- Mở khóa Màu chữ tiêu đề (xóa dev-only) -->
             <div class="setting-group dev-only">
                 <label data-i18n="lbl_bg_main">🏳️‍🌈 Màu Nền Chính</label><input type="color" id="val-bg-main" value="#121b22">
-                <label data-i18n="lbl_text_color">🏳️‍🌈 Màu Chữ Hệ Thống</label><input type="color" id="val-text-color" value="#ffffff">
+            </div>
+            <div class="setting-group">
+                <label data-i18n="lbl_text_color">🏳️‍🌈 Màu Chữ Tiêu Đề</label><input type="color" id="val-text-color" value="#ffffff">
             </div>
 
             <div class="setting-group">
@@ -144,7 +148,6 @@
                 <input type="hidden" id="val-theme-frame" value="none">
             </div>
             
-            <!-- THÊM CLASS dev-only BAO CẢ CỤM NÀY -->
             <div class="setting-group dev-only">
                 <label data-i18n="lbl_frame_svg_size">🖼️ Khung Icon & SVG</label>
                 <div class="slider-item"><span class="slider-label">Khung</span><input type="range" id="val-frame-size" min="40" max="100" value="60"></div>
@@ -156,8 +159,9 @@
                     <span class="slider-label" data-i18n="lbl_frame_bg_opacity">Độ đậm nền</span><input type="range" id="val-frame-bg-opacity" min="0" max="100" value="100">
                 </div>
             </div>
-            
-            <div class="setting-group dev-only"><label data-i18n="lbl_svg_color">Màu SVG</label><input type="color" id="val-svg-color" value="#ffffff"></div>
+            <div class="setting-group">
+                <label data-i18n="lbl_svg_color">Màu Icon (SVG)</label><input type="color" id="val-svg-color" value="#ffffff">
+            </div>
 
             <div class="setting-group highlight-box dev-only">
                 <label data-i18n="lbl_media_widget">🎵 Trình Phát Nhạc</label>
@@ -169,7 +173,6 @@
                 <div class="slider-item"><span class="slider-label" data-i18n="lbl_media_svg_color">Màu SVG</span><input type="color" id="val-media-svg-color" value="#ffffff"></div>
             </div>
 
-            <!-- THÊM CLASS dev-only BAO CẢ CỤM ĐỔ BÓNG -->
             <h3 class="section-title dev-only" data-i18n="lbl_shadow_section">🔘 Đổ Bóng</h3>
             <div id="shadow-controls" class="dev-only"></div>
         </div>
@@ -223,7 +226,7 @@
         </div>
     </div>
     
-    <script src="js/theme.js?v=9.8"></script>
-    <script src="js/main.js?v=9.8"></script>
+    <script src="js/theme.js?v=9.9"></script>
+    <script src="js/main.js?v=9.9"></script>
 </body>
 </html>
