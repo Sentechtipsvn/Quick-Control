@@ -47,6 +47,26 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // --- [FIX LỖI] LẮNG NGHE SỰ KIỆN KHI CHỌN "GIAO DIỆN" SẴN CÓ ---
+    document.getElementById('val-theme-preset').addEventListener('change', (e) => {
+        const val = e.target.value;
+        if (val !== 'none') {
+            unpackConfig(val); // Tự động ghi đè mọi cấu hình
+            e.target.value = 'none'; // Trả về mặc định để lần sau vẫn chọn lại được
+        }
+    });
+    // -------------------------------------------------------------
+
+    // --- [MỚI] LẮNG NGHE SỰ KIỆN KHI CHỌN "ANIMATION POPUP" ---
+    const drawerEl = document.getElementById('settings-drawer');
+    const popupAnimSelect = document.getElementById('val-popup-anim');
+    popupAnimSelect.addEventListener('change', (e) => {
+        const animClass = e.target.value;
+        drawerEl.className = 'settings-drawer ' + (drawerEl.classList.contains('open') ? 'open ' : '') + (animClass !== 'default' ? animClass : '');
+        localStorage.setItem('sttv_popupAnim', animClass);
+    });
+    // -------------------------------------------------------------
+
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     let audioCtx;
     function playTick() {
@@ -107,7 +127,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     const overlay = document.getElementById('settings-overlay');
-    const drawerEl = document.getElementById('settings-drawer');
     const closeSettings = () => { drawerEl.classList.remove('open'); overlay.classList.remove('open'); };
     document.getElementById('open-settings').onclick = () => { drawerEl.classList.add('open'); overlay.classList.add('open'); };
     document.getElementById('close-settings').onclick = closeSettings;
@@ -260,11 +279,18 @@ document.addEventListener("DOMContentLoaded", () => {
             
             document.querySelectorAll('.shadow-switch').forEach(c => { c.checked = false; document.getElementById(`drawer-${c.value}`).classList.remove('active'); });
             if (arr[13] && arr[13].length > 0) {
-                const sId = arr[13][0]; document.querySelector(`input[name="active_shadow"][value="${sId}"]`).checked = true;
-                const drw = document.getElementById(`drawer-${sId}`); drw.classList.add('active');
-                drw.querySelector('.s-x').value = arr[13][1]; drw.querySelector('.s-y').value = arr[13][2];
-                drw.querySelector('.s-b').value = arr[13][3]; drw.querySelector('.s-s').value = arr[13][4]; drw.querySelector('.s-c').value = arr[13][5];
-                if(arr[13].length > 6) drw.querySelector('.s-o').value = arr[13][6];
+                const sId = arr[13][0]; 
+                const shadowSwitch = document.querySelector(`input[name="active_shadow"][value="${sId}"]`);
+                if(shadowSwitch) {
+                    shadowSwitch.checked = true;
+                    const drw = document.getElementById(`drawer-${sId}`); 
+                    if(drw){
+                        drw.classList.add('active');
+                        drw.querySelector('.s-x').value = arr[13][1]; drw.querySelector('.s-y').value = arr[13][2];
+                        drw.querySelector('.s-b').value = arr[13][3]; drw.querySelector('.s-s').value = arr[13][4]; drw.querySelector('.s-c').value = arr[13][5];
+                        if(arr[13].length > 6) drw.querySelector('.s-o').value = arr[13][6];
+                    }
+                }
             }
             if(arr.length >= 17) {
                 document.getElementById('toggle-hide-labels').checked = arr[14];
@@ -388,11 +414,18 @@ document.addEventListener("DOMContentLoaded", () => {
         safeSet('val-list-bg', 'listBg', '#1a1a1a'); safeSet('val-list-bg-opacity', 'listBgOpacity', '10');
         safeSet('val-list-text', 'listText', '#ffffff'); safeSet('val-list-svg', 'listSvg', '#ffffff');
         
-        // Load Theme Frame & Đồng bộ Visual
         const savedFrame = localStorage.getItem('sttv_themeFrame') || 'none';
         const frameEl = document.getElementById('val-theme-frame');
         if(frameEl) frameEl.value = savedFrame;
         syncThemePickerVisuals(savedFrame);
+
+        // Đọc cấu hình Animation đã lưu
+        const savedAnim = localStorage.getItem('sttv_popupAnim') || 'default';
+        const popupAnimSelect = document.getElementById('val-popup-anim');
+        if (popupAnimSelect) popupAnimSelect.value = savedAnim;
+        if (savedAnim !== 'default') {
+            drawerEl.classList.add(savedAnim);
+        }
 
         safeSet('val-frame-size', 'frameSize', '60');
         safeSet('val-svg-size', 'svgSize', '28'); safeSet('val-svg-opacity', 'svgOpacity', '100');
@@ -425,14 +458,16 @@ document.addEventListener("DOMContentLoaded", () => {
                     if (shadowState[mode.id]) {
                         const drawer = document.getElementById(`drawer-${mode.id}`);
                         const checkbox = document.querySelector(`input[name="active_shadow"][value="${mode.id}"]`);
-                        checkbox.checked = shadowState[mode.id].active;
-                        if (checkbox.checked) drawer.classList.add('active'); else drawer.classList.remove('active');
-                        drawer.querySelector('.s-x').value = shadowState[mode.id].x || 0;
-                        drawer.querySelector('.s-y').value = shadowState[mode.id].y || 4;
-                        drawer.querySelector('.s-b').value = shadowState[mode.id].b || 10;
-                        drawer.querySelector('.s-s').value = shadowState[mode.id].s || 0;
-                        drawer.querySelector('.s-c').value = shadowState[mode.id].c || '#000000';
-                        drawer.querySelector('.s-o').value = shadowState[mode.id].o || 100;
+                        if(checkbox && drawer) {
+                            checkbox.checked = shadowState[mode.id].active;
+                            if (checkbox.checked) drawer.classList.add('active'); else drawer.classList.remove('active');
+                            drawer.querySelector('.s-x').value = shadowState[mode.id].x || 0;
+                            drawer.querySelector('.s-y').value = shadowState[mode.id].y || 4;
+                            drawer.querySelector('.s-b').value = shadowState[mode.id].b || 10;
+                            drawer.querySelector('.s-s').value = shadowState[mode.id].s || 0;
+                            drawer.querySelector('.s-c').value = shadowState[mode.id].c || '#000000';
+                            drawer.querySelector('.s-o').value = shadowState[mode.id].o || 100;
+                        }
                     }
                 });
             } catch (e) {}
