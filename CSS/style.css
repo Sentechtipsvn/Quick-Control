@@ -190,3 +190,16 @@ select { width: 100%; padding: 10px; border-radius: 8px; background: rgba(0,0,0,
     .theme-chip { background: transparent; border: 2px solid transparent; }
     .theme-chip.active { border-color: var(--accent-color); background: rgba(0, 122, 255, 0.1); }
 }
+
+/* --- HIỆU ỨNG ANIMATION CHO POPUP CÀI ĐẶT --- */
+/* 1. Thu phóng (macOS Zoom) */
+.settings-drawer.anim-zoom { right: 15px; transform: scale(0.6); opacity: 0; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease; pointer-events: none; }
+.settings-drawer.anim-zoom.open { transform: scale(1); opacity: 1; pointer-events: auto; }
+
+/* 2. Trượt từ trên xuống (Slide Top) */
+.settings-drawer.anim-slide-top { right: 15px; transform: translateY(-120%); opacity: 0; transition: transform 0.4s cubic-bezier(0.1, 0.7, 0.1, 1), opacity 0.4s ease; pointer-events: none; }
+.settings-drawer.anim-slide-top.open { transform: translateY(0); opacity: 1; pointer-events: auto; }
+
+/* 3. Làm mờ (Fade) */
+.settings-drawer.anim-fade { right: 15px; opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }
+.settings-drawer.anim-fade.open { opacity: 1; pointer-events: auto; }
