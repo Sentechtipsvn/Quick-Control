@@ -4,13 +4,13 @@ const SUPPORTED_LANGS = [
     'hu-HU', 'id-ID', 'it-IT', 'ja', 'ko-KR', 'ms-MY', 'nb-NO', 'nl-NL', 
     'pl-PL', 'pt-BR', 'pt-PT', 'ro-RO', 'ru', 'sv-SE', 'sw-KE', 'th-TH', 
     'tr-TR', 'uk-UA', 'vi-VN', 'zh-CN', 'zh-TW'
-]; //[span_1](start_span)[span_1](end_span)
+];[span_0](start_span)[span_0](end_span)
 
 document.addEventListener("DOMContentLoaded", async () => {
     let userLang = navigator.language || navigator.userLanguage;
     if (!SUPPORTED_LANGS.includes(userLang)) userLang = 'en-US';
 
-    // HỖ TRỢ XỬ LÝ NGÔN NGỮ HIỂN THỊ NGƯỢC (RTL NHƯ TIẾNG Ả RẬP, PERSIAN)
+    // HỖ TRỢ HIỂN THỊ NGƯỢC (RTL CHO TIẾNG Ả RẬP, PERSIAN)
     const RTL_LANGS = ['ar', 'fa-IR'];
     if (RTL_LANGS.includes(userLang)) {
         document.documentElement.setAttribute('dir', 'rtl');
