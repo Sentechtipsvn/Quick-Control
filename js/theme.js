@@ -1,3 +1,5 @@
+const DEV_MODE = true; 
+
 const SHADOW_MODES = [
     { id: 'inset', nameKey: 'shadow_inset', name: 'Bóng Chìm', template: 'inset {x}px {y}px {b}px {s}px {c}' },
     { id: 'outer', nameKey: 'shadow_outer', name: 'Bóng Ngoài', template: '{x}px {y}px {b}px {s}px {c}' },
@@ -10,9 +12,18 @@ document.addEventListener("DOMContentLoaded", () => {
     const root = document.documentElement;
     const shadowContainer = document.getElementById('shadow-controls');
     
+    // Tự động ẩn/hiện tính năng dựa vào DEV_MODE
+    function applyDevModeVisibility() {
+        const advancedElements = document.querySelectorAll('.dev-only');
+        advancedElements.forEach(el => {
+            el.style.display = DEV_MODE ? '' : 'none';
+        });
+    }
+
+    // TẠO CÁC MỤC ĐỔ BÓNG
     SHADOW_MODES.forEach(mode => {
         const div = document.createElement('div');
-        div.className = 'shadow-item';
+        div.className = 'shadow-item dev-only';
         div.innerHTML = `
             <div class="shadow-header">
                 <span data-i18n="${mode.nameKey}">${mode.name}</span>
@@ -199,6 +210,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let combinedShadow = '';
         activeShadows.forEach(checkbox => {
             const drawer = document.getElementById(`drawer-${checkbox.value}`);
+            if (!drawer) return;
             const mode = SHADOW_MODES.find(m => m.id === checkbox.value);
             const hexColor = drawer.querySelector('.s-c').value;
             const opacity = drawer.querySelector('.s-o').value;
@@ -245,16 +257,22 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem('sttv_mediaBtnColor', document.getElementById('val-media-btn-color').value);
         localStorage.setItem('sttv_mediaSvgColor', document.getElementById('val-media-svg-color').value);
 
+        // LƯU CẤU HÌNH ĐỔ BÓNG CHI TIẾT
         const shadowState = {};
         SHADOW_MODES.forEach(mode => {
             const drawer = document.getElementById(`drawer-${mode.id}`);
             const checkbox = document.querySelector(`input[name="active_shadow"][value="${mode.id}"]`);
-            shadowState[mode.id] = {
-                active: checkbox.checked, x: drawer.querySelector('.s-x').value,
-                y: drawer.querySelector('.s-y').value, b: drawer.querySelector('.s-b').value,
-                s: drawer.querySelector('.s-s').value, c: drawer.querySelector('.s-c').value,
-                o: drawer.querySelector('.s-o').value
-            };
+            if (drawer && checkbox) {
+                shadowState[mode.id] = {
+                    active: checkbox.checked,
+                    x: drawer.querySelector('.s-x').value,
+                    y: drawer.querySelector('.s-y').value,
+                    b: drawer.querySelector('.s-b').value,
+                    s: drawer.querySelector('.s-s').value,
+                    c: drawer.querySelector('.s-c').value,
+                    o: drawer.querySelector('.s-o').value
+                };
+            }
         });
         localStorage.setItem('sttv_shadowConfig', JSON.stringify(shadowState));
     }
@@ -340,21 +358,27 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch(e) { alert("Mã cấu hình không hợp lệ!"); }
     }
 
-    document.getElementById('btn-export').onclick = () => { 
-        navigator.clipboard.writeText(packConfig()).then(() => {
-            const msg = window.i18nData?.['msg_copy_success'] || "Đã sao chép mã cấu hình!";
-            alert(msg);
-        }); 
-    };
+    const btnExport = document.getElementById('btn-export');
+    if (btnExport) {
+        btnExport.onclick = () => { 
+            navigator.clipboard.writeText(packConfig()).then(() => {
+                const msg = window.i18nData?.['msg_copy_success'] || "Đã sao chép mã cấu hình!";
+                alert(msg);
+            }); 
+        };
+    }
 
-    document.getElementById('btn-import').onclick = () => { 
-        const promptText = window.i18nData?.['msg_prompt_import'] || "📥 Dán mã cấu hình vào đây:";
-        const code = prompt(promptText); 
-        if (code) {
-            unpackConfig(code);
-            resetPresetToCustom();
-        } 
-    };
+    const btnImport = document.getElementById('btn-import');
+    if (btnImport) {
+        btnImport.onclick = () => { 
+            const promptText = window.i18nData?.['msg_prompt_import'] || "📥 Dán mã cấu hình vào đây:";
+            const code = prompt(promptText); 
+            if (code) {
+                unpackConfig(code);
+                resetPresetToCustom();
+            } 
+        };
+    }
 
     function updateLiveVariables() {
         root.style.setProperty('--bg-main', document.getElementById('val-bg-main').value);
@@ -459,6 +483,31 @@ document.addEventListener("DOMContentLoaded", () => {
         safeSet('val-media-btn-size', 'mediaBtnSize', '50'); safeSet('val-media-bg-color', 'mediaBgColor', '#ffffff');
         safeSet('val-media-btn-color', 'mediaBtnColor', '#ffffff'); safeSet('val-media-svg-color', 'mediaSvgColor', '#ffffff');
 
+        // KHÔI PHỤC CẤU HÌNH ĐỔ BÓNG CHI TIẾT (ĐÃ SỬA LỖI MẤT BÓNG)
+        const savedShadowConfig = localStorage.getItem('sttv_shadowConfig');
+        if (savedShadowConfig) {
+            try {
+                const shadowState = JSON.parse(savedShadowConfig);
+                SHADOW_MODES.forEach(mode => {
+                    if (shadowState[mode.id]) {
+                        const item = shadowState[mode.id];
+                        const checkbox = document.querySelector(`input[name="active_shadow"][value="${mode.id}"]`);
+                        const drawer = document.getElementById(`drawer-${mode.id}`);
+                        if (checkbox && drawer) {
+                            checkbox.checked = item.active;
+                            if (item.active) drawer.classList.add('active'); else drawer.classList.remove('active');
+                            drawer.querySelector('.s-x').value = item.x;
+                            drawer.querySelector('.s-y').value = item.y;
+                            drawer.querySelector('.s-b').value = item.b;
+                            drawer.querySelector('.s-s').value = item.s;
+                            drawer.querySelector('.s-c').value = item.c;
+                            drawer.querySelector('.s-o').value = item.o;
+                        }
+                    }
+                });
+            } catch(e) { console.error("Lỗi đọc cấu hình shadow:", e); }
+        }
+
         const initLayout = localStorage.getItem('sttv_layoutMode') || 'grid';
         const btnList = document.getElementById('btn-layout-list');
         const btnGrid = document.getElementById('btn-layout-grid');
@@ -469,6 +518,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     loadSettingsFromLocal();
+    applyDevModeVisibility();
     updateLiveVariables();
 
     document.addEventListener("visibilitychange", function() { if (document.visibilityState === 'hidden') saveSettingsToLocal(); });
