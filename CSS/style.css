@@ -96,10 +96,10 @@ input[type=range]::-webkit-slider-thumb {
 
 input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; background: rgba(255,255,255,0.2); border-radius: 3px; }
 
-/* THEME GRID PICKER CSS - CẬP NHẬT 5 CỘT & NÚT NHỎ HƠN */
+/* THEME GRID PICKER CSS - 5 CỘT X 2 HÀNG GỌN GÀNG */
 .theme-grid-picker { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-top: 10px; justify-items: center; }
-.theme-chip, .theme-chip-more {
-    width: calc(100% - 3px); /* Giảm 3px theo yêu cầu Sếp */
+.theme-chip {
+    width: calc(100% - 3px);
     max-width: 44px;
     aspect-ratio: 1; border-radius: 10px; 
     background: transparent; border: 2px solid transparent; 
@@ -112,7 +112,23 @@ input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; bac
     box-shadow: 0 0 12px rgba(0, 122, 255, 0.4); 
     background: rgba(0, 122, 255, 0.1); 
 }
-.theme-chip-more { background: rgba(150,150,150,0.2); font-size: 16px; color: inherit; }
+
+/* NÚT + XEM THÊM: ĐÃ SỬA THÀNH MÀU TRẮNG BỌC TRONG KHUNG TRÒN MÀU XANH DA TRỜI (#007aff) */
+.theme-chip-more {
+    width: calc(100% - 3px);
+    max-width: 44px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: #007aff;
+    color: #ffffff;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 122, 255, 0.4);
+    transition: all 0.2s ease;
+}
 .theme-chip-more:active { transform: scale(0.9); }
 
 /* Bảng Setting */
@@ -177,6 +193,17 @@ select { width: 100%; padding: 10px; border-radius: 8px; background: rgba(0,0,0,
 .macos-body { padding: 30px 25px; text-align: center; }
 .info-desc { font-size: 15px; margin-top: 15px; line-height: 1.6; }
 
+/* HỖ TRỢ GIAO DIỆN NGƯỢC (RTL CHO TIẾNG Ả RẬP, PERSIAN,...) */
+[dir="rtl"] .settings-drawer { right: auto; left: -120%; box-shadow: 5px 0 25px rgba(0,0,0,0.5); }
+[dir="rtl"] .settings-drawer.open { left: 15px; right: auto; }
+[dir="rtl"] .settings-fab { right: auto; left: 25px; }
+[dir="rtl"] .info-btn { right: auto; left: 20px; }
+[dir="rtl"] .app-container.list-mode .glass-btn { flex-direction: row-reverse; }
+[dir="rtl"] .settings-header { flex-direction: row-reverse; }
+[dir="rtl"] .slider-item { flex-direction: row-reverse; }
+[dir="rtl"] .feature-toggles label { flex-direction: row-reverse; }
+[dir="rtl"] .shadow-header { flex-direction: row-reverse; }
+
 /* AUTO LIGHT MODE */
 @media (prefers-color-scheme: light) {
     .settings-drawer { background: rgba(245, 245, 247, 0.95); color: #000; box-shadow: -5px 0 25px rgba(0,0,0,0.2); }
@@ -192,7 +219,6 @@ select { width: 100%; padding: 10px; border-radius: 8px; background: rgba(0,0,0,
     .shadow-drawer { background: rgba(0,0,0,0.01); }
     .theme-chip { background: transparent; border: 2px solid transparent; }
     .theme-chip.active { border-color: var(--accent-color); background: rgba(0, 122, 255, 0.1); }
-    .theme-chip-more { background: rgba(0,0,0,0.05); }
 }
 
 /* --- HIỆU ỨNG ANIMATION CHO POPUP CÀI ĐẶT --- */
@@ -202,3 +228,8 @@ select { width: 100%; padding: 10px; border-radius: 8px; background: rgba(0,0,0,
 .settings-drawer.anim-slide-top.open { transform: translateY(0); opacity: 1; pointer-events: auto; }
 .settings-drawer.anim-fade { right: 15px; opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }
 .settings-drawer.anim-fade.open { opacity: 1; pointer-events: auto; }
+
+/* Hỗ trợ RTL cho Animation */
+[dir="rtl"] .settings-drawer.anim-zoom { left: 15px; right: auto; }
+[dir="rtl"] .settings-drawer.anim-slide-top { left: 15px; right: auto; }
+[dir="rtl"] .settings-drawer.anim-fade { left: 15px; right: auto; }
