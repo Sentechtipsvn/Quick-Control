@@ -213,6 +213,149 @@ document.addEventListener("DOMContentLoaded", () => {
         root.style.setProperty('--btn-shadow', combinedShadow || 'none');
     }
 
+    function saveSettingsToLocal() {
+        localStorage.setItem('sttv_bgMain', document.getElementById('val-bg-main').value);
+        localStorage.setItem('sttv_textColor', document.getElementById('val-text-color').value);
+        localStorage.setItem('sttv_listBg', document.getElementById('val-list-bg').value);
+        localStorage.setItem('sttv_listBgOpacity', document.getElementById('val-list-bg-opacity').value);
+        localStorage.setItem('sttv_listText', document.getElementById('val-list-text').value);
+        localStorage.setItem('sttv_listSvg', document.getElementById('val-list-svg').value);
+        localStorage.setItem('sttv_themeFrame', document.getElementById('val-theme-frame').value);
+        localStorage.setItem('sttv_frameSize', document.getElementById('val-frame-size').value);
+        localStorage.setItem('sttv_svgSize', document.getElementById('val-svg-size').value);
+        localStorage.setItem('sttv_svgOpacity', document.getElementById('val-svg-opacity').value);
+        localStorage.setItem('sttv_frameRadius', document.getElementById('val-frame-radius').value);
+        localStorage.setItem('sttv_frameColor', document.getElementById('val-frame-color').value);
+        localStorage.setItem('sttv_frameBgOpacity', document.getElementById('val-frame-bg-opacity').value);
+        localStorage.setItem('sttv_svgColor', document.getElementById('val-svg-color').value);
+        
+        localStorage.setItem('sttv_hideLabels', document.getElementById('toggle-hide-labels').checked);
+        localStorage.setItem('sttv_listFrame', document.getElementById('toggle-list-frame').checked);
+        localStorage.setItem('sttv_titleSize', document.getElementById('val-title-size').value);
+        localStorage.setItem('sttv_titleSpacing', document.getElementById('val-title-spacing').value);
+        localStorage.setItem('sttv_iconSize', document.getElementById('val-icon-size').value);
+        localStorage.setItem('sttv_iconSpacing', document.getElementById('val-icon-spacing').value);
+        localStorage.setItem('sttv_glassMode', document.getElementById('toggle-glass').checked);
+        localStorage.setItem('sttv_audioFeedback', document.getElementById('toggle-audio').checked);
+
+        localStorage.setItem('sttv_mediaWidth', document.getElementById('val-media-width').value);
+        localStorage.setItem('sttv_mediaBgOpacity', document.getElementById('val-media-bg-opacity').value);
+        localStorage.setItem('sttv_mediaBtnSize', document.getElementById('val-media-btn-size').value);
+        localStorage.setItem('sttv_mediaBgColor', document.getElementById('val-media-bg-color').value);
+        localStorage.setItem('sttv_mediaBtnColor', document.getElementById('val-media-btn-color').value);
+        localStorage.setItem('sttv_mediaSvgColor', document.getElementById('val-media-svg-color').value);
+
+        const shadowState = {};
+        SHADOW_MODES.forEach(mode => {
+            const drawer = document.getElementById(`drawer-${mode.id}`);
+            const checkbox = document.querySelector(`input[name="active_shadow"][value="${mode.id}"]`);
+            shadowState[mode.id] = {
+                active: checkbox.checked, x: drawer.querySelector('.s-x').value,
+                y: drawer.querySelector('.s-y').value, b: drawer.querySelector('.s-b').value,
+                s: drawer.querySelector('.s-s').value, c: drawer.querySelector('.s-c').value,
+                o: drawer.querySelector('.s-o').value
+            };
+        });
+        localStorage.setItem('sttv_shadowConfig', JSON.stringify(shadowState));
+    }
+
+    function packConfig() {
+        const activeShadow = document.querySelector('input[name="active_shadow"]:checked');
+        const sId = activeShadow ? activeShadow.value : '';
+        let sData = [];
+        if (sId) {
+            const drw = document.getElementById(`drawer-${sId}`);
+            sData = [ sId, drw.querySelector('.s-x').value, drw.querySelector('.s-y').value, drw.querySelector('.s-b').value, drw.querySelector('.s-s').value, drw.querySelector('.s-c').value, drw.querySelector('.s-o').value ];
+        }
+        const dataArr = [
+            document.getElementById('val-bg-main').value, document.getElementById('val-text-color').value,
+            localStorage.getItem('sttv_layoutMode') || 'grid', document.getElementById('val-list-bg').value, 
+            document.getElementById('val-list-text').value, document.getElementById('val-list-svg').value,
+            document.getElementById('val-theme-frame').value, document.getElementById('val-frame-size').value,
+            document.getElementById('val-svg-size').value, document.getElementById('val-svg-opacity').value,
+            document.getElementById('val-frame-radius').value, document.getElementById('val-frame-color').value, document.getElementById('val-svg-color').value,
+            sData, document.getElementById('toggle-hide-labels').checked, document.getElementById('val-title-size').value, document.getElementById('val-title-spacing').value,
+            document.getElementById('toggle-list-frame').checked, document.getElementById('val-icon-size').value, document.getElementById('val-icon-spacing').value,
+            document.getElementById('val-list-bg-opacity').value, document.getElementById('val-frame-bg-opacity').value,
+            document.getElementById('val-media-width').value, document.getElementById('val-media-bg-opacity').value,
+            document.getElementById('val-media-btn-size').value, document.getElementById('val-media-bg-color').value,
+            document.getElementById('val-media-btn-color').value, document.getElementById('val-media-svg-color').value
+        ];
+        return btoa(JSON.stringify(dataArr)).replace(/=/g, ''); 
+    }
+
+    function unpackConfig(base64Str) {
+        try {
+            const arr = JSON.parse(atob(base64Str));
+            if (arr.length < 13) throw 'Lỗi';
+            document.getElementById('val-bg-main').value = arr[0]; document.getElementById('val-text-color').value = arr[1];
+            setLayoutMode(arr[2]);
+            document.getElementById('val-list-bg').value = arr[3]; document.getElementById('val-list-text').value = arr[4]; document.getElementById('val-list-svg').value = arr[5];
+            
+            const frameVal = arr[6];
+            document.getElementById('val-theme-frame').value = frameVal;
+            syncThemePickerVisuals(frameVal);
+
+            document.getElementById('val-frame-size').value = arr[7];
+            document.getElementById('val-svg-size').value = arr[8]; document.getElementById('val-svg-opacity').value = arr[9];
+            document.getElementById('val-frame-radius').value = arr[10]; document.getElementById('val-frame-color').value = arr[11]; document.getElementById('val-svg-color').value = arr[12];
+            
+            document.querySelectorAll('.shadow-switch').forEach(c => { c.checked = false; document.getElementById(`drawer-${c.value}`).classList.remove('active'); });
+            if (arr[13] && arr[13].length > 0) {
+                const sId = arr[13][0]; 
+                const shadowSwitch = document.querySelector(`input[name="active_shadow"][value="${sId}"]`);
+                if(shadowSwitch) {
+                    shadowSwitch.checked = true;
+                    const drw = document.getElementById(`drawer-${sId}`); 
+                    if(drw){
+                        drw.classList.add('active');
+                        drw.querySelector('.s-x').value = arr[13][1]; drw.querySelector('.s-y').value = arr[13][2];
+                        drw.querySelector('.s-b').value = arr[13][3]; drw.querySelector('.s-s').value = arr[13][4]; drw.querySelector('.s-c').value = arr[13][5];
+                        if(arr[13].length > 6) drw.querySelector('.s-o').value = arr[13][6];
+                    }
+                }
+            }
+            if(arr.length >= 17) {
+                document.getElementById('toggle-hide-labels').checked = arr[14];
+                document.getElementById('val-title-size').value = arr[15];
+                document.getElementById('val-title-spacing').value = arr[16];
+            }
+            if(arr.length >= 18) document.getElementById('toggle-list-frame').checked = arr[17];
+            if(arr.length >= 20) {
+                document.getElementById('val-icon-size').value = arr[18];
+                document.getElementById('val-icon-spacing').value = arr[19];
+            }
+            if(arr.length >= 21) { document.getElementById('val-list-bg-opacity').value = arr[20]; } else { document.getElementById('val-list-bg-opacity').value = 10; }
+            if(arr.length >= 22) { document.getElementById('val-frame-bg-opacity').value = arr[21]; } else { document.getElementById('val-frame-bg-opacity').value = 100; }
+            
+            if(arr.length >= 28) {
+                document.getElementById('val-media-width').value = arr[22];
+                document.getElementById('val-media-bg-opacity').value = arr[23];
+                document.getElementById('val-media-btn-size').value = arr[24];
+                document.getElementById('val-media-bg-color').value = arr[25];
+                document.getElementById('val-media-btn-color').value = arr[26];
+                document.getElementById('val-media-svg-color').value = arr[27];
+            }
+            updateLiveVariables();
+        } catch(e) { alert("Mã cấu hình không hợp lệ!"); }
+    }
+
+    document.getElementById('btn-export').onclick = () => { 
+        navigator.clipboard.writeText(packConfig()).then(() => {
+            const msg = window.i18nData?.['msg_copy_success'] || "Đã sao chép mã cấu hình!";
+            alert(msg);
+        }); 
+    };
+
+    document.getElementById('btn-import').onclick = () => { 
+        const promptText = window.i18nData?.['msg_prompt_import'] || "📥 Dán mã cấu hình vào đây:";
+        const code = prompt(promptText); 
+        if (code) {
+            unpackConfig(code);
+            resetPresetToCustom();
+        } 
+    };
+
     function updateLiveVariables() {
         root.style.setProperty('--bg-main', document.getElementById('val-bg-main').value);
         root.style.setProperty('--text-color', document.getElementById('val-text-color').value);
@@ -262,7 +405,18 @@ document.addEventListener("DOMContentLoaded", () => {
         const glassMode = document.getElementById('toggle-glass').checked;
         if(glassMode) mainContainer.classList.add('glass-active'); else mainContainer.classList.remove('glass-active');
 
+        const mediaBgColor = document.getElementById('val-media-bg-color').value;
+        root.style.setProperty('--media-bg-rgb', hexToRgb(mediaBgColor));
+        root.style.setProperty('--media-bg-opacity', document.getElementById('val-media-bg-opacity').value / 100);
+        root.style.setProperty('--media-width', document.getElementById('val-media-width').value + '%');
+        root.style.setProperty('--media-btn-color', document.getElementById('val-media-btn-color').value);
+        root.style.setProperty('--media-svg-color', document.getElementById('val-media-svg-color').value);
+        const mediaBtnSize = document.getElementById('val-media-btn-size').value;
+        root.style.setProperty('--media-btn-size', mediaBtnSize + 'px');
+        root.style.setProperty('--media-btn-play', (parseInt(mediaBtnSize) + 15) + 'px');
+
         updateShadow();
+        saveSettingsToLocal();
     }
 
     function loadSettingsFromLocal() {
@@ -301,6 +455,10 @@ document.addEventListener("DOMContentLoaded", () => {
         safeSet('toggle-glass', 'glassMode', false, true); safeSet('toggle-audio', 'audioFeedback', false, true);
         safeSet('toggle-parallax', 'parallax', false, true);
 
+        safeSet('val-media-width', 'mediaWidth', '90'); safeSet('val-media-bg-opacity', 'mediaBgOpacity', '3');
+        safeSet('val-media-btn-size', 'mediaBtnSize', '50'); safeSet('val-media-bg-color', 'mediaBgColor', '#ffffff');
+        safeSet('val-media-btn-color', 'mediaBtnColor', '#ffffff'); safeSet('val-media-svg-color', 'mediaSvgColor', '#ffffff');
+
         const initLayout = localStorage.getItem('sttv_layoutMode') || 'grid';
         const btnList = document.getElementById('btn-layout-list');
         const btnGrid = document.getElementById('btn-layout-grid');
@@ -312,4 +470,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     loadSettingsFromLocal();
     updateLiveVariables();
+
+    document.addEventListener("visibilitychange", function() { if (document.visibilityState === 'hidden') saveSettingsToLocal(); });
+    window.addEventListener("beforeunload", saveSettingsToLocal);
 });
