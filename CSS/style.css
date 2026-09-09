@@ -65,7 +65,7 @@ body { background-color: var(--bg-main); background-size: cover; background-posi
 .sys-slider-container { display: flex; align-items: center; gap: 12px; color: var(--media-svg-color); opacity: 0.8; }
 .sys-slider { -webkit-appearance: none; flex: 1; height: 8px !important; border-radius: 4px; background: rgba(0, 0, 0, 0.3) !important; box-shadow: inset 1px 1px 3px rgba(0,0,0,0.5), inset -1px -1px 3px rgba(255,255,255,0.1) !important; outline: none; }
 
-/* Nút Settings Trong suốt Cập Nhật */
+/* Nút Settings Trong suốt */
 .settings-fab { position: fixed; bottom: 25px; right: 25px; width: 45px; height: 45px; border-radius: 50%; background: transparent; border: none; box-shadow: none; z-index: 100; cursor: pointer; overflow: hidden; padding: 0; transition: transform 0.2s ease; }
 .settings-fab img { width: 100%; height: 100%; object-fit: contain; }
 .settings-fab:active { transform: scale(0.9); }
@@ -96,7 +96,7 @@ input[type=range]::-webkit-slider-thumb {
 
 input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; background: rgba(255,255,255,0.2); border-radius: 3px; }
 
-/* THEME GRID PICKER CSS - 5 CỘT X 2 HÀNG GỌN GÀNG */
+/* THEME GRID PICKER: 5 CỘT X 2 HÀNG */
 .theme-grid-picker { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-top: 10px; justify-items: center; }
 .theme-chip {
     width: calc(100% - 3px);
@@ -113,7 +113,7 @@ input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; bac
     background: rgba(0, 122, 255, 0.1); 
 }
 
-/* NÚT + XEM THÊM: ĐÃ SỬA THÀNH MÀU TRẮNG BỌC TRONG KHUNG TRÒN MÀU XANH DA TRỜI (#007aff) */
+/* NÚT DẤU + MÀU TRẮNG TRONG KHUNG TRÒN XANH DA TRỜI (#007aff) */
 .theme-chip-more {
     width: calc(100% - 3px);
     max-width: 44px;
@@ -121,7 +121,8 @@ input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; bac
     border-radius: 50%;
     background: #007aff;
     color: #ffffff;
-    font-size: 16px;
+    font-size: 20px;
+    font-weight: bold;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -161,39 +162,24 @@ input[type=range] { -webkit-appearance: none; width: 100%; background: transpare
 .shadow-drawer.active { max-height: 400px; padding: 15px; }
 select { width: 100%; padding: 10px; border-radius: 8px; background: rgba(0,0,0,0.3); color: white; border: 1px solid rgba(255,255,255,0.2); font-size: 14px; }
 .info-btn { 
-    position: absolute; 
-    bottom: 20px; 
-    right: 20px; 
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    background: #007aff; 
-    color: #ffffff;      
-    border: none; 
-    font-size: 15px; 
-    font-weight: bold;
-    font-family: -apple-system, sans-serif;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer; 
-    z-index: 10; 
-    box-shadow: none;
+    position: absolute; bottom: 20px; right: 20px; width: 28px; height: 28px;
+    border-radius: 50%; background: #007aff; color: #ffffff; border: none; 
+    font-size: 15px; font-weight: bold; font-family: -apple-system, sans-serif;
+    display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10;
 }
 
-/* Info Popup macOS PRO */
+/* Info Popup macOS */
 .info-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); opacity: 0; visibility: hidden; transition: opacity 0.3s ease; z-index: 2000; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
 .info-overlay.show { opacity: 1; visibility: visible; }
 .macos-window { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); width: 85%; max-width: 380px; background: #ffffff; border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); z-index: 2001; opacity: 0; visibility: hidden; transition: all 0.3s ease; color: #000000; overflow: hidden; }
 .macos-window.show { opacity: 1; visibility: visible; transform: translate(-50%, -50%) scale(1); }
 .macos-header { background: #f1f1f1; padding: 12px 15px; display: flex; gap: 8px; align-items: center; justify-content: flex-start; }
 .mac-dot { width: 13px; height: 13px; border-radius: 50%; cursor: pointer; box-shadow: inset 0 0 4px rgba(0,0,0,0.1); }
-.close-dot { background: #ff5f56; } .close-dot:active { opacity: 0.7; }
-.min-dot { background: #ffbd2e; } .max-dot { background: #27c93f; }
+.close-dot { background: #ff5f56; } .min-dot { background: #ffbd2e; } .max-dot { background: #27c93f; }
 .macos-body { padding: 30px 25px; text-align: center; }
 .info-desc { font-size: 15px; margin-top: 15px; line-height: 1.6; }
 
-/* HỖ TRỢ GIAO DIỆN NGƯỢC (RTL CHO TIẾNG Ả RẬP, PERSIAN,...) */
+/* HỖ TRỢ GIAO DIỆN NGƯỢC (RTL CHO TIẾNG Ả RẬP, PERSIAN) */
 [dir="rtl"] .settings-drawer { right: auto; left: -120%; box-shadow: 5px 0 25px rgba(0,0,0,0.5); }
 [dir="rtl"] .settings-drawer.open { left: 15px; right: auto; }
 [dir="rtl"] .settings-fab { right: auto; left: 25px; }
@@ -221,7 +207,7 @@ select { width: 100%; padding: 10px; border-radius: 8px; background: rgba(0,0,0,
     .theme-chip.active { border-color: var(--accent-color); background: rgba(0, 122, 255, 0.1); }
 }
 
-/* --- HIỆU ỨNG ANIMATION CHO POPUP CÀI ĐẶT --- */
+/* ANIMATION POPUP CÀI ĐẶT */
 .settings-drawer.anim-zoom { right: 15px; transform: scale(0.6); opacity: 0; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease; pointer-events: none; }
 .settings-drawer.anim-zoom.open { transform: scale(1); opacity: 1; pointer-events: auto; }
 .settings-drawer.anim-slide-top { right: 15px; transform: translateY(-120%); opacity: 0; transition: transform 0.4s cubic-bezier(0.1, 0.7, 0.1, 1), opacity 0.4s ease; pointer-events: none; }
@@ -229,7 +215,6 @@ select { width: 100%; padding: 10px; border-radius: 8px; background: rgba(0,0,0,
 .settings-drawer.anim-fade { right: 15px; opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }
 .settings-drawer.anim-fade.open { opacity: 1; pointer-events: auto; }
 
-/* Hỗ trợ RTL cho Animation */
 [dir="rtl"] .settings-drawer.anim-zoom { left: 15px; right: auto; }
 [dir="rtl"] .settings-drawer.anim-slide-top { left: 15px; right: auto; }
 [dir="rtl"] .settings-drawer.anim-fade { left: 15px; right: auto; }
