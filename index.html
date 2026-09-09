@@ -7,8 +7,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Control Panel">
     <link rel="apple-touch-icon" href="icon.png">
-    <title>Trung tâm điều khiển - Sentechtipvn</title>
-    <link rel="stylesheet" href="CSS/style.css?v=9.1">
+    <title>Trung tâm điều khiển - Sentechtipsvn</title>
+    <link rel="stylesheet" href="CSS/style.css?v=9.2">
 </head>
 <body>
     <div class="app-container grid-mode" id="main-container">
@@ -68,6 +68,16 @@
                     <option value="WyIjMDAwMDAwIiwiI2ZmZmZmZiIsImdyaWQiLCIjMWExYTFhIiwiI2ZmZmZmZiIsIiNmZmZmZmYiLCJub25lIiwiNjAiLCIyOCIsIjEwMCIsIjIyIiwiIzFjMWMxZSIsIiNmZmZmZmYiLFsib3V0ZXIiLCIwIiwiMCIsIjAiLCIwIiwiIzAwMDAwMCIsIjEwMCJdLGZhbHNlLDIyLDAuNSxmYWxzZSwxNCwwLDEwLDEwMF0=" data-i18n="opt_preset_dark">🖤 Dark</option>
                     <option value="WyIjMTExMTExIiwiI2ZmZDcwMCIsImdyaWQiLCIjMWExYTFhIiwiI2ZmZDcwMCIsIiNmZmQ3MDAiLCJub25lIiwiNjAiLCIzMCIsIjEwMCIsIjUwIiwiIzIyMjIyMiIsIiNmZmQ3MDAiLFsib3V0ZXIiLCIwIiwiNCIsIjEwIiwiMCIsIiMwMDAwMDAiLCI4MCJdLGZhbHNlLDIyLDAuNSx0cnVlLDE0LDAsMTAsMTAwXQ==" data-i18n="opt_preset_gold">👑 Gold</option>
                 </select>
+
+                <!-- BỔ SUNG CHỌN HIỆU ỨNG ANIMATION -->
+                <label style="margin-top: 10px;">✨ Hiệu ứng Popup Cài đặt</label>
+                <select id="val-popup-anim">
+                    <option value="default">Trượt từ phải sang (Mặc định)</option>
+                    <option value="anim-zoom">Thu phóng (macOS)</option>
+                    <option value="anim-slide-top">Trượt từ trên xuống</option>
+                    <option value="anim-fade">Làm mờ (Fade)</option>
+                </select>
+
                 <div class="feature-toggles">
                     <label><span data-i18n="lbl_audio_feedback">🎚️ Âm thanh</span><input type="checkbox" id="toggle-audio"></label>
                     <label><span data-i18n="lbl_parallax">🧭 Gia tốc kế 3D</span><input type="checkbox" id="toggle-parallax"></label>
@@ -117,7 +127,6 @@
                 <label style="margin-top: 10px;"><input type="checkbox" id="toggle-list-frame"> <span data-i18n="lbl_list_frame">Theme cho Danh sách</span></label>
             </div>
             
-            <!-- THEME GRID PICKER - LOẠI BỎ NỀN THEO Ý SẾP -->
             <div class="setting-group">
                 <label data-i18n="lbl_theme_frame">💠 Theme SVG</label>
                 <div class="theme-grid-picker" id="theme-grid-picker">
@@ -180,7 +189,6 @@
             <div class="mac-dot max-dot"></div>
         </div>
         <div class="macos-body">
-            <!-- INFO CHUYÊN NGHIỆP TRỌNG TÂM - CẬP NHẬT MÀU XANH DƯƠNG -->
             <h3 style="margin-bottom: 12px; font-size: 26px;">
                 <a href="https://browse.shortcuty.app/user/Sentechtipsvn" target="_blank" style="color: #007aff; text-decoration: none;">Sentechtipsvn</a>
             </h3>
@@ -188,7 +196,7 @@
         </div>
     </div>
     
-    <script src="js/theme.js?v=9.1"></script>
-    <script src="js/main.js?v=9.1"></script>
+    <script src="js/theme.js?v=9.2"></script>
+    <script src="js/main.js?v=9.2"></script>
 </body>
 </html>
