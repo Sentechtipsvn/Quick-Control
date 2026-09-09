@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-title" content="Control Panel">
     <link rel="apple-touch-icon" href="icon.png">
     <title>Trung tâm điều khiển - Sentechtipvn</title>
-    <link rel="stylesheet" href="CSS/style.css?v=9.7">
+    <link rel="stylesheet" href="CSS/style.css?v=9.8">
 </head>
 <body>
     <div class="app-container grid-mode" id="main-container">
@@ -98,6 +98,7 @@
                 <input type="file" id="upload-bg" accept="image/*" style="font-size: 12px;">
                 <button type="button" id="clear-bg" style="margin-top:5px; padding:5px; background:rgba(150,150,150,0.2); border:none; color:inherit; border-radius:5px;">Xóa ảnh nền</button>
             </div>
+            
             <div class="setting-group">
                 <label><input type="checkbox" id="toggle-glass"> <span data-i18n="lbl_glassmorphism">Bật Kính mờ</span></label>
             </div>
@@ -143,6 +144,7 @@
                 <input type="hidden" id="val-theme-frame" value="none">
             </div>
             
+            <!-- THÊM CLASS dev-only BAO CẢ CỤM NÀY -->
             <div class="setting-group dev-only">
                 <label data-i18n="lbl_frame_svg_size">🖼️ Khung Icon & SVG</label>
                 <div class="slider-item"><span class="slider-label">Khung</span><input type="range" id="val-frame-size" min="40" max="100" value="60"></div>
@@ -167,8 +169,9 @@
                 <div class="slider-item"><span class="slider-label" data-i18n="lbl_media_svg_color">Màu SVG</span><input type="color" id="val-media-svg-color" value="#ffffff"></div>
             </div>
 
+            <!-- THÊM CLASS dev-only BAO CẢ CỤM ĐỔ BÓNG -->
             <h3 class="section-title dev-only" data-i18n="lbl_shadow_section">🔘 Đổ Bóng</h3>
-            <div id="shadow-controls"></div>
+            <div id="shadow-controls" class="dev-only"></div>
         </div>
         <button id="btn-info" class="info-btn">i</button>
     </div>
@@ -220,7 +223,7 @@
         </div>
     </div>
     
-    <script src="js/theme.js?v=9.7"></script>
-    <script src="js/main.js?v=9.7"></script>
+    <script src="js/theme.js?v=9.8"></script>
+    <script src="js/main.js?v=9.8"></script>
 </body>
 </html>
