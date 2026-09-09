@@ -3,7 +3,7 @@
 // true  : Mở 100% công cụ phối màu, đổ bóng, chỉnh nhạc (Bản Cá Nhân)
 // false : Ẩn thanh thủ công, chỉ giữ bản ăn sẵn 1-Chạm (Bản Cộng Đồng)
 // =========================================================
-const DEV_MODE = false; 
+const DEV_MODE = true; 
 
 const SHADOW_MODES = [
     { id: 'inset', nameKey: 'shadow_inset', name: 'Bóng Chìm', template: 'inset {x}px {y}px {b}px {s}px {c}' },
