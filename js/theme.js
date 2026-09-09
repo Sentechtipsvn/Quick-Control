@@ -1,9 +1,4 @@
-// =========================================================
-// CÔNG TẮC CHUYỂN ĐỔI BẢN DEV & BẢN CỘNG ĐỒNG
-// true  : Mở 100% công cụ phối màu, đổ bóng, chỉnh nhạc (Bản Cá Nhân)
-// false : Ẩn thanh thủ công, chỉ giữ bản ăn sẵn 1-Chạm (Bản Cộng Đồng)
-// =========================================================
-const DEV_MODE = true; 
+const DEV_MODE = false; 
 
 const SHADOW_MODES = [
     { id: 'inset', nameKey: 'shadow_inset', name: 'Bóng Chìm', template: 'inset {x}px {y}px {b}px {s}px {c}' },
@@ -284,85 +279,147 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem('sttv_shadowConfig', JSON.stringify(shadowState));
     }
 
+    // HÀM ĐÓNG GÓI CẤU HÌNH (GỌN NHẸ - KHÔNG CHỨA BỘ MÃ ẢNH NỀN BASE64)
     function packConfig() {
-        const activeShadow = document.querySelector('input[name="active_shadow"]:checked');
-        const sId = activeShadow ? activeShadow.value : '';
-        let sData = [];
-        if (sId) {
-            const drw = document.getElementById(`drawer-${sId}`);
-            sData = [ sId, drw.querySelector('.s-x').value, drw.querySelector('.s-y').value, drw.querySelector('.s-b').value, drw.querySelector('.s-s').value, drw.querySelector('.s-c').value, drw.querySelector('.s-o').value ];
-        }
-        const dataArr = [
-            document.getElementById('val-bg-main').value, document.getElementById('val-text-color').value,
-            localStorage.getItem('sttv_layoutMode') || 'grid', document.getElementById('val-list-bg').value, 
-            document.getElementById('val-list-text').value, document.getElementById('val-list-svg').value,
-            document.getElementById('val-theme-frame').value, document.getElementById('val-frame-size').value,
-            document.getElementById('val-svg-size').value, document.getElementById('val-svg-opacity').value,
-            document.getElementById('val-frame-radius').value, document.getElementById('val-frame-color').value, document.getElementById('val-svg-color').value,
-            sData, document.getElementById('toggle-hide-labels').checked, document.getElementById('val-title-size').value, document.getElementById('val-title-spacing').value,
-            document.getElementById('toggle-list-frame').checked, document.getElementById('val-icon-size').value, document.getElementById('val-icon-spacing').value,
-            document.getElementById('val-list-bg-opacity').value, document.getElementById('val-frame-bg-opacity').value,
-            document.getElementById('val-media-width').value, document.getElementById('val-media-bg-opacity').value,
-            document.getElementById('val-media-btn-size').value, document.getElementById('val-media-bg-color').value,
-            document.getElementById('val-media-btn-color').value, document.getElementById('val-media-svg-color').value
-        ];
-        return btoa(JSON.stringify(dataArr)).replace(/=/g, ''); 
+        const shadowState = {};
+        SHADOW_MODES.forEach(mode => {
+            const drawer = document.getElementById(`drawer-${mode.id}`);
+            const checkbox = document.querySelector(`input[name="active_shadow"][value="${mode.id}"]`);
+            if (drawer && checkbox) {
+                shadowState[mode.id] = {
+                    active: checkbox.checked,
+                    x: drawer.querySelector('.s-x').value,
+                    y: drawer.querySelector('.s-y').value,
+                    b: drawer.querySelector('.s-b').value,
+                    s: drawer.querySelector('.s-s').value,
+                    c: drawer.querySelector('.s-c').value,
+                    o: drawer.querySelector('.s-o').value
+                };
+            }
+        });
+
+        const fullConfig = {
+            bgMain: document.getElementById('val-bg-main').value, // Chỉ lưu màu nền chính
+            textColor: document.getElementById('val-text-color').value,
+            layoutMode: localStorage.getItem('sttv_layoutMode') || 'grid',
+            listBg: document.getElementById('val-list-bg').value,
+            listText: document.getElementById('val-list-text').value,
+            listSvg: document.getElementById('val-list-svg').value,
+            themeFrame: document.getElementById('val-theme-frame').value,
+            frameSize: document.getElementById('val-frame-size').value,
+            svgSize: document.getElementById('val-svg-size').value,
+            svgOpacity: document.getElementById('val-svg-opacity').value,
+            frameRadius: document.getElementById('val-frame-radius').value,
+            frameColor: document.getElementById('val-frame-color').value,
+            svgColor: document.getElementById('val-svg-color').value,
+            hideLabels: document.getElementById('toggle-hide-labels').checked,
+            titleSize: document.getElementById('val-title-size').value,
+            titleSpacing: document.getElementById('val-title-spacing').value,
+            listFrame: document.getElementById('toggle-list-frame').checked,
+            iconSize: document.getElementById('val-icon-size').value,
+            iconSpacing: document.getElementById('val-icon-spacing').value,
+            listBgOpacity: document.getElementById('val-list-bg-opacity').value,
+            frameBgOpacity: document.getElementById('val-frame-bg-opacity').value,
+            mediaWidth: document.getElementById('val-media-width').value,
+            mediaBgOpacity: document.getElementById('val-media-bg-opacity').value,
+            mediaBtnSize: document.getElementById('val-media-btn-size').value,
+            mediaBgColor: document.getElementById('val-media-bg-color').value,
+            mediaBtnColor: document.getElementById('val-media-btn-color').value,
+            mediaSvgColor: document.getElementById('val-media-svg-color').value,
+            glassMode: document.getElementById('toggle-glass').checked,
+            popupAnim: document.getElementById('val-popup-anim').value,
+            shadowConfig: shadowState
+        };
+
+        return btoa(unescape(encodeURIComponent(JSON.stringify(fullConfig)))); 
     }
 
+    // HÀM GIẢI MÃ & KHÔI PHỤC (TỰ ĐỘNG XÓA ẢNH NỀN TẠM THỜI ĐỂ TRẢ VỀ MÀU NỀN CHUẨN)
     function unpackConfig(base64Str) {
         try {
-            const arr = JSON.parse(atob(base64Str));
-            if (arr.length < 13) throw 'Lỗi';
-            document.getElementById('val-bg-main').value = arr[0]; document.getElementById('val-text-color').value = arr[1];
-            setLayoutMode(arr[2]);
-            document.getElementById('val-list-bg').value = arr[3]; document.getElementById('val-list-text').value = arr[4]; document.getElementById('val-list-svg').value = arr[5];
+            const config = JSON.parse(decodeURIComponent(escape(atob(base64Str))));
             
-            const frameVal = arr[6];
-            document.getElementById('val-theme-frame').value = frameVal;
-            syncThemePickerVisuals(frameVal);
+            // 1. TỰ ĐỘNG XÓA ẢNH NỀN TẠM THỜI -> TRẢ VỀ MÀU NỀN CHUẨN CỦA CẤU HÌNH
+            localStorage.removeItem('sttv_customBgImage');
+            root.style.setProperty('--bg-image', 'none');
+            const uploadBgInput = document.getElementById('upload-bg');
+            if (uploadBgInput) uploadBgInput.value = "";
 
-            document.getElementById('val-frame-size').value = arr[7];
-            document.getElementById('val-svg-size').value = arr[8]; document.getElementById('val-svg-opacity').value = arr[9];
-            document.getElementById('val-frame-radius').value = arr[10]; document.getElementById('val-frame-color').value = arr[11]; document.getElementById('val-svg-color').value = arr[12];
+            if (config.bgMain) {
+                document.getElementById('val-bg-main').value = config.bgMain;
+                root.style.setProperty('--bg-main', config.bgMain);
+            }
+
+            // 2. Chữ & Layout chính
+            if (config.textColor) document.getElementById('val-text-color').value = config.textColor;
+            if (config.layoutMode) setLayoutMode(config.layoutMode);
             
-            document.querySelectorAll('.shadow-switch').forEach(c => { c.checked = false; document.getElementById(`drawer-${c.value}`).classList.remove('active'); });
-            if (arr[13] && arr[13].length > 0) {
-                const sId = arr[13][0]; 
-                const shadowSwitch = document.querySelector(`input[name="active_shadow"][value="${sId}"]`);
-                if(shadowSwitch) {
-                    shadowSwitch.checked = true;
-                    const drw = document.getElementById(`drawer-${sId}`); 
-                    if(drw){
-                        drw.classList.add('active');
-                        drw.querySelector('.s-x').value = arr[13][1]; drw.querySelector('.s-y').value = arr[13][2];
-                        drw.querySelector('.s-b').value = arr[13][3]; drw.querySelector('.s-s').value = arr[13][4]; drw.querySelector('.s-c').value = arr[13][5];
-                        if(arr[13].length > 6) drw.querySelector('.s-o').value = arr[13][6];
+            // 3. Chế độ Danh sách
+            if (config.listBg) document.getElementById('val-list-bg').value = config.listBg;
+            if (config.listText) document.getElementById('val-list-text').value = config.listText;
+            if (config.listSvg) document.getElementById('val-list-svg').value = config.listSvg;
+            if (config.listBgOpacity) document.getElementById('val-list-bg-opacity').value = config.listBgOpacity;
+            if (config.listFrame !== undefined) document.getElementById('toggle-list-frame').checked = config.listFrame;
+
+            // 4. Theme & Khung Icon
+            if (config.themeFrame) {
+                document.getElementById('val-theme-frame').value = config.themeFrame;
+                syncThemePickerVisuals(config.themeFrame);
+            }
+            if (config.frameSize) document.getElementById('val-frame-size').value = config.frameSize;
+            if (config.svgSize) document.getElementById('val-svg-size').value = config.svgSize;
+            if (config.svgOpacity) document.getElementById('val-svg-opacity').value = config.svgOpacity;
+            if (config.frameRadius) document.getElementById('val-frame-radius').value = config.frameRadius;
+            if (config.frameColor) document.getElementById('val-frame-color').value = config.frameColor;
+            if (config.frameBgOpacity) document.getElementById('val-frame-bg-opacity').value = config.frameBgOpacity;
+            if (config.svgColor) document.getElementById('val-svg-color').value = config.svgColor;
+
+            // 5. Tiêu đề & Chữ Icon
+            if (config.hideLabels !== undefined) document.getElementById('toggle-hide-labels').checked = config.hideLabels;
+            if (config.titleSize) document.getElementById('val-title-size').value = config.titleSize;
+            if (config.titleSpacing) document.getElementById('val-title-spacing').value = config.titleSpacing;
+            if (config.iconSize) document.getElementById('val-icon-size').value = config.iconSize;
+            if (config.iconSpacing) document.getElementById('val-icon-spacing').value = config.iconSpacing;
+
+            // 6. Trình phát nhạc
+            if (config.mediaWidth) document.getElementById('val-media-width').value = config.mediaWidth;
+            if (config.mediaBgOpacity) document.getElementById('val-media-bg-opacity').value = config.mediaBgOpacity;
+            if (config.mediaBtnSize) document.getElementById('val-media-btn-size').value = config.mediaBtnSize;
+            if (config.mediaBgColor) document.getElementById('val-media-bg-color').value = config.mediaBgColor;
+            if (config.mediaBtnColor) document.getElementById('val-media-btn-color').value = config.mediaBtnColor;
+            if (config.mediaSvgColor) document.getElementById('val-media-svg-color').value = config.mediaSvgColor;
+
+            // 7. Kính mờ & Hiệu ứng Popup
+            if (config.glassMode !== undefined) document.getElementById('toggle-glass').checked = config.glassMode;
+            if (config.popupAnim) {
+                document.getElementById('val-popup-anim').value = config.popupAnim;
+                drawerEl.className = 'settings-drawer ' + (config.popupAnim !== 'default' ? config.popupAnim : '');
+            }
+
+            // 8. Cấu hình Đổ bóng
+            if (config.shadowConfig) {
+                SHADOW_MODES.forEach(mode => {
+                    const item = config.shadowConfig[mode.id];
+                    const checkbox = document.querySelector(`input[name="active_shadow"][value="${mode.id}"]`);
+                    const drawer = document.getElementById(`drawer-${mode.id}`);
+                    if (item && checkbox && drawer) {
+                        checkbox.checked = item.active;
+                        if (item.active) drawer.classList.add('active'); else drawer.classList.remove('active');
+                        drawer.querySelector('.s-x').value = item.x;
+                        drawer.querySelector('.s-y').value = item.y;
+                        drawer.querySelector('.s-b').value = item.b;
+                        drawer.querySelector('.s-s').value = item.s;
+                        drawer.querySelector('.s-c').value = item.c;
+                        drawer.querySelector('.s-o').value = item.o;
                     }
-                }
+                });
             }
-            if(arr.length >= 17) {
-                document.getElementById('toggle-hide-labels').checked = arr[14];
-                document.getElementById('val-title-size').value = arr[15];
-                document.getElementById('val-title-spacing').value = arr[16];
-            }
-            if(arr.length >= 18) document.getElementById('toggle-list-frame').checked = arr[17];
-            if(arr.length >= 20) {
-                document.getElementById('val-icon-size').value = arr[18];
-                document.getElementById('val-icon-spacing').value = arr[19];
-            }
-            if(arr.length >= 21) { document.getElementById('val-list-bg-opacity').value = arr[20]; } else { document.getElementById('val-list-bg-opacity').value = 10; }
-            if(arr.length >= 22) { document.getElementById('val-frame-bg-opacity').value = arr[21]; } else { document.getElementById('val-frame-bg-opacity').value = 100; }
-            
-            if(arr.length >= 28) {
-                document.getElementById('val-media-width').value = arr[22];
-                document.getElementById('val-media-bg-opacity').value = arr[23];
-                document.getElementById('val-media-btn-size').value = arr[24];
-                document.getElementById('val-media-bg-color').value = arr[25];
-                document.getElementById('val-media-btn-color').value = arr[26];
-                document.getElementById('val-media-svg-color').value = arr[27];
-            }
+
             updateLiveVariables();
-        } catch(e) { alert("Mã cấu hình không hợp lệ!"); }
+        } catch(e) { 
+            console.error(e);
+            alert("Mã cấu hình không hợp lệ hoặc thuộc phiên bản cũ!"); 
+        }
     }
 
     const btnExport = document.getElementById('btn-export');
