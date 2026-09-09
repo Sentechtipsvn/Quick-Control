@@ -1,4 +1,3 @@
-// Hỗ trợ chuẩn 37 ngôn ngữ theo bảng mã Sếp cung cấp
 const SUPPORTED_LANGS = [
     'ar', 'bn-BD', 'cs-CZ', 'da-DK', 'de-DE', 'el-GR', 'en-GB', 'en-US', 
     'es-ES', 'es-MX', 'fa-IR', 'fi-FI', 'fil-PH', 'fr-CA', 'fr-FR', 'hi-IN', 
@@ -10,6 +9,14 @@ const SUPPORTED_LANGS = [
 document.addEventListener("DOMContentLoaded", async () => {
     let userLang = navigator.language || navigator.userLanguage;
     if (!SUPPORTED_LANGS.includes(userLang)) userLang = 'en-US';
+
+    // HỖ TRỢ XỬ LÝ NGÔN NGỮ HIỂN THỊ NGƯỢC (RTL NHƯ TIẾNG Ả RẬP, PERSIAN)
+    const RTL_LANGS = ['ar', 'fa-IR'];
+    if (RTL_LANGS.includes(userLang)) {
+        document.documentElement.setAttribute('dir', 'rtl');
+    } else {
+        document.documentElement.setAttribute('dir', 'ltr');
+    }
 
     let fallbackTranslations = {};
     try {
