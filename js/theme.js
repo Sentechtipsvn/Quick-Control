@@ -30,12 +30,17 @@ document.addEventListener("DOMContentLoaded", () => {
         shadowContainer.appendChild(div);
     });
 
-    // Sự kiện chọn Theme Visual Grid
+    // Sự kiện chọn Theme Visual Grid (Áp dụng cho tất cả chip, kể cả trong Popup)
     document.querySelectorAll('.theme-chip').forEach(chip => {
         chip.addEventListener('click', () => {
             document.querySelectorAll('.theme-chip').forEach(c => c.classList.remove('active'));
-            chip.classList.add('active');
-            document.getElementById('val-theme-frame').value = chip.dataset.value;
+            
+            // Tìm tất cả các chip có cùng value để bật active đồng bộ
+            const val = chip.dataset.value;
+            document.querySelectorAll(`.theme-chip[data-value="${val}"]`).forEach(c => c.classList.add('active'));
+            
+            document.getElementById('val-theme-frame').value = val;
+            resetPresetToCustom(); // Hủy dấu check Preset vì người dùng đã chỉnh tay
             updateLiveVariables();
         });
     });
@@ -47,17 +52,31 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // --- [FIX LỖI] LẮNG NGHE SỰ KIỆN KHI CHỌN "GIAO DIỆN" SẴN CÓ ---
-    document.getElementById('val-theme-preset').addEventListener('change', (e) => {
+    // Mở / Đóng Popup Tất Cả Theme
+    const themeModal = document.getElementById('theme-modal');
+    const themeOverlay = document.getElementById('theme-overlay');
+    document.getElementById('btn-more-themes').onclick = () => { themeModal.classList.add('show'); themeOverlay.classList.add('show'); };
+    document.getElementById('close-theme-modal').onclick = () => { themeModal.classList.remove('show'); themeOverlay.classList.remove('show'); };
+    themeOverlay.onclick = () => { themeModal.classList.remove('show'); themeOverlay.classList.remove('show'); };
+
+    // --- FIX LỖI "DẤU TÍCH GIAO DIỆN PRESET" THÔNG MINH ---
+    const presetSelect = document.getElementById('val-theme-preset');
+    
+    presetSelect.addEventListener('change', (e) => {
         const val = e.target.value;
+        localStorage.setItem('sttv_activePreset', val); // Lưu lại giá trị Preset được chọn
         if (val !== 'none') {
-            unpackConfig(val); // Tự động ghi đè mọi cấu hình
-            e.target.value = 'none'; // Trả về mặc định để lần sau vẫn chọn lại được
+            unpackConfig(val);
         }
     });
-    // -------------------------------------------------------------
 
-    // --- [MỚI] LẮNG NGHE SỰ KIỆN KHI CHỌN "ANIMATION POPUP" ---
+    function resetPresetToCustom() {
+        // Hàm này tự động gọi khi người dùng kéo thanh trượt thủ công
+        presetSelect.value = 'none';
+        localStorage.setItem('sttv_activePreset', 'none');
+    }
+
+    // --- SỰ KIỆN CHỌN ANIMATION ---
     const drawerEl = document.getElementById('settings-drawer');
     const popupAnimSelect = document.getElementById('val-popup-anim');
     popupAnimSelect.addEventListener('change', (e) => {
@@ -65,8 +84,8 @@ document.addEventListener("DOMContentLoaded", () => {
         drawerEl.className = 'settings-drawer ' + (drawerEl.classList.contains('open') ? 'open ' : '') + (animClass !== 'default' ? animClass : '');
         localStorage.setItem('sttv_popupAnim', animClass);
     });
-    // -------------------------------------------------------------
 
+    // Âm thanh
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     let audioCtx;
     function playTick() {
@@ -80,7 +99,28 @@ document.addEventListener("DOMContentLoaded", () => {
         osc.start(); osc.stop(audioCtx.currentTime + 0.05);
     }
     document.addEventListener('click', (e) => { if (e.target.tagName === 'BUTTON' || e.target.type === 'checkbox' || e.target.closest('.theme-chip')) playTick(); });
-    document.getElementById('settings-drawer').addEventListener('input', (e) => { if (e.target.type === 'range') playTick(); });
+    drawerEl.addEventListener('input', (e) => { 
+        if (e.target.type === 'range') playTick(); 
+        
+        // Nếu thay đổi bất kỳ thông số nào ngoài Preset và Animation, thì Reset cái dấu Tích Preset đi
+        if (e.target.id !== 'val-theme-preset' && e.target.id !== 'val-popup-anim') {
+            resetPresetToCustom();
+        }
+    });
+
+    document.querySelectorAll('.shadow-switch').forEach(switchBtn => {
+        switchBtn.addEventListener('change', (e) => {
+            const drawer = document.getElementById(`drawer-${e.target.value}`);
+            if (e.target.checked) drawer.classList.add('active'); else drawer.classList.remove('active');
+            resetPresetToCustom(); // Reset dấu tích preset
+            updateLiveVariables();
+        });
+    });
+    
+    // Các thao tác checkbox khác làm mất dấu check preset
+    document.querySelectorAll('input[type="checkbox"]').forEach(c => {
+        c.addEventListener('change', () => resetPresetToCustom());
+    });
 
     function handleOrientation(e) {
         if (!document.getElementById('toggle-parallax').checked) return;
@@ -118,14 +158,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     document.getElementById('clear-bg').addEventListener('click', () => { localStorage.removeItem('sttv_customBgImage'); document.body.style.backgroundImage = 'none'; uploadBg.value = ""; });
 
-    document.querySelectorAll('.shadow-switch').forEach(switchBtn => {
-        switchBtn.addEventListener('change', (e) => {
-            const drawer = document.getElementById(`drawer-${e.target.value}`);
-            if (e.target.checked) drawer.classList.add('active'); else drawer.classList.remove('active');
-            updateLiveVariables();
-        });
-    });
-
     const overlay = document.getElementById('settings-overlay');
     const closeSettings = () => { drawerEl.classList.remove('open'); overlay.classList.remove('open'); };
     document.getElementById('open-settings').onclick = () => { drawerEl.classList.add('open'); overlay.classList.add('open'); };
@@ -149,13 +181,16 @@ document.addEventListener("DOMContentLoaded", () => {
         else { btnGrid.classList.add('active'); btnList.classList.remove('active'); }
         updateLiveVariables();
     }
-    btnList.onclick = () => setLayoutMode('list'); btnGrid.onclick = () => setLayoutMode('grid');
+    btnList.onclick = () => { setLayoutMode('list'); resetPresetToCustom(); }; 
+    btnGrid.onclick = () => { setLayoutMode('grid'); resetPresetToCustom(); };
 
     const infoModal = document.getElementById('info-modal');
     const infoOverlay = document.getElementById('info-overlay');
     document.getElementById('btn-info').onclick = () => { infoModal.classList.add('show'); infoOverlay.classList.add('show'); };
     document.getElementById('close-info').onclick = () => { infoModal.classList.remove('show'); infoOverlay.classList.remove('show'); };
-    infoOverlay.onclick = () => { infoModal.classList.remove('show'); infoOverlay.classList.remove('show'); };
+    infoOverlay.onclick = (e) => { 
+        if(e.target.id === 'info-overlay') { infoModal.classList.remove('show'); infoOverlay.classList.remove('show'); }
+    };
 
     function hexToRgba(hex, alpha) {
         let r = 0, g = 0, b = 0;
@@ -327,7 +362,10 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('btn-import').onclick = () => { 
         const promptText = window.i18nData?.['msg_prompt_import'] || "📥 Dán mã cấu hình vào đây:";
         const code = prompt(promptText); 
-        if (code) unpackConfig(code); 
+        if (code) {
+            unpackConfig(code);
+            resetPresetToCustom(); // Nhập code ngoài vào cũng tính là Custom
+        } 
     };
 
     function updateLiveVariables() {
@@ -414,12 +452,17 @@ document.addEventListener("DOMContentLoaded", () => {
         safeSet('val-list-bg', 'listBg', '#1a1a1a'); safeSet('val-list-bg-opacity', 'listBgOpacity', '10');
         safeSet('val-list-text', 'listText', '#ffffff'); safeSet('val-list-svg', 'listSvg', '#ffffff');
         
+        // Đọc cấu hình Theme Picker
         const savedFrame = localStorage.getItem('sttv_themeFrame') || 'none';
         const frameEl = document.getElementById('val-theme-frame');
         if(frameEl) frameEl.value = savedFrame;
         syncThemePickerVisuals(savedFrame);
 
-        // Đọc cấu hình Animation đã lưu
+        // Đọc cấu hình Preset
+        const savedPreset = localStorage.getItem('sttv_activePreset') || 'none';
+        presetSelect.value = savedPreset;
+
+        // Đọc cấu hình Animation
         const savedAnim = localStorage.getItem('sttv_popupAnim') || 'default';
         const popupAnimSelect = document.getElementById('val-popup-anim');
         if (popupAnimSelect) popupAnimSelect.value = savedAnim;
