@@ -1,3 +1,8 @@
+// =========================================================
+// CÔNG TẮC CHUYỂN ĐỔI BẢN DEV & BẢN CỘNG ĐỒNG
+// true  : Mở 100% công cụ phối màu, đổ bóng, chỉnh nhạc (Bản Cá Nhân)
+// false : Ẩn thanh thủ công, chỉ giữ bản ăn sẵn 1-Chạm (Bản Cộng Đồng)
+// =========================================================
 const DEV_MODE = false; 
 
 const SHADOW_MODES = [
@@ -12,12 +17,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const root = document.documentElement;
     const shadowContainer = document.getElementById('shadow-controls');
     
-    // Tự động ẩn/hiện tính năng dựa vào DEV_MODE
-    function applyDevModeVisibility() {
-        const advancedElements = document.querySelectorAll('.dev-only');
-        advancedElements.forEach(el => {
-            el.style.display = DEV_MODE ? '' : 'none';
-        });
+    // GẮN CHẾ ĐỘ ẨN BẰNG CSS (!important) ĐỂ KHÔNG BỊ TRƯỢT
+    if (!DEV_MODE) {
+        document.body.classList.add('standard-mode');
     }
 
     // TẠO CÁC MỤC ĐỔ BÓNG
@@ -149,13 +151,19 @@ document.addEventListener("DOMContentLoaded", () => {
         if (file) {
             const reader = new FileReader();
             reader.onload = (ev) => {
-                const b64 = ev.target.result; localStorage.setItem('sttv_customBgImage', b64);
-                document.body.style.backgroundImage = `url('${b64}')`;
+                const b64 = ev.target.result; 
+                localStorage.setItem('sttv_customBgImage', b64);
+                // SỬ DỤNG BIẾN CSS THAY VÌ GÁN VÀO TRỰC TIẾP BODY
+                root.style.setProperty('--bg-image', `url('${b64}')`);
             };
             reader.readAsDataURL(file);
         }
     });
-    document.getElementById('clear-bg').addEventListener('click', () => { localStorage.removeItem('sttv_customBgImage'); document.body.style.backgroundImage = 'none'; uploadBg.value = ""; });
+    document.getElementById('clear-bg').addEventListener('click', () => { 
+        localStorage.removeItem('sttv_customBgImage'); 
+        root.style.setProperty('--bg-image', 'none'); 
+        uploadBg.value = ""; 
+    });
 
     const overlay = document.getElementById('settings-overlay');
     const closeSettings = () => { drawerEl.classList.remove('open'); overlay.classList.remove('open'); };
@@ -257,7 +265,6 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem('sttv_mediaBtnColor', document.getElementById('val-media-btn-color').value);
         localStorage.setItem('sttv_mediaSvgColor', document.getElementById('val-media-svg-color').value);
 
-        // LƯU CẤU HÌNH ĐỔ BÓNG CHI TIẾT
         const shadowState = {};
         SHADOW_MODES.forEach(mode => {
             const drawer = document.getElementById(`drawer-${mode.id}`);
@@ -483,7 +490,6 @@ document.addEventListener("DOMContentLoaded", () => {
         safeSet('val-media-btn-size', 'mediaBtnSize', '50'); safeSet('val-media-bg-color', 'mediaBgColor', '#ffffff');
         safeSet('val-media-btn-color', 'mediaBtnColor', '#ffffff'); safeSet('val-media-svg-color', 'mediaSvgColor', '#ffffff');
 
-        // KHÔI PHỤC CẤU HÌNH ĐỔ BÓNG CHI TIẾT (ĐÃ SỬA LỖI MẤT BÓNG)
         const savedShadowConfig = localStorage.getItem('sttv_shadowConfig');
         if (savedShadowConfig) {
             try {
@@ -514,11 +520,14 @@ document.addEventListener("DOMContentLoaded", () => {
         if (initLayout === 'list') { btnList.classList.add('active'); btnGrid.classList.remove('active'); } 
         else { btnGrid.classList.add('active'); btnList.classList.remove('active'); }
 
-        const savedBg = localStorage.getItem('sttv_customBgImage'); if (savedBg) document.body.style.backgroundImage = `url('${savedBg}')`;
+        // ĐỌC ẢNH NỀN GÁN VÀO BIẾN CSS MỚI
+        const savedBg = localStorage.getItem('sttv_customBgImage'); 
+        if (savedBg) {
+            root.style.setProperty('--bg-image', `url('${savedBg}')`);
+        }
     }
 
     loadSettingsFromLocal();
-    applyDevModeVisibility();
     updateLiveVariables();
 
     document.addEventListener("visibilitychange", function() { if (document.visibilityState === 'hidden') saveSettingsToLocal(); });
