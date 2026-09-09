@@ -96,10 +96,12 @@ input[type=range]::-webkit-slider-thumb {
 
 input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; background: rgba(255,255,255,0.2); border-radius: 3px; }
 
-/* THEME GRID PICKER CSS - ĐÃ XÓA NỀN THEO Ý SẾP */
-.theme-grid-picker { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-top: 10px; }
-.theme-chip {
-    width: 100%; aspect-ratio: 1; border-radius: 10px; 
+/* THEME GRID PICKER CSS - CẬP NHẬT 5 CỘT & NÚT NHỎ HƠN */
+.theme-grid-picker { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-top: 10px; justify-items: center; }
+.theme-chip, .theme-chip-more {
+    width: calc(100% - 3px); /* Giảm 3px theo yêu cầu Sếp */
+    max-width: 44px;
+    aspect-ratio: 1; border-radius: 10px; 
     background: transparent; border: 2px solid transparent; 
     display: flex; align-items: center; justify-content: center;
     cursor: pointer; transition: all 0.2s ease; padding: 2px;
@@ -110,6 +112,8 @@ input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; bac
     box-shadow: 0 0 12px rgba(0, 122, 255, 0.4); 
     background: rgba(0, 122, 255, 0.1); 
 }
+.theme-chip-more { background: rgba(150,150,150,0.2); font-size: 16px; color: inherit; }
+.theme-chip-more:active { transform: scale(0.9); }
 
 /* Bảng Setting */
 .settings-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); opacity: 0; visibility: hidden; transition: opacity 0.3s ease; z-index: 998; }
@@ -147,8 +151,8 @@ select { width: 100%; padding: 10px; border-radius: 8px; background: rgba(0,0,0,
     width: 28px;
     height: 28px;
     border-radius: 50%;
-    background: #007aff; /* Nền tròn màu xanh dương iOS */
-    color: #ffffff;      /* Chữ i màu trắng */
+    background: #007aff; 
+    color: #ffffff;      
     border: none; 
     font-size: 15px; 
     font-weight: bold;
@@ -186,20 +190,15 @@ select { width: 100%; padding: 10px; border-radius: 8px; background: rgba(0,0,0,
     .shadow-item { border: 1px solid rgba(0,0,0,0.1); }
     .shadow-header { background: rgba(0,0,0,0.03); border-bottom: 1px solid rgba(0,0,0,0.05); }
     .shadow-drawer { background: rgba(0,0,0,0.01); }
-    /* Giữ nguyên nền trong suốt cho chip ở Light Mode */
     .theme-chip { background: transparent; border: 2px solid transparent; }
     .theme-chip.active { border-color: var(--accent-color); background: rgba(0, 122, 255, 0.1); }
+    .theme-chip-more { background: rgba(0,0,0,0.05); }
 }
 
 /* --- HIỆU ỨNG ANIMATION CHO POPUP CÀI ĐẶT --- */
-/* 1. Thu phóng (macOS Zoom) */
 .settings-drawer.anim-zoom { right: 15px; transform: scale(0.6); opacity: 0; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease; pointer-events: none; }
 .settings-drawer.anim-zoom.open { transform: scale(1); opacity: 1; pointer-events: auto; }
-
-/* 2. Trượt từ trên xuống (Slide Top) */
 .settings-drawer.anim-slide-top { right: 15px; transform: translateY(-120%); opacity: 0; transition: transform 0.4s cubic-bezier(0.1, 0.7, 0.1, 1), opacity 0.4s ease; pointer-events: none; }
 .settings-drawer.anim-slide-top.open { transform: translateY(0); opacity: 1; pointer-events: auto; }
-
-/* 3. Làm mờ (Fade) */
 .settings-drawer.anim-fade { right: 15px; opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }
 .settings-drawer.anim-fade.open { opacity: 1; pointer-events: auto; }
