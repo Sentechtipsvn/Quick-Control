@@ -96,7 +96,7 @@ input[type=range]::-webkit-slider-thumb {
 
 input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; background: rgba(255,255,255,0.2); border-radius: 3px; }
 
-/* THEME GRID PICKER: 5 CỘT X 2 HÀNG */
+/* THEME GRID PICKER: 5 CỘT X 2 HÀNG GỌN GÀNG */
 .theme-grid-picker { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-top: 10px; justify-items: center; }
 .theme-chip {
     width: calc(100% - 3px);
@@ -121,14 +121,17 @@ input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; bac
     border-radius: 50%;
     background: #007aff;
     color: #ffffff;
-    font-size: 20px;
-    font-weight: bold;
+    font-size: 26px;
+    font-weight: 300;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     box-shadow: 0 2px 8px rgba(0, 122, 255, 0.4);
     transition: all 0.2s ease;
+}
+.theme-chip-more span {
+    margin-top: -2px; /* Cân chỉnh lại dấu + cho ngay giữa */
 }
 .theme-chip-more:active { transform: scale(0.9); }
 
