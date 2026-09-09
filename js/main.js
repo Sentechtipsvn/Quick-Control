@@ -4,31 +4,35 @@ const SUPPORTED_LANGS = [
     'hu-HU', 'id-ID', 'it-IT', 'ja', 'ko-KR', 'ms-MY', 'nb-NO', 'nl-NL', 
     'pl-PL', 'pt-BR', 'pt-PT', 'ro-RO', 'ru', 'sv-SE', 'sw-KE', 'th-TH', 
     'tr-TR', 'uk-UA', 'vi-VN', 'zh-CN', 'zh-TW'
-];[span_0](start_span)[span_0](end_span)
+];
 
 document.addEventListener("DOMContentLoaded", async () => {
     let userLang = navigator.language || navigator.userLanguage;
     if (!SUPPORTED_LANGS.includes(userLang)) userLang = 'en-US';
 
-    // HỖ TRỢ HIỂN THỊ NGƯỢC (RTL CHO TIẾNG Ả RẬP, PERSIAN)
-    const RTL_LANGS = ['ar', 'fa-IR'];
-    if (RTL_LANGS.includes(userLang)) {
+    // HỖ TRỢ RTL (ĐẢO NGƯỢC GIAO DIỆN) CHO TIẾNG Ả RẬP, PERSIAN
+    const RTL_LANGS = ['ar', 'fa-IR', 'he'];
+    if (RTL_LANGS.includes(userLang.split('-')[0]) || RTL_LANGS.includes(userLang)) {
         document.documentElement.setAttribute('dir', 'rtl');
     } else {
         document.documentElement.setAttribute('dir', 'ltr');
     }
 
-    let fallbackTranslations = {};
-    try {
-        const fbRes = await fetch(`Language/en-US.json`);
-        if (fbRes.ok) fallbackTranslations = await fbRes.json();
-    } catch (e) { console.warn("Missing English fallback"); }
+    // HÀM TỰ DÒ ĐƯỜNG DẪN: Chống lỗi trắng màn hình khi đẩy lên GitHub Pages
+    async function fetchWithCaseFallback(url1, url2) {
+        try {
+            let res = await fetch(url1);
+            if (res.ok) return await res.json();
+        } catch (e) {}
+        try {
+            let res2 = await fetch(url2);
+            if (res2.ok) return await res2.json();
+        } catch (e) {}
+        return null;
+    }
 
-    let userTranslations = {};
-    try {
-        const res = await fetch(`Language/${userLang}.json`);
-        if (res.ok) userTranslations = await res.json();
-    } catch (e) { console.warn(`Missing language: ${userLang}`); }
+    let fallbackTranslations = await fetchWithCaseFallback(`Language/en-US.json`, `language/en-US.json`) || {};
+    let userTranslations = await fetchWithCaseFallback(`Language/${userLang}.json`, `language/${userLang}.json`) || {};
 
     window.i18nData = { ...fallbackTranslations, ...userTranslations };
 
@@ -38,12 +42,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     try {
-        const dataRes = await fetch('Data/data.json'); 
-        const data = await dataRes.json();
-        const container = document.getElementById('control-panel');
+        // TỰ ĐỘNG THỬ TẢI DATA/DATA.JSON HOẶC data/data.json
+        const data = await fetchWithCaseFallback('Data/data.json', 'data/data.json');
         
+        if (!data || !data.buttons) {
+            console.error("Không tải được Data/data.json - Vui lòng kiểm tra lại cấu trúc thư mục Github.");
+            return; // Dừng lại ở đây nếu không có dữ liệu thay vì báo lỗi đỏ
+        }
+
+        const container = document.getElementById('control-panel');
         let renderArray = data.buttons;
         const savedOrder = localStorage.getItem('sttv_iconOrder');
+        
         if (savedOrder) {
             const orderIds = JSON.parse(savedOrder);
             renderArray = orderIds.map(id => data.buttons.find(b => b.id === id)).filter(b => b !== undefined);
@@ -109,5 +119,5 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         });
 
-    } catch (e) { console.error("Lỗi:", e); }
+    } catch (e) { console.error("Lỗi quá trình tải:", e); }
 });
