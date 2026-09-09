@@ -1,6 +1,6 @@
 {
   "app_title": "Quick Control",
-  "settings_title": "⚙️ Cài đặt",
+  "settings_title": "⚙️ CÀI ĐẶT",
   "btn_list": "Danh sách",
   "btn_grid": "Lưới",
   "btn_export": "Xuất",
@@ -39,7 +39,7 @@
   "lbl_frame_color": "Nền khung",
   "lbl_frame_bg_opacity": "Độ đậm nền",
   "lbl_svg_color": "Màu SVG",
-  "lbl_shadow_section": "🔘 Đổ Bóng",
+  "lbl_shadow_section": "🔘 ĐỔ BÓNG",
   "shadow_inset": "⚪️ Bóng Chìm",
   "shadow_outer": "⚪️ Bóng Ngoài",
   "shadow_soft": "⚪️ Mờ Diện Rộng",
