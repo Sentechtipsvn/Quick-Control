@@ -8,22 +8,23 @@
     <meta name="apple-mobile-web-app-title" content="Control Panel">
     <link rel="apple-touch-icon" href="icon.png">
     <title>Trung tâm điều khiển - Sentechtipvn</title>
-    <link rel="stylesheet" href="CSS/style.css?v=10.1">
+    <link rel="stylesheet" href="CSS/style.css?v=10.2">
 </head>
 <body>
 
-    <!-- MÀN HÌNH INTRO SPLIT REVEAL (CHẺ TRÁI / PHẢI) -->
+    <!-- MÀN HÌNH INTRO SPLIT REVEAL -->
     <div id="intro-screen">
         <div class="intro-half intro-left"></div>
         <div class="intro-half intro-right"></div>
         <div class="intro-content">
             <div class="apple-logo-wrapper">
-    <svg xmlns="http://www.w3.org/2000/svg" width="90" height="90" viewBox="0 0 24 24">
-        <path fill="currentColor" d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
-    </svg>
-</div>
+                <svg class="apple-svg" viewBox="0 0 52 64" width="85" height="85">
+                    <path fill="currentColor" d="M41.937 29.513c.07 7.552 6.625 10.065 6.698 10.097c-.056.178-1.047 3.582-3.454 7.098c-2.08 3.04-4.238 6.07-7.64 6.132c-3.34.061-4.415-1.982-8.235-1.982s-5.013 1.92-8.177 2.043c-3.282.125-5.782-3.287-7.88-6.316c-4.285-6.196-7.56-17.508-3.162-25.144c2.184-3.792 6.089-6.193 10.326-6.254c3.223-.062 6.266 2.168 8.236 2.168s5.667-2.682 9.554-2.288c1.627.068 6.194.657 9.127 4.95c-.236.147-5.45 3.182-5.393 9.496m-6.28-18.545C37.4 8.858 38.573 5.922 38.253 3c-2.512.101-5.55 1.674-7.352 3.782c-1.614 1.867-3.029 4.856-2.647 7.72c2.8.216 5.66-1.423 7.403-3.534"/>
+                </svg>
+            </div>
+            <!-- Bọc hiệu ứng chữ ngẫu nhiên -->
             <div class="intro-title-wrapper">
-                <div class="intro-title-wave">
+                <div class="intro-title-container" id="intro-text-wrapper">
                     <span>Q</span><span>u</span><span>i</span><span>c</span><span>k</span>
                     <span>&nbsp;</span>
                     <span>C</span><span>o</span><span>n</span><span>t</span><span>r</span><span>o</span><span>l</span>
@@ -155,16 +156,17 @@
             <div class="setting-group" style="position: relative;">
                 <label data-i18n="lbl_theme_frame">💠 Theme SVG <span class="badge-dot" id="badge-theme"></span></label>
                 <div class="theme-grid-picker">
-                <div class="theme-chip active" data-value="none"><span style="font-size: 18px;">❌</span></div>
-                <div class="theme-chip" data-value="Theme/Black-Colour.png"><img src="Theme/Black-Colour.png" alt="Black"></div>
-                <div class="theme-chip" data-value="Theme/Red-Colour.png"><img src="Theme/Red-Colour.png" alt="Red"></div>
-                <div class="theme-chip" data-value="Theme/Green-colour.png"><img src="Theme/Green-colour.png" alt="Green"></div>
-                <div class="theme-chip" data-value="Theme/Orange-colour.png"><img src="Theme/Orange-colour.png" alt="Orange"></div>
-                <div class="theme-chip" data-value="Theme/Purple-colour.png"><img src="Theme/Purple-colour.png" alt="Purple"></div>
-                <div class="theme-chip" data-value="Theme/Moss-green.png"><img src="Theme/Moss-green.png" alt="Moss"></div>
-                <div class="theme-chip" data-value="Theme/icon-Glass.png"><img src="Theme/icon-Glass.png" alt="Glass"></div>
-                <div class="theme-chip" data-value="Theme/Convex_glass.png"><img src="Theme/Convex_glass.png" alt="Convex glass"></div>
-                <div class="theme-chip-more" id="btn-more-themes"><span>+</span></div>
+                    <div class="theme-chip active" data-value="none"><span style="font-size: 18px;">❌</span></div>
+                    <div class="theme-chip" data-value="Theme/Black-Colour.png"><img src="Theme/Black-Colour.png" alt="Black"></div>
+                    <div class="theme-chip" data-value="Theme/Red-Colour.png"><img src="Theme/Red-Colour.png" alt="Red"></div>
+                    <div class="theme-chip" data-value="Theme/Green-colour.png"><img src="Theme/Green-colour.png" alt="Green"></div>
+                    <div class="theme-chip" data-value="Theme/Orange-colour.png"><img src="Theme/Orange-colour.png" alt="Orange"></div>
+                    
+                    <div class="theme-chip" data-value="Theme/Purple-colour.png"><img src="Theme/Purple-colour.png" alt="Purple"></div>
+                    <div class="theme-chip" data-value="Theme/Moss-green.png"><img src="Theme/Moss-green.png" alt="Moss"></div>
+                    <div class="theme-chip" data-value="Theme/icon-Glass.png"><img src="Theme/icon-Glass.png" alt="Glass"></div>
+                    <div class="theme-chip" data-value="Theme/icon-Siri.png"><img src="Theme/icon-Siri.png" alt="Siri"></div>
+                    <div class="theme-chip-more" id="btn-more-themes"><span>+</span></div>
                 </div>
                 <input type="hidden" id="val-theme-frame" value="none">
             </div>
@@ -201,30 +203,14 @@
         <button id="btn-info" class="info-btn">i</button>
     </div>
 
-    <!-- POPUP INFO -->
-    <div class="info-overlay" id="info-overlay"></div>
-    <div id="info-modal" class="info-modal macos-window">
-        <div class="macos-header">
-            <div class="mac-dot close-dot" id="close-info"></div>
-            <div class="mac-dot min-dot"></div>
-            <div class="mac-dot max-dot"></div>
-        </div>
-        <div class="macos-body">
-            <h3 style="margin-bottom: 12px; font-size: 26px;">
-                <a href="https://browse.shortcuty.app/user/Sentechtipvn" target="_blank" style="color: #007aff; text-decoration: none;">Sentechtipvn</a>
-            </h3>
-            <p class="info-desc" style="font-weight: 500; color: #444;">Bảng điều khiển Webclip nâng cao tích hợp giao diện kính mờ và hệ thống Live Knobs tuỳ biến, mang lại trải nghiệm chuyên nghiệp và đồng bộ tuyệt đối trên hệ sinh thái iOS.</p>
-        </div>
-    </div>
-
-    <!-- POPUP KHO GIAO DIỆN -->
+    <!-- POPUP KHO GIAO DIỆN CHÍNH (ĐẦY ĐỦ) -->
     <div class="info-overlay" id="theme-overlay"></div>
     <div id="theme-modal" class="macos-window" style="max-width: 320px;">
         <div class="macos-header">
             <div class="mac-dot close-dot" id="close-theme-modal"></div>
             <div style="font-size: 14px; font-weight: bold; margin-left: 10px; color: #333;">Kho Giao Diện</div>
         </div>
-        <div class="macos-body" style="padding: 20px;">
+        <div class="macos-body">
             <div class="theme-grid-picker full-grid">
                 <div class="theme-chip active" data-value="none"><span style="font-size: 18px;">❌</span></div>
                 <div class="theme-chip" data-value="Theme/Black-Colour.png"><img src="Theme/Black-Colour.png" alt="Black"></div>
@@ -234,9 +220,9 @@
                 <div class="theme-chip" data-value="Theme/Purple-colour.png"><img src="Theme/Purple-colour.png" alt="Purple"></div>
                 <div class="theme-chip" data-value="Theme/Moss-green.png"><img src="Theme/Moss-green.png" alt="Moss"></div>
                 <div class="theme-chip" data-value="Theme/icon-Glass.png"><img src="Theme/icon-Glass.png" alt="Glass"></div>
-                <div class="theme-chip" data-value="Theme/Convex_glass.png"><img src="Theme/Convex_glass.png" alt="Convex glass"></div>
                 <div class="theme-chip" data-value="Theme/icon-Glass2.png"><img src="Theme/icon-Glass2.png" alt="Glass 2"></div>
                 <div class="theme-chip" data-value="Theme/icon-Glass3.png"><img src="Theme/icon-Glass3.png" alt="Glass 3"></div>
+                <div class="theme-chip" data-value="Theme/icon-Siri.png"><img src="Theme/icon-Siri.png" alt="Siri"></div>
                 <div class="theme-chip" data-value="Theme/Black_button.png"><img src="Theme/Black_button.png" alt="Black button"></div>
                 <div class="theme-chip" data-value="Theme/icon-rainbow.png"><img src="Theme/icon-rainbow.png" alt="Rainbow"></div>
                 <div class="theme-chip" data-value="Theme/White_button.png"><img src="Theme/White_button.png" alt="White"></div>
@@ -244,12 +230,11 @@
                 <div class="theme-chip" data-value="Theme/Bubble_neon.png"><img src="Theme/Bubble_neon.png" alt="Bubble neon"></div>
                 <div class="theme-chip" data-value="Theme/Neon_rainbow.png"><img src="Theme/Neon_rainbow.png" alt="Neon rainbow"></div>
                 <div class="theme-chip" data-value="Theme/neon_black.png"><img src="Theme/neon_black.png" alt="neon black"></div>
-                <div class="theme-chip-more" id="btn-more-themes"><span>+</sp
             </div>
         </div>
     </div>
     
-    <script src="js/theme.js?v=10.1"></script>
-    <script src="js/main.js?v=10.1"></script>
+    <script src="js/theme.js?v=10.2"></script>
+    <script src="js/main.js?v=10.2"></script>
 </body>
 </html>
