@@ -1,4 +1,4 @@
-p:root {
+:root {
     --bg-main: #121b22; --text-color: #ffffff; --accent-color: #007aff;
     --icon-font-size: 14px; --icon-spacing: 0px; 
     --frame-size: 60px; --svg-size: 28px; --svg-opacity: 1; 
@@ -44,7 +44,7 @@ body.standard-mode .dev-only {
 .app-header { text-align: center; padding: 60px 0 20px 0; font-size: var(--title-size); font-weight: bold; letter-spacing: var(--title-spacing); text-shadow: none; transition: font-size 0.2s, letter-spacing 0.2s; }
 .label { font-size: var(--icon-font-size, 14px); font-weight: 500; letter-spacing: var(--icon-spacing, 0px); text-align: center; text-shadow: none; display: var(--label-display); transition: font-size 0.2s, letter-spacing 0.2s; }
 
-/* MÀN HÌNH INTRO SPLIT REVEAL (CHẺ TRÁI/PHẢI CHUẨN 3S) */
+/* MÀN HÌNH INTRO SPLIT REVEAL */
 #intro-screen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 99999; display: flex; justify-content: center; align-items: center; pointer-events: none; }
 .intro-half { position: absolute; top: 0; width: 50%; height: 100%; background: #000000; transition: transform 1.5s cubic-bezier(0.77, 0, 0.175, 1); z-index: 1; }
 .intro-left { left: 0; }
@@ -75,13 +75,13 @@ body.standard-mode .dev-only {
 .app-container { transition: transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 1s ease; }
 .app-container.intro-zoom { transform: scale(0.9); opacity: 0; }
 
-/* BONG BÓNG CON SỐ TRÊN NÚM SLIDER (TOOLTIP VALUE) */
+/* BONG BÓNG CON SỐ TRÊN NÚM SLIDER */
 .slider-item { position: relative; display: flex; align-items: center; margin-bottom: 8px; }
 .slider-label { width: 95px; font-size: 12px; opacity: 0.8; }
 .slider-tooltip { position: absolute; right: 0; top: -22px; background: #007aff; color: #ffffff; font-size: 11px; font-weight: bold; padding: 2px 7px; border-radius: 10px; opacity: 0; transform: translateY(5px); transition: opacity 0.2s, transform 0.2s; pointer-events: none; z-index: 10; }
 .slider-tooltip.show { opacity: 1; transform: translateY(0); }
 
-/* DẤU CHẤM ĐỎ THÔNG BÁO (BADGE NOTIFICATION) */
+/* DẤU CHẤM ĐỎ THÔNG BÁO */
 .badge-dot { display: inline-block; width: 8px; height: 8px; background-color: #ff3b30; border-radius: 50%; margin-left: 5px; vertical-align: middle; box-shadow: 0 0 6px #ff3b30; animation: badgePulse 1.5s infinite; }
 @keyframes badgePulse { 0% { opacity: 0.5; } 100% { opacity: 1; transform: scale(1.2); } }
 .badge-dot.hidden { display: none !important; }
@@ -117,7 +117,7 @@ body.standard-mode .dev-only {
 .app-container.list-mode.list-frame-active .icon-box svg { fill: var(--svg-color); color: var(--svg-color); width: var(--svg-size); height: var(--svg-size); opacity: var(--svg-opacity); }
 
 /* WIDGET TRÌNH PHÁT NHẠC */
-.media-player-widget { margin: 10px auto 30px auto; width: var(--media-width); max-width: 400px; padding: 20px; border-radius: 24px; display: flex; flex-direction: column; gap: 22px; background: rgba(var(--media-bg-rgb), var(--media-bg-opacity)); box-shadow: var(--btn-shadow); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+.media-player-widget { margin: 10px auto 30px auto; width: var(--media-width); max-width: 400px; padding: 20px; border-radius: 24px; display: flex; flex-direction: column; gap: 22px; background: rgba(var(--media-bg-rgb), var(--media-bg-opacity)); box-shadow: var(--btn-shadow); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
 .media-controls { display: flex; align-items: center; justify-content: center; gap: 30px; }
 .media-btn { border: none; background: var(--media-btn-color); color: var(--media-svg-color); border-radius: 50%; width: var(--media-btn-size); height: var(--media-btn-size); display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: var(--btn-shadow); transition: all 0.15s ease; }
 .media-btn.play-main { width: var(--media-btn-play); height: var(--media-btn-play); }
@@ -126,7 +126,7 @@ body.standard-mode .dev-only {
 .sys-slider-container { display: flex; align-items: center; gap: 12px; color: var(--media-svg-color); opacity: 0.8; }
 .sys-slider { -webkit-appearance: none; flex: 1; height: 8px !important; border-radius: 4px; background: rgba(0, 0, 0, 0.3) !important; box-shadow: inset 1px 1px 3px rgba(0,0,0,0.5), inset -1px -1px 3px rgba(255,255,255,0.1) !important; outline: none; }
 
-/* Nút Settings Trong suốt */
+/* Nút Settings */
 .settings-fab { position: fixed; bottom: 25px; right: 25px; width: 45px; height: 45px; border-radius: 50%; background: transparent; border: none; box-shadow: none; z-index: 100; cursor: pointer; overflow: hidden; padding: 0; transition: transform 0.2s ease; }
 .settings-fab img { width: 100%; height: 100%; object-fit: contain; }
 .settings-fab:active { transform: scale(0.9); }
@@ -156,8 +156,35 @@ input[type=range]::-webkit-slider-thumb {
 }
 input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; background: rgba(255,255,255,0.2); border-radius: 3px; }
 
-/* THEME GRID PICKER */
-.theme-grid-picker { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-top: 10px; max-height: 96px; overflow-y: auto; justify-items: center; }
+/* ========================================= */
+/* THEME GRID PICKER: TRONG BẢNG CÀI ĐẶT (2 HÀNG x 5 CỘT) */
+/* ========================================= */
+.settings-drawer .theme-grid-picker { 
+    display: grid; 
+    grid-template-columns: repeat(5, 1fr); 
+    grid-template-rows: repeat(2, 44px); 
+    gap: 12px; 
+    margin-top: 10px; 
+    justify-items: center; 
+    align-items: center;
+    overflow: hidden; 
+}
+
+/* ========================================= */
+/* THEME GRID PICKER: TRONG POPUP KHO GIAO DIỆN (HIỂN THỊ HẾT) */
+/* ========================================= */
+.macos-window .full-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 12px;
+    max-height: 280px;
+    overflow-y: auto;
+    padding: 5px;
+    justify-items: center;
+    align-items: center;
+}
+
+/* CHIP GIAO DIỆN CHUNG CHO CẢ 2 KHU VỰC */
 .theme-chip {
     width: calc(100% - 3px); max-width: 44px; aspect-ratio: 1; border-radius: 10px; 
     background: transparent; border: 2px solid transparent; 
@@ -167,6 +194,7 @@ input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; bac
 .theme-chip img { width: 100%; height: 100%; object-fit: contain; pointer-events: none; border-radius: inherit; }
 .theme-chip.active { border-color: var(--accent-color); box-shadow: 0 0 12px rgba(0, 122, 255, 0.4); background: rgba(0, 122, 255, 0.1); }
 
+/* NÚT DẤU + MÀU XANH TRONG CÀI ĐẶT */
 .theme-chip-more {
     width: calc(100% - 3px); max-width: 44px; aspect-ratio: 1; border-radius: 50%;
     background: #007aff; color: #ffffff; font-size: 26px; font-weight: 300;
@@ -192,7 +220,6 @@ input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; bac
 .section-title { margin: 20px 0 10px; font-size: 16px; color: var(--accent-color); border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; }
 .slider-item { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
 .slider-item input[type=range] { flex: 1; }
-input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; }
 .slider-item input[type="color"] { height: 28px; padding: 0; border: none; background: none; border-radius: 5px; cursor: pointer; }
 .layout-buttons { display: flex; gap: 10px; }
 .layout-btn { flex: 1; padding: 10px 0; background: rgba(255,255,255,0.1); border: 1px solid transparent; color: white; border-radius: 8px; cursor: pointer; font-weight: 500; transition: all 0.2s; }
@@ -219,7 +246,7 @@ select { width: 100%; padding: 10px; border-radius: 8px; background: rgba(0,0,0,
 .macos-header { background: #f1f1f1; padding: 12px 15px; display: flex; gap: 8px; align-items: center; justify-content: flex-start; }
 .mac-dot { width: 13px; height: 13px; border-radius: 50%; cursor: pointer; box-shadow: inset 0 0 4px rgba(0,0,0,0.1); }
 .close-dot { background: #ff5f56; } .min-dot { background: #ffbd2e; } .max-dot { background: #27c93f; }
-.macos-body { padding: 30px 25px; text-align: center; }
+.macos-body { padding: 20px 15px 30px 15px; text-align: center; }
 .info-desc { font-size: 15px; margin-top: 15px; line-height: 1.6; }
 
 /* ANIMATION POPUP CÀI ĐẶT */
