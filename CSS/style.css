@@ -152,11 +152,11 @@ input[type=range]::-webkit-slider-thumb, .sys-slider::-webkit-slider-thumb {
 }
 /* 1. Các thanh trượt chung trong bảng Cài Đặt (nhận icon-dot.png) */
 input[type=range]::-webkit-slider-thumb {
-    background-image: url('../Theme/icon-dot.png') !important; margin-top: -9.5px !important;
+    background-image: url('Theme/icon-dot.png') !important; margin-top: -9.5px !important;
 }
 /* 2. Thanh trượt mâm nhạc ngoài Màn Hình Chính (nhận icon-control.png) */
 .sys-slider::-webkit-slider-thumb {
-    background-image: url('../Theme/icon-control.png') !important; margin-top: -8.5px !important;
+    background-image: url('Theme/icon-control.png') !important; margin-top: -8.5px !important;
 }
 input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; background: rgba(255,255,255,0.2); border-radius: 3px; }
 
