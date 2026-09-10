@@ -1,3 +1,8 @@
+// =========================================================
+// CÔNG TẮC CHUYỂN ĐỔI BẢN DEV (SẾP) & BẢN CỘNG ĐỒNG (STANDARD)
+// true  : Mở 100% công cụ phối màu, đổ bóng, chỉnh nhạc (Bản Cá Nhân)
+// false : Ẩn thanh thủ công, chỉ giữ bản ăn sẵn 1-Chạm (Bản Cộng Đồng)
+// =========================================================
 const DEV_MODE = true; 
 
 const SHADOW_MODES = [
@@ -118,16 +123,11 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // CẢI TIẾN GIA TỐC KẾ 3D: ICON CHỈ LẮC LƯ NHẸ, KHÔNG BỊ VĂNG RA KHỎI KHUNG
     function handleOrientation(e) {
         if (!document.getElementById('toggle-parallax').checked) return;
         let x = e.gamma; let y = e.beta; 
-        
-        // Khóa cứng góc nghiêng tối đa
         if (x > 45) x = 45; if (x < -45) x = -45;
         if (y > 45) y = 45; if (y < -45) y = -45;
-        
-        // Chia tỉ lệ cực êm (/10) để icon lơ lửng nhẹ nhàng bên trong frame
         root.style.setProperty('--tilt-x', (x / 10) + 'px'); 
         root.style.setProperty('--tilt-y', (y / 10) + 'px');
     }
@@ -339,9 +339,11 @@ document.addEventListener("DOMContentLoaded", () => {
         return btoa(unescape(encodeURIComponent(JSON.stringify(fullConfig)))); 
     }
 
-    // NÂNG CẤP BỘ GIẢI MÃ: NHẬN CẢ MÃ ĐỜI CŨ (ARRAY) LẪN MÃ ĐỜI MỚI (JSON)
     function unpackConfig(base64Str) {
         try {
+            // FIX LỖI TỐI MÀN HÌNH: Xóa ngay class adjusting khi đổi preset
+            drawerEl.classList.remove('adjusting');
+
             const decodedStr = decodeURIComponent(escape(atob(base64Str)));
             let config;
             try {
@@ -350,14 +352,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 alert("Mã không hợp lệ!"); return;
             }
             
-            // XÓA ẢNH NỀN TẠM THỜI -> TRẢ VỀ MÀU NỀN CHUẨN
             localStorage.removeItem('sttv_customBgImage');
             root.style.setProperty('--bg-image', 'none');
             const uploadBgInput = document.getElementById('upload-bg');
             if (uploadBgInput) uploadBgInput.value = "";
 
             if (Array.isArray(config)) {
-                // ---> TRƯỜNG HỢP 1: MÃ CŨ (Ví dụ: Chủ đề VietOS, Neon, Dark...)
                 if (config.length < 13) throw 'Lỗi mã cũ';
                 if(config[0]) { document.getElementById('val-bg-main').value = config[0]; root.style.setProperty('--bg-main', config[0]); }
                 document.getElementById('val-text-color').value = config[1];
@@ -413,7 +413,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     document.getElementById('val-media-svg-color').value = config[27];
                 }
             } else {
-                // ---> TRƯỜNG HỢP 2: MÃ MỚI (JSON OBJECT MÀ SẾP XUẤT RA TỪ BẢN MỚI NÀY)
                 if (config.bgMain) {
                     document.getElementById('val-bg-main').value = config.bgMain;
                     root.style.setProperty('--bg-main', config.bgMain);
