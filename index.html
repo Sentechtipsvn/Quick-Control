@@ -8,11 +8,10 @@
     <meta name="apple-mobile-web-app-title" content="Control Panel">
     <link rel="apple-touch-icon" href="icon.png">
     <title>Trung tâm điều khiển - Sentechtipvn</title>
-    <link rel="stylesheet" href="CSS/style.css?v=10.2">
+    <link rel="stylesheet" href="CSS/style.css?v=10.3">
 </head>
 <body>
 
-    <!-- MÀN HÌNH INTRO SPLIT REVEAL -->
     <div id="intro-screen">
         <div class="intro-half intro-left"></div>
         <div class="intro-half intro-right"></div>
@@ -22,7 +21,6 @@
                     <path fill="currentColor" d="M41.937 29.513c.07 7.552 6.625 10.065 6.698 10.097c-.056.178-1.047 3.582-3.454 7.098c-2.08 3.04-4.238 6.07-7.64 6.132c-3.34.061-4.415-1.982-8.235-1.982s-5.013 1.92-8.177 2.043c-3.282.125-5.782-3.287-7.88-6.316c-4.285-6.196-7.56-17.508-3.162-25.144c2.184-3.792 6.089-6.193 10.326-6.254c3.223-.062 6.266 2.168 8.236 2.168s5.667-2.682 9.554-2.288c1.627.068 6.194.657 9.127 4.95c-.236.147-5.45 3.182-5.393 9.496m-6.28-18.545C37.4 8.858 38.573 5.922 38.253 3c-2.512.101-5.55 1.674-7.352 3.782c-1.614 1.867-3.029 4.856-2.647 7.72c2.8.216 5.66-1.423 7.403-3.534"/>
                 </svg>
             </div>
-            <!-- Bọc hiệu ứng chữ ngẫu nhiên -->
             <div class="intro-title-wrapper">
                 <div class="intro-title-container" id="intro-text-wrapper">
                     <span>Q</span><span>u</span><span>i</span><span>c</span><span>k</span>
@@ -33,7 +31,6 @@
         </div>
     </div>
 
-    <!-- MAIN APP CONTAINER -->
     <div class="app-container grid-mode" id="main-container">
         <div class="app-header" data-i18n="app_title">Quick Control</div>
         <div class="grid-layout" id="control-panel"></div>
@@ -203,7 +200,6 @@
         <button id="btn-info" class="info-btn">i</button>
     </div>
 
-    <!-- POPUP KHO GIAO DIỆN CHÍNH (ĐẦY ĐỦ) -->
     <div class="info-overlay" id="theme-overlay"></div>
     <div id="theme-modal" class="macos-window" style="max-width: 320px;">
         <div class="macos-header">
@@ -233,8 +229,45 @@
             </div>
         </div>
     </div>
+
+    <div class="info-overlay" id="info-overlay"></div>
+    <div id="info-modal" class="macos-window">
+        <div class="macos-header">
+            <div class="mac-dot close-dot" id="close-info"></div>
+            <div style="font-size: 14px; font-weight: bold; margin-left: 10px; color: #333;">Thông tin ứng dụng</div>
+        </div>
+        <div class="macos-body">
+            <div class="info-desc">
+                <h3 style="font-size: 18px; margin-bottom: 8px;">Quick Control</h3>
+                <p style="font-size: 13px; color: #666;">Phiên bản 10.3 — Sentechtipvn</p>
+                <p style="margin-top: 14px; text-align: left;">
+                    Ứng dụng điều khiển nhanh dành cho iOS thông qua <b>Shortcuts</b>.<br><br>
+                    • Tên Shortcut cần đặt: <code style="background:#eee; padding:2px 6px; border-radius:4px;">QuickControl</code><br>
+                    • Định dạng input: <code style="background:#eee; padding:2px 6px; border-radius:4px;">text</code><br>
+                    • Ví dụ: <code style="background:#eee; padding:2px 6px; border-radius:4px;">media_playpause</code>, <code style="background:#eee; padding:2px 6px; border-radius:4px;">vol_50</code>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="info-overlay" id="config-overlay"></div>
+    <div id="config-modal" class="macos-window">
+        <div class="macos-header">
+            <div class="mac-dot close-dot" id="close-config"></div>
+            <div id="config-modal-title" style="font-size: 14px; font-weight: bold; margin-left: 10px; color: #333;">Cấu hình</div>
+        </div>
+        <div class="macos-body">
+            <textarea id="config-textarea" 
+                style="width: 100%; height: 140px; padding: 10px; border-radius: 8px; border: 1px solid #ccc; font-family: ui-monospace, monospace; font-size: 11px; resize: none; box-sizing: border-box; word-break: break-all;"
+                placeholder="Mã cấu hình..."></textarea>
+            <div style="display: flex; gap: 8px; margin-top: 12px;">
+                <button id="btn-config-copy" style="flex: 1; padding: 10px; background: #007aff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;">📋 Sao chép</button>
+                <button id="btn-config-apply" style="flex: 1; padding: 10px; background: #34c759; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;">✅ Áp dụng</button>
+            </div>
+        </div>
+    </div>
     
-    <script src="js/theme.js?v=10.2"></script>
-    <script src="js/main.js?v=10.2"></script>
+    <script src="js/theme.js?v=10.3"></script>
+    <script src="js/main.js?v=10.3"></script>
 </body>
 </html>
