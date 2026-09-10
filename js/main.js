@@ -10,7 +10,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     let userLang = navigator.language || navigator.userLanguage;
     if (!SUPPORTED_LANGS.includes(userLang)) userLang = 'en-US';
 
-    // HỖ TRỢ RTL (ĐẢO NGƯỢC GIAO DIỆN) CHO TIẾNG Ả RẬP, PERSIAN
     const RTL_LANGS = ['ar', 'fa-IR', 'he'];
     if (RTL_LANGS.includes(userLang.split('-')[0]) || RTL_LANGS.includes(userLang)) {
         document.documentElement.setAttribute('dir', 'rtl');
@@ -18,7 +17,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.documentElement.setAttribute('dir', 'ltr');
     }
 
-    // HÀM TỰ DÒ ĐƯỜNG DẪN: Chống lỗi trắng màn hình khi đẩy lên GitHub Pages
     async function fetchWithCaseFallback(url1, url2) {
         try {
             let res = await fetch(url1);
@@ -42,12 +40,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     try {
-        // TỰ ĐỘNG THỬ TẢI DATA/DATA.JSON HOẶC data/data.json
         const data = await fetchWithCaseFallback('Data/data.json', 'data/data.json');
         
         if (!data || !data.buttons) {
-            console.error("Không tải được Data/data.json - Vui lòng kiểm tra lại cấu trúc thư mục Github.");
-            return; // Dừng lại ở đây nếu không có dữ liệu thay vì báo lỗi đỏ
+            console.error("Không tải được Data/data.json");
+            return;
         }
 
         const container = document.getElementById('control-panel');
@@ -77,21 +74,23 @@ document.addEventListener("DOMContentLoaded", async () => {
         let editMode = false;
         let selectedSwapNode = null;
         
-        btnEditLayout.addEventListener('click', () => {
-            editMode = !editMode;
-            document.body.classList.toggle('edit-mode', editMode);
-            btnEditLayout.style.background = editMode ? 'red' : '';
-            btnEditLayout.innerHTML = editMode ? 'Xong' : '🔄 Sắp xếp';
-            
-            if (!editMode && selectedSwapNode) {
-                selectedSwapNode.classList.remove('selected-swap');
-                selectedSwapNode = null;
-            }
+        if (btnEditLayout) {
+            btnEditLayout.addEventListener('click', () => {
+                editMode = !editMode;
+                document.body.classList.toggle('edit-mode', editMode);
+                btnEditLayout.style.background = editMode ? 'red' : '';
+                btnEditLayout.innerHTML = editMode ? 'Xong' : '🔄 Sắp xếp';
+                
+                if (!editMode && selectedSwapNode) {
+                    selectedSwapNode.classList.remove('selected-swap');
+                    selectedSwapNode = null;
+                }
 
-            document.querySelectorAll('.glass-btn').forEach(b => {
-                b.onclick = editMode ? (e) => e.preventDefault() : null;
+                document.querySelectorAll('.glass-btn').forEach(b => {
+                    b.onclick = editMode ? (e) => e.preventDefault() : null;
+                });
             });
-        });
+        }
 
         container.addEventListener('click', (e) => {
             if (!editMode) return;
@@ -115,7 +114,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 selectedSwapNode = null;
                 
                 const newOrder = Array.from(container.querySelectorAll('.glass-btn')).map(b => b.dataset.id);
-                localStorage.setItem('sttv_iconOrder', JSON.stringify(newOrder));
+                try { localStorage.setItem('sttv_iconOrder', JSON.stringify(newOrder)); } catch(err) {}
             }
         });
 
