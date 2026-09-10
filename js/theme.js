@@ -111,6 +111,15 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    function applyShadowI18n() {
+        if (!window.i18nData) return;
+        document.querySelectorAll('#shadow-controls [data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (window.i18nData[key]) el.innerText = window.i18nData[key];
+        });
+    }
+    applyShadowI18n();
+
     document.querySelectorAll('.theme-chip').forEach(chip => {
         chip.addEventListener('click', () => {
             document.querySelectorAll('.theme-chip').forEach(c => c.classList.remove('active'));
@@ -357,13 +366,13 @@ document.addEventListener("DOMContentLoaded", () => {
         if (mode === 'export') {
             configTextarea.value = packConfig();
             configTextarea.readOnly = true;
-            configModalTitle.innerText = '📤 Xuất cấu hình';
+            configModalTitle.innerText = (window.i18nData && window.i18nData['modal_config_title_export']) || '📤 Xuất cấu hình';
             btnConfigCopy.style.display = 'block';
             btnConfigApply.style.display = 'none';
         } else {
             configTextarea.value = '';
             configTextarea.readOnly = false;
-            configModalTitle.innerText = '📥 Nhập cấu hình';
+            configModalTitle.innerText = (window.i18nData && window.i18nData['modal_config_title_import']) || '📥 Nhập cấu hình';
             btnConfigCopy.style.display = 'none';
             btnConfigApply.style.display = 'block';
         }
