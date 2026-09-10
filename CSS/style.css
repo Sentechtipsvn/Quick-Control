@@ -42,7 +42,7 @@ body.standard-mode .dev-only {
     display: none !important;
 }
 
-.app-header { text-align: center; padding: 60px 0 20px 0; font-size: var(--title-size); font-weight: bold; letter-spacing: var(--title-spacing); text-shadow: 0 2px 5px rgba(0,0,0,0.5); transition: font-size 0.2s, letter-spacing 0.2s; }
+.app-header { text-align: center; padding: 60px 0 20px 0; font-size: var(--title-size); font-weight: bold; letter-spacing: var(--title-spacing); text-shadow: none; transition: font-size 0.2s, letter-spacing 0.2s; }
 
 /* Grid Mode */
 .grid-layout { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; padding: 20px; max-width: 600px; margin: 0 auto; position: relative; }
@@ -55,7 +55,7 @@ body.standard-mode .dev-only {
 }
 .icon-box svg { width: var(--svg-size); height: var(--svg-size); fill: var(--svg-color); color: var(--svg-color); opacity: var(--svg-opacity); position: relative; z-index: 2; transform: perspective(500px) translate3d(calc(var(--tilt-x) * 1.5), calc(var(--tilt-y) * 1.5), 10px); }
 .glass-btn:active .icon-box { transform: scale(0.92); }
-.label { font-size: var(--icon-font-size, 14px); font-weight: 500; letter-spacing: var(--icon-spacing, 0px); text-align: center; text-shadow: 0 1px 3px rgba(0,0,0,0.5); display: var(--label-display); transition: font-size 0.2s, letter-spacing 0.2s; }
+.label { font-size: var(--icon-font-size, 14px); font-weight: 500; letter-spacing: var(--icon-spacing, 0px); text-align: center; text-shadow: none; display: var(--label-display); transition: font-size 0.2s, letter-spacing 0.2s; }
 .glass-active .icon-box { background: rgba(255,255,255,0.15); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.2); }
 .glass-active.list-mode .glass-btn { background: rgba(0,0,0,0.3); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); }
 
