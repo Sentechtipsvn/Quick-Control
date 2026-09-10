@@ -6,6 +6,19 @@ const SUPPORTED_LANGS = [
     'tr-TR', 'uk-UA', 'vi-VN', 'zh-CN', 'zh-TW'
 ];
 
+function safeSetItem(key, value) {
+    try {
+        localStorage.setItem(key, value);
+        return true;
+    } catch (e) {
+        console.warn('localStorage.setItem failed:', key, e);
+        return false;
+    }
+}
+function safeGetItem(key) {
+    try { return localStorage.getItem(key); } catch (e) { return null; }
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
     let userLang = navigator.language || navigator.userLanguage;
     if (!SUPPORTED_LANGS.includes(userLang)) userLang = 'en-US';
@@ -34,38 +47,56 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     window.i18nData = { ...fallbackTranslations, ...userTranslations };
 
-    document.querySelectorAll('[data-i18n]').forEach(element => {
-        const key = element.getAttribute('data-i18n');
-        if(window.i18nData[key]) element.innerText = window.i18nData[key];
-    });
+    function applyI18n() {
+        document.querySelectorAll('[data-i18n]').forEach(element => {
+            const key = element.getAttribute('data-i18n');
+            if (window.i18nData[key]) element.innerText = window.i18nData[key];
+        });
+
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+            const key = element.getAttribute('data-i18n-placeholder');
+            if (window.i18nData[key]) element.placeholder = window.i18nData[key];
+        });
+    }
+
+    applyI18n();
+
+    window.applyI18n = applyI18n;
 
     try {
         const data = await fetchWithCaseFallback('Data/data.json', 'data/data.json');
         
         if (!data || !data.buttons) {
-            console.error("Không tải được Data/data.json");
+            console.error("Không tải được Data/data.json - Vui lòng kiểm tra lại cấu trúc thư mục Github.");
             return;
         }
 
         const container = document.getElementById('control-panel');
+        if (!container) return;
+
         let renderArray = data.buttons;
-        const savedOrder = localStorage.getItem('sttv_iconOrder');
+        const savedOrder = safeGetItem('sttv_iconOrder');
         
         if (savedOrder) {
-            const orderIds = JSON.parse(savedOrder);
-            renderArray = orderIds.map(id => data.buttons.find(b => b.id === id)).filter(b => b !== undefined);
-            data.buttons.forEach(b => { if(!renderArray.includes(b)) renderArray.push(b); });
+            try {
+                const orderIds = JSON.parse(savedOrder);
+                renderArray = orderIds.map(id => data.buttons.find(b => b.id === id)).filter(b => b !== undefined);
+                data.buttons.forEach(b => { if (!renderArray.includes(b)) renderArray.push(b); });
+            } catch (e) {
+                console.warn('Lỗi parse sttv_iconOrder:', e);
+                renderArray = data.buttons;
+            }
         }
 
         if (renderArray && renderArray.length > 0) {
             renderArray.forEach(item => {
                 const btn = document.createElement('a');
                 btn.className = 'glass-btn';
-                btn.href = item.action;
+                btn.href = item.action || '#';
                 btn.dataset.id = item.id;
                 
                 const localizedTitle = window.i18nData[item.title_key] || item.title || 'Phím tắt';
-                btn.innerHTML = `<div class="icon-box">${item.svg}</div><span class="label">${localizedTitle}</span>`;
+                btn.innerHTML = `<div class="icon-box">${item.svg || ''}</div><span class="label">${localizedTitle}</span>`;
                 container.appendChild(btn);
             });
         }
@@ -79,7 +110,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 editMode = !editMode;
                 document.body.classList.toggle('edit-mode', editMode);
                 btnEditLayout.style.background = editMode ? 'red' : '';
-                btnEditLayout.innerHTML = editMode ? 'Xong' : '🔄 Sắp xếp';
+
+                const editLabel = window.i18nData?.['btn_edit_layout'] || 'Sắp xếp';
+                btnEditLayout.innerHTML = editMode ? 'Xong' : `🔄 <span>${editLabel}</span>`;
                 
                 if (!editMode && selectedSwapNode) {
                     selectedSwapNode.classList.remove('selected-swap');
@@ -114,9 +147,19 @@ document.addEventListener("DOMContentLoaded", async () => {
                 selectedSwapNode = null;
                 
                 const newOrder = Array.from(container.querySelectorAll('.glass-btn')).map(b => b.dataset.id);
-                try { localStorage.setItem('sttv_iconOrder', JSON.stringify(newOrder)); } catch(err) {}
+                safeSetItem('sttv_iconOrder', JSON.stringify(newOrder));
             }
         });
 
-    } catch (e) { console.error("Lỗi quá trình tải:", e); }
+        const observer = new MutationObserver(() => {
+            document.querySelectorAll('#control-panel [data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (window.i18nData[key]) element.innerText = window.i18nData[key];
+            });
+        });
+        observer.observe(container, { childList: true, subtree: true });
+
+    } catch (e) { 
+        console.error("Lỗi quá trình tải:", e); 
+    }
 });
