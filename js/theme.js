@@ -1,7 +1,5 @@
 // =========================================================
 // CÔNG TẮC CHUYỂN ĐỔI BẢN DEV (SẾP) & BẢN CỘNG ĐỒNG (STANDARD)
-// true  : Mở 100% công cụ phối màu, đổ bóng, chỉnh nhạc (Bản Cá Nhân)
-// false : Ẩn thanh thủ công, chỉ giữ bản ăn sẵn 1-Chạm (Bản Cộng Đồng)
 // =========================================================
 const DEV_MODE = true; 
 
@@ -16,11 +14,48 @@ const SHADOW_MODES = [
 document.addEventListener("DOMContentLoaded", () => {
     const root = document.documentElement;
     const shadowContainer = document.getElementById('shadow-controls');
+    const mainContainer = document.getElementById('main-container');
+    const introScreen = document.getElementById('intro-screen');
+
+    // MÀN HÌNH INTRO SPLIT REVEAL: ĐẢM BẢO RENDER XONG MỚI BUNG
+    mainContainer.classList.add('intro-zoom');
     
-    // GẮN CHẾ ĐỘ ẨN BẰNG CSS (!important) ĐỂ KHÔNG BỊ TRƯỢT
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            introScreen.classList.add('dismiss');
+            mainContainer.classList.remove('intro-zoom');
+            setTimeout(() => { introScreen.style.display = 'none'; }, 600);
+        }, 400);
+    });
+
     if (!DEV_MODE) {
         document.body.classList.add('standard-mode');
     }
+
+    // QUẢN LÝ DẤU CHẤM ĐỎ THÔNG BÁO (BADGE NOTIFICATION)
+    const badgePreset = document.getElementById('badge-preset');
+    const badgeTheme = document.getElementById('badge-theme');
+    
+    if (localStorage.getItem('sttv_seen_preset_badge') === 'true') badgePreset?.classList.add('hidden');
+    if (localStorage.getItem('sttv_seen_theme_badge') === 'true') badgeTheme?.classList.add('hidden');
+
+    // THÊM BONG BÓNG CON SỐ CHO TẤT CẢ THANH TRƯỢT
+    document.querySelectorAll('.slider-item').forEach(item => {
+        const input = item.querySelector('input[type="range"]');
+        if (input) {
+            const tooltip = document.createElement('div');
+            tooltip.className = 'slider-tooltip';
+            tooltip.innerText = input.value;
+            item.appendChild(tooltip);
+
+            input.addEventListener('input', (e) => {
+                tooltip.innerText = e.target.value;
+                tooltip.classList.add('show');
+            });
+            input.addEventListener('change', () => tooltip.classList.remove('show'));
+            input.addEventListener('blur', () => tooltip.classList.remove('show'));
+        }
+    });
 
     // TẠO CÁC MỤC ĐỔ BÓNG
     SHADOW_MODES.forEach(mode => {
@@ -49,6 +84,9 @@ document.addEventListener("DOMContentLoaded", () => {
             const val = chip.dataset.value;
             document.querySelectorAll(`.theme-chip[data-value="${val}"]`).forEach(c => c.classList.add('active'));
             document.getElementById('val-theme-frame').value = val;
+            
+            // Xóa dấu chấm đỏ Theme
+            if (badgeTheme) { badgeTheme.classList.add('hidden'); localStorage.setItem('sttv_seen_theme_badge', 'true'); }
             resetPresetToCustom();
             updateLiveVariables();
         });
@@ -79,6 +117,8 @@ document.addEventListener("DOMContentLoaded", () => {
     presetSelect.addEventListener('change', (e) => {
         const val = e.target.value;
         localStorage.setItem('sttv_activePreset', val);
+        // Xóa dấu chấm đỏ Preset khi chọn
+        if (badgePreset) { badgePreset.classList.add('hidden'); localStorage.setItem('sttv_seen_preset_badge', 'true'); }
         if (val !== 'none') unpackConfig(val);
     });
 
@@ -341,16 +381,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function unpackConfig(base64Str) {
         try {
-            // FIX LỖI TỐI MÀN HÌNH: Xóa ngay class adjusting khi đổi preset
             drawerEl.classList.remove('adjusting');
-
             const decodedStr = decodeURIComponent(escape(atob(base64Str)));
             let config;
-            try {
-                config = JSON.parse(decodedStr);
-            } catch(e) {
-                alert("Mã không hợp lệ!"); return;
-            }
+            try { config = JSON.parse(decodedStr); } catch(e) { alert("Mã không hợp lệ!"); return; }
             
             localStorage.removeItem('sttv_customBgImage');
             root.style.setProperty('--bg-image', 'none');
@@ -413,10 +447,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     document.getElementById('val-media-svg-color').value = config[27];
                 }
             } else {
-                if (config.bgMain) {
-                    document.getElementById('val-bg-main').value = config.bgMain;
-                    root.style.setProperty('--bg-main', config.bgMain);
-                }
+                if (config.bgMain) { document.getElementById('val-bg-main').value = config.bgMain; root.style.setProperty('--bg-main', config.bgMain); }
                 if (config.textColor) document.getElementById('val-text-color').value = config.textColor;
                 if (config.layoutMode) setLayoutMode(config.layoutMode);
                 if (config.listBg) document.getElementById('val-list-bg').value = config.listBg;
@@ -522,9 +553,8 @@ document.addEventListener("DOMContentLoaded", () => {
         root.style.setProperty('--label-display', document.getElementById('toggle-hide-labels').checked ? 'none' : 'block');
         
         const currentLayout = localStorage.getItem('sttv_layoutMode') || 'grid';
-        const mainContainer = document.getElementById('main-container');
-        if (currentLayout === 'list') { mainContainer.classList.add('list-mode'); mainContainer.classList.remove('grid-mode'); } 
-        else { mainContainer.classList.remove('list-mode'); mainContainer.classList.add('grid-mode'); }
+        if (currentLayout === 'list') { btnList.classList.add('active'); btnGrid.classList.remove('active'); } 
+        else { btnGrid.classList.add('active'); btnList.classList.remove('active'); }
 
         const isListFrame = document.getElementById('toggle-list-frame').checked;
         if (isListFrame) mainContainer.classList.add('list-frame-active'); else mainContainer.classList.remove('list-frame-active');
@@ -631,8 +661,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         const initLayout = localStorage.getItem('sttv_layoutMode') || 'grid';
-        const btnList = document.getElementById('btn-layout-list');
-        const btnGrid = document.getElementById('btn-layout-grid');
         if (initLayout === 'list') { btnList.classList.add('active'); btnGrid.classList.remove('active'); } 
         else { btnGrid.classList.add('active'); btnList.classList.remove('active'); }
 
