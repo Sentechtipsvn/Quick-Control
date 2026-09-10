@@ -1,6 +1,3 @@
-// =========================================================
-// CÔNG TẮC CHUYỂN ĐỔI BẢN DEV (SẾP) & BẢN CỘNG ĐỒNG (STANDARD)
-// =========================================================
 const DEV_MODE = true; 
 
 const SHADOW_MODES = [
@@ -16,51 +13,77 @@ document.addEventListener("DOMContentLoaded", () => {
     const shadowContainer = document.getElementById('shadow-controls');
     const mainContainer = document.getElementById('main-container');
     const introScreen = document.getElementById('intro-screen');
+    const introTextWrapper = document.getElementById('intro-text-wrapper');
 
-    // MÀN HÌNH INTRO: KÍCH HOẠT ZOOM IN KHI MỞ LẠI
+    // 1. CHỌN NGẪU NHIÊN 1 TRONG 3 HIỆU ỨNG CHO CHỮ INTRO
+    if (introTextWrapper) {
+        const effects = ['anim-wave', 'anim-bounce', 'anim-flip'];
+        const randomEffect = effects[Math.floor(Math.random() * effects.length)];
+        introTextWrapper.classList.add(randomEffect);
+    }
+
     mainContainer.classList.add('intro-zoom');
     
-    // TIMELINE CHUẨN 3 GIÂY (1.5S LOGO + 1.5S CHỮ) TRƯỚC KHI MỞ TRÀN 2 BÊN
+    // TIMELINE CHUẨN 3 GIÂY TRƯỚC KHI TÁCH ĐÔI MÀN HÌNH
     window.addEventListener('load', () => {
         setTimeout(() => {
-            introScreen.classList.add('dismiss'); // Lệnh chẻ màn hình sang 2 bên (1.5s)
-            mainContainer.classList.remove('intro-zoom'); // Giao diện chính bung zoom in (1s)
-            
-            // Xóa triệt để màn hình intro khỏi bộ nhớ sau khi hiệu ứng kết thúc
+            introScreen.classList.add('dismiss'); 
+            mainContainer.classList.remove('intro-zoom'); 
             setTimeout(() => { introScreen.style.display = 'none'; }, 1500); 
-        }, 3000); // Đợi đủ 3 giây
+        }, 3000); 
     });
 
     if (!DEV_MODE) {
         document.body.classList.add('standard-mode');
     }
 
-    // QUẢN LÝ DẤU CHẤM ĐỎ THÔNG BÁO (BADGE NOTIFICATION)
     const badgePreset = document.getElementById('badge-preset');
     const badgeTheme = document.getElementById('badge-theme');
     
     if (localStorage.getItem('sttv_seen_preset_badge') === 'true') badgePreset?.classList.add('hidden');
     if (localStorage.getItem('sttv_seen_theme_badge') === 'true') badgeTheme?.classList.add('hidden');
 
-    // TẠO BONG BÓNG CON SỐ (TOOLTIP) CHO TẤT CẢ THANH TRƯỢT
-    document.querySelectorAll('.slider-item').forEach(item => {
-        const input = item.querySelector('input[type="range"]');
-        if (input) {
-            const tooltip = document.createElement('div');
-            tooltip.className = 'slider-tooltip';
-            tooltip.innerText = input.value;
-            item.appendChild(tooltip);
+    // 2. TẠO BONG BÓNG CON SỐ (TOOLTIP) CHẠY THEO NÚM KÉO CHO MỌI THANH TRƯỢT
+    document.querySelectorAll('input[type="range"]').forEach(input => {
+        // Tạo khối bọc thông minh để neo tooltip chạy theo %
+        const wrapper = document.createElement('div');
+        wrapper.style.position = 'relative';
+        wrapper.style.flex = '1';
+        wrapper.style.display = 'flex';
+        wrapper.style.alignItems = 'center';
+        wrapper.style.width = '100%';
+        
+        input.parentNode.insertBefore(wrapper, input);
+        wrapper.appendChild(input);
 
-            input.addEventListener('input', (e) => {
-                tooltip.innerText = e.target.value;
-                tooltip.classList.add('show');
-            });
-            input.addEventListener('change', () => tooltip.classList.remove('show'));
-            input.addEventListener('blur', () => tooltip.classList.remove('show'));
-        }
+        const tooltip = document.createElement('div');
+        tooltip.className = 'slider-tooltip';
+        tooltip.innerText = input.value;
+        wrapper.appendChild(tooltip);
+
+        const updateTooltip = () => {
+            tooltip.innerText = input.value;
+            tooltip.classList.add('show');
+            
+            const min = input.min ? parseFloat(input.min) : 0;
+            const max = input.max ? parseFloat(input.max) : 100;
+            const val = parseFloat(input.value);
+            let percent = ((val - min) / (max - min)) * 100;
+            
+            // Ép khung % để bóng không bị lẹm ra viền màn hình
+            if (percent < 5) percent = 5;
+            if (percent > 95) percent = 95;
+            
+            tooltip.style.left = `calc(${percent}% - 12px)`;
+        };
+
+        input.addEventListener('input', updateTooltip);
+        input.addEventListener('pointerup', () => tooltip.classList.remove('show'));
+        input.addEventListener('touchend', () => tooltip.classList.remove('show'));
+        input.addEventListener('blur', () => tooltip.classList.remove('show'));
+        input.addEventListener('mouseleave', () => tooltip.classList.remove('show'));
     });
 
-    // TẠO CÁC MỤC ĐỔ BÓNG
     SHADOW_MODES.forEach(mode => {
         const div = document.createElement('div');
         div.className = 'shadow-item dev-only';
@@ -664,8 +687,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         const initLayout = localStorage.getItem('sttv_layoutMode') || 'grid';
-        const btnList = document.getElementById('btn-layout-list');
-        const btnGrid = document.getElementById('btn-layout-grid');
         if (initLayout === 'list') { btnList.classList.add('active'); btnGrid.classList.remove('active'); } 
         else { btnGrid.classList.add('active'); btnList.classList.remove('active'); }
 
