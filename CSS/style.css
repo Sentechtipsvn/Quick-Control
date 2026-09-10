@@ -1,4 +1,4 @@
-:root {
+p:root {
     --bg-main: #121b22; --text-color: #ffffff; --accent-color: #007aff;
     --icon-font-size: 14px; --icon-spacing: 0px; 
     --frame-size: 60px; --svg-size: 28px; --svg-opacity: 1; 
@@ -52,7 +52,7 @@ body.standard-mode .dev-only {
 
 .intro-content { position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; transition: opacity 0.5s ease, transform 0.5s ease; }
 .apple-logo-wrapper { color: #ffffff; filter: drop-shadow(0 0 12px #007aff) drop-shadow(0 0 25px #007aff); animation: pulseGlow 1.5s infinite alternate; }
-.apple-logo-wrapper svg { width: 90px; height: 90px; }
+.apple-logo-wrapper svg { width: 170px; height: 170px; }
 @keyframes pulseGlow { 0% { filter: drop-shadow(0 0 8px #007aff); transform: scale(1); } 100% { filter: drop-shadow(0 0 22px #007aff) drop-shadow(0 0 35px #0051a8); transform: scale(1.05); } }
 
 .intro-title-wrapper { margin-top: 18px; opacity: 0; animation: fadeInDelay 0.5s forwards 1.5s; }
