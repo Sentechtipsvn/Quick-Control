@@ -2,15 +2,35 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Control Panel">
     <link rel="apple-touch-icon" href="icon.png">
     <title>Trung tâm điều khiển - Sentechtipvn</title>
-    <link rel="stylesheet" href="CSS/style.css?v=9.9">
+    <link rel="stylesheet" href="CSS/style.css?v=10.0">
 </head>
 <body>
+
+    <!-- MÀN HÌNH INTRO SPLIT REVEAL (CHỐNG TRẪI RENDER) -->
+    <div id="intro-screen">
+        <div class="intro-half intro-top"></div>
+        <div class="intro-half intro-bottom"></div>
+        <div class="intro-content">
+            <div class="apple-logo-wrapper">
+                <svg class="apple-svg" viewBox="0 0 170 170" width="85" height="85">
+                    <path fill="currentColor" d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.33.13-9.13-1.9-14.4-6.08-3.72-3-7.7-7.85-11.95-14.54-6.3-9.98-11.28-20.91-14.94-32.8-3.66-11.88-5.49-23.01-5.49-33.39 0-14.28 3.57-25.9 10.71-34.87 7.14-8.97 16.14-13.58 27.01-13.83 4.88 0 10.15 1.25 15.82 3.75 5.67 2.5 9.74 3.75 12.22 3.75 2.12 0 6.23-1.25 12.33-3.75 6.1-2.5 11.19-3.63 15.27-3.38 11.88.5 21.41 4.88 28.59 13.13-10.38 6.25-15.44 14.88-15.19 25.88.25 8.63 3.5 15.88 9.75 21.75 6.25 5.88 13.88 9 22.88 9.38-2.25 6.88-5.13 13.5-8.63 19.88zM119.22 31.8c0-6.75 2.5-13.25 7.5-19.5 5-6.25 11.38-10.13 19.13-11.63.25 1 .38 1.88.38 2.63 0 6.63-2.56 13.13-7.69 19.5-5.13 6.38-11.44 10.13-18.94 11.25-.13-.75-.38-1.5-.38-2.25z"/>
+                </svg>
+            </div>
+            <div class="intro-title-wave">
+                <span>Q</span><span>u</span><span>i</span><span>c</span><span>k</span>
+                <span> </span>
+                <span>C</span><span>o</span><span>n</span><span>t</span><span>r</span><span>o</span><span>l</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP CONTAINER -->
     <div class="app-container grid-mode" id="main-container">
         <div class="app-header" data-i18n="app_title">Quick Control</div>
         <div class="grid-layout" id="control-panel"></div>
@@ -53,20 +73,19 @@
         </div>
         
         <div class="settings-body">
-            <!-- Xóa class dev-only để 3 nút Nhập/Xuất/Sắp xếp luôn hiện -->
             <div class="config-actions">
                 <button id="btn-export" class="action-btn">📤 <span data-i18n="btn_export">Xuất</span></button>
                 <button id="btn-import" class="action-btn">📥 <span data-i18n="btn_import">Nhập</span></button>
                 <button id="btn-edit-layout" class="action-btn">🔄 <span data-i18n="btn_edit_layout">Sắp xếp</span></button>
             </div>
 
-            <div class="setting-group highlight-box">
-                <label data-i18n="lbl_theme_presets">🪄 Giao diện</label>
+            <div class="setting-group highlight-box" style="position: relative;">
+                <label data-i18n="lbl_theme_presets">🪄 Giao diện <span class="badge-dot" id="badge-preset"></span></label>
                 <select id="val-theme-preset">
                     <option value="none" data-i18n="opt_preset_none">Tự do tùy chỉnh</option>
                     <option value="WyIjY2MwMDAwIiwiI2ZmZmZmZiIsImdyaWQiLCIjY2MwMDAwIiwiI2ZmZmZmZiIsIiNmZmZmMDAiLCJUaGVtZS9SZWQtQ29sb3VyLnBuZyIsIjYwIiwiMjgiLCIxMDAiLCI1MCIsIiNjYzAwMDAiLCIjZmZmZjAwIixbImdsb3ciLCIwIiwiMCIsIjE1IiwiMCIsIiNmZmZmMDAiLCIxMDAiXSxmYWxzZSwiMjIiLCIwLjUiLHRydWUsIjEwIiwiMCIsIjEwIiwiMTAwIiwiOTAiLCIzIiwiNTAiLCIjZmZmZmZmIiwiI2I1MWEwMCIsIiNmZmZmMDAiXQ==" data-i18n="opt_preset_vn">🇻🇳 VietOS</option>
-                    <option value="eyJiZ01haW4iOiIjZmZmZmZmIiwidGV4dENvbG9yIjoiIzAwMDAwMCIsImxheW91dE1vZGUiOiJncmlkIiwibGlzdEJnIjoiI2NjMDAwMCIsImxpc3RUZXh0IjoiI2ZmZmZmZiIsImxpc3RTdmciOiIjZmZmZjAwIiwidGhlbWVGcmFtZSI6IlRoZW1lL05lb25fcmFpbmJvdy5wbmciLCJmcmFtZVNpemUiOiI1NCIsInN2Z1NpemUiOiIyNSIsInN2Z09wYWNpdHkiOiIxMDAiLCJmcmFtZVJhZGl1cyI6IjUwIiwiZnJhbWVDb2xvciI6IiNjYzAwMDAiLCJzdmdDb2xvciI6IiNmZWZiNDEiLCJoaWRlTGFiZWxzIjpmYWxzZSwidGl0bGVTaXplIjoiMzYiLCJ0aXRsZVNwYWNpbmciOiIwLjUiLCJsaXN0RnJhbWUiOnRydWUsImljb25TaXplIjoiMTEiLCJpY29uU3BhY2luZyI6IjAiLCJsaXN0QmdPcGFjaXR5IjoiMTAiLCJmcmFtZUJnT3BhY2l0eSI6IjEwMCIsIm1lZGlhV2lkdGgiOiI5OCIsIm1lZGlhQmdPcGFjaXR5IjoiNDciLCJtZWRpYUJ0blNpemUiOiI1MCIsIm1lZGlhQmdDb2xvciI6IiNmZmZmZmYiLCJtZWRpYUJ0bkNvbG9yIjoiI2Q2ZDZkNiIsIm1lZGlhU3ZnQ29sb3IiOiIjZmVmYjQxIiwiZ2xhc3NNb2RlIjpmYWxzZSwicG9wdXBBbmltIjoiYW5pbS16b29tIiwic2hhZG93Q29uZmlnIjp7Imluc2V0Ijp7ImFjdGl2ZSI6ZmFsc2UsIngiOiIwIiwieSI6IjUiLCJiIjoiMCIsInMiOiItNCIsImMiOiIjZmZmZmZmIiwibyI6IjEwMCJ9LCJvdXRlciI6eyJhY3RpdmUiOnRydWUsIngiOiIwIiwieSI6IjYiLCJiIjoiNSIsInMiOiItMyIsImMiOiIjMDAwMDAwIiwibyI6IjEwMCJ9LCJzb2Z0Ijp7ImFjdGl2ZSI6ZmFsc2UsIngiOiIwIiwieSI6IjAiLCJiIjoiNyIsInMiOiIyIiwiYyI6IiNmZjQwMTUiLCJvIjoiMTAwIn0sImhhcmQiOnsiYWN0aXZlIjp0cnVlLCJ4IjoiMCIsInkiOiI0IiwiYiI6IjEwIiwicyI6IjAiLCJjIjoiIzQ3NDc0NyIsIm8iOiIxMDAifSwiZ2xvdyI6eyJhY3RpdmUiOmZhbHNlLCJ4IjoiMCIsInkiOiIwIiwiYiI6IjEyIiwicyI6IjAiLCJjIjoiI2UyMjQwMCIsIm8iOiI0OCJ9fX0=" data-i18n="opt_preset_Neon_light">Neon sáng</option>
-                    <option value="eyJiZ01haW4iOiIjMzMzMzMzIiwidGV4dENvbG9yIjoiI2ZmZmZmZiIsImxheW91dE1vZGUiOiJncmlkIiwibGlzdEJnIjoiI2NjMDAwMCIsImxpc3RUZXh0IjoiI2ZmZmZmZiIsImxpc3RTdmciOiIjZmZmZjAwIiwidGhlbWVGcmFtZSI6IlRoZW1lL05lb25fcmFpbmJvdy5wbmciLCJmcmFtZVNpemUiOiI1NCIsInN2Z1NpemUiOiIyNSIsInN2Z09wYWNpdHkiOiIxMDAiLCJmcmFtZVJhZGl1cyI6IjUwIiwiZnJhbWVDb2xvciI6IiNjYzAwMDAiLCJzdmdDb2xvciI6IiNmZWZiNDEiLCJoaWRlTGFiZWxzIjpmYWxzZSwidGl0bGVTaXplIjoiMzYiLCJ0aXRsZVNwYWNpbmciOiIwLjUiLCJsaXN0RnJhbWUiOnRydWUsImljb25TaXplIjoiMTEiLCJpY29uU3BhY2luZyI6IjAiLCJsaXN0QmdPcGFjaXR5IjoiMTAiLCJmcmFtZUJnT3BhY2l0eSI6IjEwMCIsIm1lZGlhV2lkdGgiOiI5OCIsIm1lZGlhQmdPcGFjaXR5IjoiMTAwIiwibWVkaWFCdG5TaXplIjoiNTAiLCJtZWRpYUJnQ29sb3IiOiIjMzMzMzMzIiwibWVkaWFCdG5Db2xvciI6IiMzMzMzMzMiLCJtZWRpYVN2Z0NvbG9yIjoiI2ZlZmI0MSIsImdsYXNzTW9kZSI6ZmFsc2UsInBvcHVwQW5pbSI6ImFuaW0tem9vbSIsInNoYWRvd0NvbmZpZyI6eyJpbnNldCI6eyJhY3RpdmUiOmZhbHNlLCJ4IjoiMCIsInkiOiI1IiwiYiI6IjAiLCJzIjoiLTQiLCJjIjoiI2ZmZmZmZiIsIm8iOiIxMDAifSwib3V0ZXIiOnsiYWN0aXZlIjp0cnVlLCJ4IjoiMCIsInkiOiI2IiwiYiI6IjkiLCJzIjoiLTIiLCJjIjoiIzAwMDAwMCIsIm8iOiIxMDAifSwic29mdCI6eyJhY3RpdmUiOmZhbHNlLCJ4IjoiMCIsInkiOiIwIiwiYiI6IjciLCJzIjoiMiIsImMiOiIjZmY0MDE1IiwibyI6IjEwMCJ9LCJoYXJkIjp7ImFjdGl2ZSI6dHJ1ZSwieCI6IjAiLCJ5IjoiLTgiLCJiIjoiMTIiLCJzIjoiLTIiLCJjIjoiIzk5OTk5OSIsIm8iOiI0NSJ9LCJnbG93Ijp7ImFjdGl2ZSI6ZmFsc2UsIngiOiIwIiwieSI6IjAiLCJiIjoiMTIiLCJzIjoiMCIsImMiOiIjZTIyNDAwIiwibyI6IjQ4In19fQ==" data-i18n="opt_preset_Dark_neon">Neon tối</option>
+                    <option value="WyIjMGYwZjEzIiwiIzAwZmZmZiIsImdyaWQiLCIjMWExYTFhIiwiIzAwZmZmZiIsIiMwMGZmZmYiLCJub25lIiwiNjAiLCIyOCIsIjEwMCIsIjIwIiwiIzFhMWExYSIsIiMwMGZmZmYiLFsiZ2xvdyIsIjAiLCIwIiwiMjAiLCIyIiwiIzAwZmZmZiIsIjEwMCJdLGZhbHNlLDIyLDAuNSxmYWxzZSwxNCwwLDEwLDEwMF0=" data-i18n="opt_preset_neon_dark">🌙 Neon tối</option>
+                    <option value="WyIjZjBmMGY1IiwiIzAwN2FmZiIsImdyaWQiLCIjZmZmZmZmIiwiIzAwN2FmZiIsIiMwMDdhZmYiLCJub25lIiwiNjAiLCIyOCIsIjEwMCIsIjIwIiwiI2ZmZmZmZiIsIiMwMDdhZmYiLFsib3V0ZXIiLCIwIiwiNCIsIjE1IiwiMCIsIiMwMDdhZmYiLCIyMCJdLGZhbHNlLDIyLDAuNSxmYWxzZSwxNCwwLDEwLDEwMF0=" data-i18n="opt_preset_neon_light">💡 Neon sáng</option>
                     <option value="WyIjMDAwMDAwIiwiI2ZmZmZmZiIsImdyaWQiLCIjMWExYTFhIiwiI2ZmZmZmZiIsIiNmZmZmZmYiLCJub25lIiwiNjAiLCIyOCIsIjEwMCIsIjIyIiwiIzFjMWMxZSIsIiNmZmZmZmYiLFsib3V0ZXIiLCIwIiwiMCIsIjAiLCIwIiwiIzAwMDAwMCIsIjEwMCJdLGZhbHNlLDIyLDAuNSxmYWxzZSwxNCwwLDEwLDEwMF0=" data-i18n="opt_preset_dark">🖤 Dark</option>
                     <option value="WyIjMTExMTExIiwiI2ZmZDcwMCIsImdyaWQiLCIjMWExYTFhIiwiI2ZmZDcwMCIsIiNmZmQ3MDAiLCJub25lIiwiNjAiLCIzMCIsIjEwMCIsIjUwIiwiIzIyMjIyMiIsIiNmZmQ3MDAiLFsib3V0ZXIiLCIwIiwiNCIsIjEwIiwiMCIsIiMwMDAwMDAiLCI4MCJdLGZhbHNlLDIyLDAuNSx0cnVlLDE0LDAsMTAsMTAwXQ==" data-i18n="opt_preset_gold">👑 Gold</option>
                 </select>
@@ -105,7 +124,6 @@
                 <label><input type="checkbox" id="toggle-glass"> <span data-i18n="lbl_glassmorphism">Bật Kính mờ</span></label>
             </div>
 
-            <!-- Mở khóa Màu chữ tiêu đề (xóa dev-only) -->
             <div class="setting-group dev-only">
                 <label data-i18n="lbl_bg_main">🏳️‍🌈 Màu Nền Chính</label><input type="color" id="val-bg-main" value="#121b22">
             </div>
@@ -132,8 +150,8 @@
                 <label style="margin-top: 10px;"><input type="checkbox" id="toggle-list-frame"> <span data-i18n="lbl_list_frame">Theme cho Danh sách</span></label>
             </div>
             
-            <div class="setting-group">
-                <label data-i18n="lbl_theme_frame">💠 Theme SVG</label>
+            <div class="setting-group" style="position: relative;">
+                <label data-i18n="lbl_theme_frame">💠 Theme SVG <span class="badge-dot" id="badge-theme"></span></label>
                 <div class="theme-grid-picker">
                     <div class="theme-chip active" data-value="none"><span style="font-size: 18px;">❌</span></div>
                     <div class="theme-chip" data-value="Theme/Black-Colour.png"><img src="Theme/Black-Colour.png" alt="Black"></div>
@@ -160,6 +178,7 @@
                     <span class="slider-label" data-i18n="lbl_frame_bg_opacity">Độ đậm nền</span><input type="range" id="val-frame-bg-opacity" min="0" max="100" value="100">
                 </div>
             </div>
+            
             <div class="setting-group">
                 <label data-i18n="lbl_svg_color">Màu Icon (SVG)</label><input type="color" id="val-svg-color" value="#ffffff">
             </div>
@@ -196,7 +215,7 @@
         </div>
     </div>
 
-    <!-- POPUP KHO GIAO DIỆN (XEM THÊM) -->
+    <!-- POPUP KHO GIAO DIỆN -->
     <div class="info-overlay" id="theme-overlay"></div>
     <div id="theme-modal" class="macos-window" style="max-width: 320px;">
         <div class="macos-header">
@@ -227,7 +246,7 @@
         </div>
     </div>
     
-    <script src="js/theme.js?v=9.9"></script>
-    <script src="js/main.js?v=9.9"></script>
+    <script src="js/theme.js?v=10.0"></script>
+    <script src="js/main.js?v=10.0"></script>
 </body>
 </html>
