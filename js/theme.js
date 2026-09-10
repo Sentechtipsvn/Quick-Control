@@ -17,15 +17,18 @@ document.addEventListener("DOMContentLoaded", () => {
     const mainContainer = document.getElementById('main-container');
     const introScreen = document.getElementById('intro-screen');
 
-    // MÀN HÌNH INTRO SPLIT REVEAL: ĐẢM BẢO RENDER XONG MỚI BUNG
+    // MÀN HÌNH INTRO: KÍCH HOẠT ZOOM IN KHI MỞ LẠI
     mainContainer.classList.add('intro-zoom');
     
+    // TIMELINE CHUẨN 3 GIÂY (1.5S LOGO + 1.5S CHỮ) TRƯỚC KHI MỞ TRÀN 2 BÊN
     window.addEventListener('load', () => {
         setTimeout(() => {
-            introScreen.classList.add('dismiss');
-            mainContainer.classList.remove('intro-zoom');
-            setTimeout(() => { introScreen.style.display = 'none'; }, 600);
-        }, 400);
+            introScreen.classList.add('dismiss'); // Lệnh chẻ màn hình sang 2 bên (1.5s)
+            mainContainer.classList.remove('intro-zoom'); // Giao diện chính bung zoom in (1s)
+            
+            // Xóa triệt để màn hình intro khỏi bộ nhớ sau khi hiệu ứng kết thúc
+            setTimeout(() => { introScreen.style.display = 'none'; }, 1500); 
+        }, 3000); // Đợi đủ 3 giây
     });
 
     if (!DEV_MODE) {
@@ -39,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (localStorage.getItem('sttv_seen_preset_badge') === 'true') badgePreset?.classList.add('hidden');
     if (localStorage.getItem('sttv_seen_theme_badge') === 'true') badgeTheme?.classList.add('hidden');
 
-    // THÊM BONG BÓNG CON SỐ CHO TẤT CẢ THANH TRƯỢT
+    // TẠO BONG BÓNG CON SỐ (TOOLTIP) CHO TẤT CẢ THANH TRƯỢT
     document.querySelectorAll('.slider-item').forEach(item => {
         const input = item.querySelector('input[type="range"]');
         if (input) {
@@ -85,7 +88,6 @@ document.addEventListener("DOMContentLoaded", () => {
             document.querySelectorAll(`.theme-chip[data-value="${val}"]`).forEach(c => c.classList.add('active'));
             document.getElementById('val-theme-frame').value = val;
             
-            // Xóa dấu chấm đỏ Theme
             if (badgeTheme) { badgeTheme.classList.add('hidden'); localStorage.setItem('sttv_seen_theme_badge', 'true'); }
             resetPresetToCustom();
             updateLiveVariables();
@@ -117,7 +119,6 @@ document.addEventListener("DOMContentLoaded", () => {
     presetSelect.addEventListener('change', (e) => {
         const val = e.target.value;
         localStorage.setItem('sttv_activePreset', val);
-        // Xóa dấu chấm đỏ Preset khi chọn
         if (badgePreset) { badgePreset.classList.add('hidden'); localStorage.setItem('sttv_seen_preset_badge', 'true'); }
         if (val !== 'none') unpackConfig(val);
     });
@@ -553,6 +554,8 @@ document.addEventListener("DOMContentLoaded", () => {
         root.style.setProperty('--label-display', document.getElementById('toggle-hide-labels').checked ? 'none' : 'block');
         
         const currentLayout = localStorage.getItem('sttv_layoutMode') || 'grid';
+        const btnList = document.getElementById('btn-layout-list');
+        const btnGrid = document.getElementById('btn-layout-grid');
         if (currentLayout === 'list') { btnList.classList.add('active'); btnGrid.classList.remove('active'); } 
         else { btnGrid.classList.add('active'); btnList.classList.remove('active'); }
 
@@ -661,6 +664,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         const initLayout = localStorage.getItem('sttv_layoutMode') || 'grid';
+        const btnList = document.getElementById('btn-layout-list');
+        const btnGrid = document.getElementById('btn-layout-grid');
         if (initLayout === 'list') { btnList.classList.add('active'); btnGrid.classList.remove('active'); } 
         else { btnGrid.classList.add('active'); btnList.classList.remove('active'); }
 
