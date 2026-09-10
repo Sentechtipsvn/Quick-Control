@@ -73,9 +73,23 @@ body.standard-mode .dev-only { display: none !important; }
 
 .app-container { transition: transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 1s ease; }
 .app-container.intro-zoom { transform: scale(0.9); opacity: 0; }
+.slider-item { 
+    position: relative; 
+    display: flex; 
+    align-items: center; 
+    margin-bottom: 8px; 
+    width: 100%; 
+}
+.slider-item > div { 
+    flex: 1; 
+    display: flex; 
+    align-items: center; 
+}
 
-/* BONG BÓNG CON SỐ TRÊN NÚM SLIDER */
-.slider-item { position: relative; display: flex; align-items: center; margin-bottom: 8px; width: 100%; }
+.slider-item input[type=range] { 
+    flex: 1; 
+    width: 100% !important; 
+}
 .slider-label { width: 95px; font-size: 12px; opacity: 0.8; flex-shrink: 0; }
 .slider-tooltip { position: absolute; top: -28px; background: #007aff; color: #ffffff; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 8px; opacity: 0; transform: translateY(5px); transition: opacity 0.2s, transform 0.2s, left 0.1s ease-out; pointer-events: none; z-index: 50; white-space: nowrap; box-shadow: 0 2px 6px rgba(0,0,0,0.3); }
 .slider-tooltip.show { opacity: 1; transform: translateY(0); }
