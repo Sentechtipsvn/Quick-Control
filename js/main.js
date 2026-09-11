@@ -10,7 +10,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     let userLang = navigator.language || navigator.userLanguage;
     if (!SUPPORTED_LANGS.includes(userLang)) userLang = 'en-US';
 
-    // HỖ TRỢ RTL (ĐẢO NGƯỢC GIAO DIỆN) CHO TIẾNG Ả RẬP, PERSIAN
     const RTL_LANGS = ['ar', 'fa-IR', 'he'];
     if (RTL_LANGS.includes(userLang.split('-')[0]) || RTL_LANGS.includes(userLang)) {
         document.documentElement.setAttribute('dir', 'rtl');
@@ -18,7 +17,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.documentElement.setAttribute('dir', 'ltr');
     }
 
-    // HÀM TỰ DÒ ĐƯỜNG DẪN: Chống lỗi trắng màn hình khi đẩy lên GitHub Pages
     async function fetchWithCaseFallback(url1, url2) {
         try {
             let res = await fetch(url1);
@@ -31,23 +29,24 @@ document.addEventListener("DOMContentLoaded", async () => {
         return null;
     }
 
-    let fallbackTranslations = await fetchWithCaseFallback(`Language/en-US.json`, `language/en-US.json`) || {};
-    let userTranslations = await fetchWithCaseFallback(`Language/${userLang}.json`, `language/${userLang}.json`) || {};
+    // SONG SONG HÓA NĂNG LƯỢNG TẢI TRANG (PROMISE.ALL)
+    const [fallbackTranslations, userTranslations, data] = await Promise.all([
+        fetchWithCaseFallback(`Language/en-US.json`, `language/en-US.json`),
+        fetchWithCaseFallback(`Language/${userLang}.json`, `language/${userLang}.json`),
+        fetchWithCaseFallback('Data/data.json', 'data/data.json')
+    ]);
 
-    window.i18nData = { ...fallbackTranslations, ...userTranslations };
+    window.i18nData = { ...(fallbackTranslations || {}), ...(userTranslations || {}) };
 
     document.querySelectorAll('[data-i18n]').forEach(element => {
         const key = element.getAttribute('data-i18n');
-        if(window.i18nData[key]) element.innerText = window.i18nData[key];
+        if (window.i18nData[key]) element.innerText = window.i18nData[key];
     });
 
     try {
-        // TỰ ĐỘNG THỬ TẢI DATA/DATA.JSON HOẶC data/data.json
-        const data = await fetchWithCaseFallback('Data/data.json', 'data/data.json');
-        
         if (!data || !data.buttons) {
-            console.error("Không tải được Data/data.json - Vui lòng kiểm tra lại cấu trúc thư mục Github.");
-            return; // Dừng lại ở đây nếu không có dữ liệu thay vì báo lỗi đỏ
+            console.error("Không tải được dữ liệu Data/data.json");
+            return;
         }
 
         const container = document.getElementById('control-panel');
@@ -57,7 +56,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (savedOrder) {
             const orderIds = JSON.parse(savedOrder);
             renderArray = orderIds.map(id => data.buttons.find(b => b.id === id)).filter(b => b !== undefined);
-            data.buttons.forEach(b => { if(!renderArray.includes(b)) renderArray.push(b); });
+            data.buttons.forEach(b => { if (!renderArray.includes(b)) renderArray.push(b); });
         }
 
         if (renderArray && renderArray.length > 0) {
@@ -77,21 +76,26 @@ document.addEventListener("DOMContentLoaded", async () => {
         let editMode = false;
         let selectedSwapNode = null;
         
-        btnEditLayout.addEventListener('click', () => {
-            editMode = !editMode;
-            document.body.classList.toggle('edit-mode', editMode);
-            btnEditLayout.style.background = editMode ? 'red' : '';
-            btnEditLayout.innerHTML = editMode ? 'Xong' : '🔄 Sắp xếp';
-            
-            if (!editMode && selectedSwapNode) {
-                selectedSwapNode.classList.remove('selected-swap');
-                selectedSwapNode = null;
-            }
+        if (btnEditLayout) {
+            btnEditLayout.addEventListener('click', () => {
+                editMode = !editMode;
+                document.body.classList.toggle('edit-mode', editMode);
+                btnEditLayout.style.background = editMode ? 'red' : '';
+                
+                const txtXong = window.i18nData['btn_done'] || 'Xong';
+                const txtSapXep = window.i18nData['btn_edit_layout'] || 'Sắp xếp';
+                btnEditLayout.innerHTML = editMode ? `✓ ${txtXong}` : `🔄 ${txtSapXep}`;
+                
+                if (!editMode && selectedSwapNode) {
+                    selectedSwapNode.classList.remove('selected-swap');
+                    selectedSwapNode = null;
+                }
 
-            document.querySelectorAll('.glass-btn').forEach(b => {
-                b.onclick = editMode ? (e) => e.preventDefault() : null;
+                document.querySelectorAll('.glass-btn').forEach(b => {
+                    b.onclick = editMode ? (e) => e.preventDefault() : null;
+                });
             });
-        });
+        }
 
         container.addEventListener('click', (e) => {
             if (!editMode) return;
@@ -119,5 +123,5 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         });
 
-    } catch (e) { console.error("Lỗi quá trình tải:", e); }
+    } catch (e) { console.error("Lỗi khởi tạo danh sách nút:", e); }
 });
