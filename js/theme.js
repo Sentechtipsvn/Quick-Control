@@ -15,7 +15,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const introScreen = document.getElementById('intro-screen');
     const introTextWrapper = document.getElementById('intro-text-wrapper');
 
-    // 1. CHỌN NGẪU NHIÊN 1 TRONG 3 HIỆU ỨNG CHO CHỮ INTRO
     if (introTextWrapper) {
         const effects = ['anim-wave', 'anim-bounce', 'anim-flip'];
         const randomEffect = effects[Math.floor(Math.random() * effects.length)];
@@ -24,7 +23,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     mainContainer.classList.add('intro-zoom');
     
-    // TIMELINE CHUẨN 3 GIÂY TRƯỚC KHI TÁCH ĐÔI MÀN HÌNH
     window.addEventListener('load', () => {
         setTimeout(() => {
             introScreen.classList.add('dismiss'); 
@@ -33,9 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 3000); 
     });
 
-    if (!DEV_MODE) {
-        document.body.classList.add('standard-mode');
-    }
+    if (!DEV_MODE) document.body.classList.add('standard-mode');
 
     const badgePreset = document.getElementById('badge-preset');
     const badgeTheme = document.getElementById('badge-theme');
@@ -43,35 +39,54 @@ document.addEventListener("DOMContentLoaded", () => {
     if (localStorage.getItem('sttv_seen_preset_badge') === 'true') badgePreset?.classList.add('hidden');
     if (localStorage.getItem('sttv_seen_theme_badge') === 'true') badgeTheme?.classList.add('hidden');
 
-    // 2. TẠO BONG BÓNG CON SỐ (TOOLTIP) CỐ ĐỊNH, CHẠY THEO NÚM KÉO
+    // HIỂN THỊ THÔNG SỐ TRÊN NÚM KÉO
     let globalTooltip = document.createElement('div');
     globalTooltip.className = 'slider-tooltip';
     document.body.appendChild(globalTooltip);
 
-    document.querySelectorAll('input[type="range"]').forEach(input => {
-        const updateGlobalTooltip = () => {
-            globalTooltip.innerText = input.value;
-            globalTooltip.classList.add('show');
-            
-            const rect = input.getBoundingClientRect();
-            const min = parseFloat(input.min) || 0;
-            const max = parseFloat(input.max) || 100;
-            const val = parseFloat(input.value);
-            const percent = (val - min) / (max - min);
-            
-            // Núm kéo dài 25px, bù trừ để tooltip đứng đúng giữa núm
-            const thumbOffset = 12.5 - (percent * 25);
-            const thumbX = rect.left + (percent * rect.width) + thumbOffset;
-            
-            globalTooltip.style.left = `${thumbX}px`;
-            globalTooltip.style.top = `${rect.top - 35}px`;
-        };
+    let rafId = null;
+    document.addEventListener('input', (e) => {
+        if (e.target && e.target.type === 'range') {
+            const input = e.target;
+            if (rafId) cancelAnimationFrame(rafId);
+            rafId = requestAnimationFrame(() => {
+                globalTooltip.innerText = input.value;
+                globalTooltip.classList.add('show');
+                
+                const rect = input.getBoundingClientRect();
+                const min = parseFloat(input.min) || 0;
+                const max = parseFloat(input.max) || 100;
+                const val = parseFloat(input.value);
+                const percent = (val - min) / (max - min);
+                
+                const thumbOffset = 12.5 - (percent * 25);
+                const thumbX = rect.left + (percent * rect.width) + thumbOffset;
+                
+                globalTooltip.style.left = `${thumbX}px`;
+                globalTooltip.style.top = `${rect.top - 35}px`;
+            });
 
-        input.addEventListener('input', updateGlobalTooltip);
-        input.addEventListener('pointerup', () => globalTooltip.classList.remove('show'));
-        input.addEventListener('touchend', () => globalTooltip.classList.remove('show'));
-        input.addEventListener('blur', () => globalTooltip.classList.remove('show'));
-        input.addEventListener('mouseleave', () => globalTooltip.classList.remove('show'));
+            playTick();
+            if (e.target.id !== 'val-theme-preset' && e.target.id !== 'val-popup-anim') {
+                resetPresetToCustom();
+            }
+            updateLiveVariables(false); 
+        }
+    });
+
+    const hideTooltip = (e) => {
+        if (e.target && e.target.type === 'range') {
+            globalTooltip.classList.remove('show');
+        }
+    };
+
+    document.addEventListener('pointerup', hideTooltip);
+    document.addEventListener('touchend', hideTooltip);
+    document.addEventListener('change', (e) => {
+        if (e.target && e.target.type === 'range') {
+            hideTooltip(e);
+            saveSettingsToLocal();
+        }
     });
 
     SHADOW_MODES.forEach(mode => {
@@ -103,7 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
             
             if (badgeTheme) { badgeTheme.classList.add('hidden'); localStorage.setItem('sttv_seen_theme_badge', 'true'); }
             resetPresetToCustom();
-            updateLiveVariables();
+            updateLiveVariables(true);
         });
     });
 
@@ -149,31 +164,31 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem('sttv_popupAnim', animClass);
     });
 
+    // REUSE AUDIO CONTEXT
     const AudioContext = window.AudioContext || window.webkitAudioContext;
-    let audioCtx;
+    let audioCtx = null;
     function playTick() {
         if (!document.getElementById('toggle-audio').checked) return;
         if (!audioCtx) audioCtx = new AudioContext();
         if (audioCtx.state === 'suspended') audioCtx.resume();
-        const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
-        osc.type = 'sine'; osc.frequency.setValueAtTime(800, audioCtx.currentTime); osc.frequency.exponentialRampToValueAtTime(300, audioCtx.currentTime + 0.05);
-        gain.gain.setValueAtTime(0.3, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+        const osc = audioCtx.createOscillator(); 
+        const gain = audioCtx.createGain();
+        osc.type = 'sine'; 
+        osc.frequency.setValueAtTime(800, audioCtx.currentTime); 
+        osc.frequency.exponentialRampToValueAtTime(300, audioCtx.currentTime + 0.04);
+        gain.gain.setValueAtTime(0.2, audioCtx.currentTime); 
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.04);
         osc.connect(gain); gain.connect(audioCtx.destination);
-        osc.start(); osc.stop(audioCtx.currentTime + 0.05);
+        osc.start(); osc.stop(audioCtx.currentTime + 0.04);
     }
     document.addEventListener('click', (e) => { if (e.target.tagName === 'BUTTON' || e.target.type === 'checkbox' || e.target.closest('.theme-chip') || e.target.closest('.theme-chip-more')) playTick(); });
-    
-    drawerEl.addEventListener('input', (e) => { 
-        if (e.target.type === 'range') playTick(); 
-        if (e.target.id !== 'val-theme-preset' && e.target.id !== 'val-popup-anim') resetPresetToCustom();
-    });
 
     document.querySelectorAll('.shadow-switch').forEach(switchBtn => {
         switchBtn.addEventListener('change', (e) => {
             const drawer = document.getElementById(`drawer-${e.target.value}`);
             if (e.target.checked) drawer.classList.add('active'); else drawer.classList.remove('active');
             resetPresetToCustom();
-            updateLiveVariables();
+            updateLiveVariables(true);
         });
     });
 
@@ -232,25 +247,16 @@ document.addEventListener("DOMContentLoaded", () => {
             drawerEl.classList.add('adjusting'); clearTimeout(adjustTimeout);
             adjustTimeout = setTimeout(() => drawerEl.classList.remove('adjusting'), 800);
         }
-        updateLiveVariables();
     });
 
     const btnList = document.getElementById('btn-layout-list');
     const btnGrid = document.getElementById('btn-layout-grid');
     function setLayoutMode(mode) {
         localStorage.setItem('sttv_layoutMode', mode);
-        updateLiveVariables();
+        updateLiveVariables(true);
     }
     btnList.onclick = () => { setLayoutMode('list'); resetPresetToCustom(); }; 
     btnGrid.onclick = () => { setLayoutMode('grid'); resetPresetToCustom(); };
-
-    const infoModal = document.getElementById('info-modal');
-    const infoOverlay = document.getElementById('info-overlay');
-    document.getElementById('btn-info').onclick = () => { infoModal.classList.add('show'); infoOverlay.classList.add('show'); };
-    document.getElementById('close-info').onclick = () => { infoModal.classList.remove('show'); infoOverlay.classList.remove('show'); };
-    infoOverlay.onclick = (e) => { 
-        if(e.target.id === 'info-overlay') { infoModal.classList.remove('show'); infoOverlay.classList.remove('show'); }
-    };
 
     function hexToRgba(hex, alpha) {
         let r = 0, g = 0, b = 0;
@@ -337,14 +343,14 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem('sttv_shadowConfig', JSON.stringify(shadowState));
     }
 
-    // THUẬT TOÁN ĐÓNG GÓI CHUỖI SIÊU GỌN THEO URI COMPONENT
+    // ĐÓNG GÓI CHUỖI SIÊU NHẸ (KHÔNG CẦN BASE64)
     function packConfig() {
-        const shadowCompact = [];
+        const shadowArr = [];
         SHADOW_MODES.forEach(mode => {
             const drawer = document.getElementById(`drawer-${mode.id}`);
             const checkbox = document.querySelector(`input[name="active_shadow"][value="${mode.id}"]`);
             if (drawer && checkbox && checkbox.checked) {
-                shadowCompact.push([
+                shadowArr.push([
                     mode.id, 
                     drawer.querySelector('.s-x').value,
                     drawer.querySelector('.s-y').value,
@@ -356,7 +362,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        const data = [
+        const configValues = [
             document.getElementById('val-bg-main').value, 
             document.getElementById('val-text-color').value,
             localStorage.getItem('sttv_layoutMode') || 'grid',
@@ -386,13 +392,14 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById('val-media-svg-color').value,
             document.getElementById('toggle-glass').checked ? 1 : 0,
             document.getElementById('val-popup-anim').value,
-            shadowCompact.join('~')
+            shadowArr.join('~')
         ];
         
-        return encodeURIComponent(data.join('|'));
+        return encodeURIComponent(configValues.join('|'));
     }
 
-    function unpackConfig(encodedStr) {
+    function unpackConfig(code) {
+        if (!code) return;
         try {
             drawerEl.classList.remove('adjusting');
             localStorage.removeItem('sttv_customBgImage');
@@ -400,209 +407,112 @@ document.addEventListener("DOMContentLoaded", () => {
             const uploadBgInput = document.getElementById('upload-bg');
             if (uploadBgInput) uploadBgInput.value = "";
 
-            let config;
-            let isOldBase64 = false;
+            const decoded = decodeURIComponent(code.trim());
+            const data = decoded.split('|');
+            if (data.length < 29) {
+                alert("Mã cấu hình không hợp lệ!");
+                return;
+            }
+            
+            document.getElementById('val-bg-main').value = data[0]; 
+            document.getElementById('val-text-color').value = data[1];
+            setLayoutMode(data[2]);
+            document.getElementById('val-list-bg').value = data[3];
+            document.getElementById('val-list-text').value = data[4];
+            document.getElementById('val-list-svg').value = data[5];
+            document.getElementById('val-theme-frame').value = data[6];
+            syncThemePickerVisuals(data[6]);
+            document.getElementById('val-frame-size').value = data[7];
+            document.getElementById('val-svg-size').value = data[8]; 
+            document.getElementById('val-svg-opacity').value = data[9];
+            document.getElementById('val-frame-radius').value = data[10]; 
+            document.getElementById('val-frame-color').value = data[11]; 
+            document.getElementById('val-svg-color').value = data[12];
+            document.getElementById('toggle-hide-labels').checked = data[13] === '1';
+            document.getElementById('val-title-size').value = data[14];
+            document.getElementById('val-title-spacing').value = data[15];
+            document.getElementById('toggle-list-frame').checked = data[16] === '1';
+            document.getElementById('val-icon-size').value = data[17];
+            document.getElementById('val-icon-spacing').value = data[18];
+            document.getElementById('val-list-bg-opacity').value = data[19];
+            document.getElementById('val-frame-bg-opacity').value = data[20];
+            document.getElementById('val-media-width').value = data[21];
+            document.getElementById('val-media-bg-opacity').value = data[22];
+            document.getElementById('val-media-btn-size').value = data[23];
+            document.getElementById('val-media-bg-color').value = data[24];
+            document.getElementById('val-media-btn-color').value = data[25];
+            document.getElementById('val-media-svg-color').value = data[26];
+            document.getElementById('toggle-glass').checked = data[27] === '1';
+            document.getElementById('val-popup-anim').value = data[28];
+            
+            document.querySelectorAll('.shadow-switch').forEach(c => { 
+                c.checked = false; 
+                const drw = document.getElementById(`drawer-${c.value}`);
+                if (drw) drw.classList.remove('active'); 
+            });
 
-            try {
-                const decoded = decodeURIComponent(escape(atob(encodedStr)));
-                if (decoded.startsWith('{') || decoded.startsWith('[')) {
-                    config = JSON.parse(decoded);
-                    isOldBase64 = true;
-                }
-            } catch(e) { }
-
-            // BẢO LƯU LOGIC CŨ ĐỂ KHÔNG LÀM HỎNG PRESET CÓ SẴN CỦA SẾP
-            if (isOldBase64) {
-                if (Array.isArray(config)) {
-                    if(config[0]) document.getElementById('val-bg-main').value = config[0];
-                    document.getElementById('val-text-color').value = config[1];
-                    setLayoutMode(config[2]);
-                    document.getElementById('val-list-bg').value = config[3];
-                    document.getElementById('val-list-text').value = config[4];
-                    document.getElementById('val-list-svg').value = config[5];
-                    document.getElementById('val-theme-frame').value = config[6];
-                    syncThemePickerVisuals(config[6]);
-                    document.getElementById('val-frame-size').value = config[7];
-                    document.getElementById('val-svg-size').value = config[8]; 
-                    document.getElementById('val-svg-opacity').value = config[9];
-                    document.getElementById('val-frame-radius').value = config[10]; 
-                    document.getElementById('val-frame-color').value = config[11]; 
-                    document.getElementById('val-svg-color').value = config[12];
-                    
-                    document.querySelectorAll('.shadow-switch').forEach(c => { c.checked = false; document.getElementById(`drawer-${c.value}`).classList.remove('active'); });
-                    if (config[13] && config[13].length > 0) {
-                        const sId = config[13][0]; 
+            if (data[29]) {
+                const shadows = data[29].split('~');
+                shadows.forEach(sh => {
+                    const p = sh.split('*');
+                    if (p.length > 1) {
+                        const sId = p[0];
                         const shadowSwitch = document.querySelector(`input[name="active_shadow"][value="${sId}"]`);
-                        if(shadowSwitch) {
+                        if (shadowSwitch) {
                             shadowSwitch.checked = true;
                             const drw = document.getElementById(`drawer-${sId}`); 
-                            if(drw){
+                            if (drw) {
                                 drw.classList.add('active');
-                                drw.querySelector('.s-x').value = config[13][1]; drw.querySelector('.s-y').value = config[13][2];
-                                drw.querySelector('.s-b').value = config[13][3]; drw.querySelector('.s-s').value = config[13][4]; drw.querySelector('.s-c').value = config[13][5];
-                                if(config[13].length > 6) drw.querySelector('.s-o').value = config[13][6];
+                                drw.querySelector('.s-x').value = p[1]; 
+                                drw.querySelector('.s-y').value = p[2];
+                                drw.querySelector('.s-b').value = p[3]; 
+                                drw.querySelector('.s-s').value = p[4]; 
+                                drw.querySelector('.s-c').value = p[5];
+                                if (p[6]) drw.querySelector('.s-o').value = p[6];
                             }
                         }
                     }
-                    if(config.length >= 17) {
-                        document.getElementById('toggle-hide-labels').checked = config[14];
-                        document.getElementById('val-title-size').value = config[15];
-                        document.getElementById('val-title-spacing').value = config[16];
-                    }
-                    if(config.length >= 18) document.getElementById('toggle-list-frame').checked = config[17];
-                    if(config.length >= 20) {
-                        document.getElementById('val-icon-size').value = config[18];
-                        document.getElementById('val-icon-spacing').value = config[19];
-                    }
-                    document.getElementById('val-list-bg-opacity').value = config.length >= 21 ? config[20] : 10;
-                    document.getElementById('val-frame-bg-opacity').value = config.length >= 22 ? config[21] : 100;
-                    if(config.length >= 28) {
-                        document.getElementById('val-media-width').value = config[22];
-                        document.getElementById('val-media-bg-opacity').value = config[23];
-                        document.getElementById('val-media-btn-size').value = config[24];
-                        document.getElementById('val-media-bg-color').value = config[25];
-                        document.getElementById('val-media-btn-color').value = config[26];
-                        document.getElementById('val-media-svg-color').value = config[27];
-                    }
-                } else {
-                    if (config.bgMain) document.getElementById('val-bg-main').value = config.bgMain;
-                    if (config.textColor) document.getElementById('val-text-color').value = config.textColor;
-                    if (config.layoutMode) setLayoutMode(config.layoutMode);
-                    if (config.listBg) document.getElementById('val-list-bg').value = config.listBg;
-                    if (config.listText) document.getElementById('val-list-text').value = config.listText;
-                    if (config.listSvg) document.getElementById('val-list-svg').value = config.listSvg;
-                    if (config.listBgOpacity) document.getElementById('val-list-bg-opacity').value = config.listBgOpacity;
-                    if (config.listFrame !== undefined) document.getElementById('toggle-list-frame').checked = config.listFrame;
-                    if (config.themeFrame) { document.getElementById('val-theme-frame').value = config.themeFrame; syncThemePickerVisuals(config.themeFrame); }
-                    if (config.frameSize) document.getElementById('val-frame-size').value = config.frameSize;
-                    if (config.svgSize) document.getElementById('val-svg-size').value = config.svgSize;
-                    if (config.svgOpacity) document.getElementById('val-svg-opacity').value = config.svgOpacity;
-                    if (config.frameRadius) document.getElementById('val-frame-radius').value = config.frameRadius;
-                    if (config.frameColor) document.getElementById('val-frame-color').value = config.frameColor;
-                    if (config.frameBgOpacity) document.getElementById('val-frame-bg-opacity').value = config.frameBgOpacity;
-                    if (config.svgColor) document.getElementById('val-svg-color').value = config.svgColor;
-                    if (config.hideLabels !== undefined) document.getElementById('toggle-hide-labels').checked = config.hideLabels;
-                    if (config.titleSize) document.getElementById('val-title-size').value = config.titleSize;
-                    if (config.titleSpacing) document.getElementById('val-title-spacing').value = config.titleSpacing;
-                    if (config.iconSize) document.getElementById('val-icon-size').value = config.iconSize;
-                    if (config.iconSpacing) document.getElementById('val-icon-spacing').value = config.iconSpacing;
-                    if (config.mediaWidth) document.getElementById('val-media-width').value = config.mediaWidth;
-                    if (config.mediaBgOpacity) document.getElementById('val-media-bg-opacity').value = config.mediaBgOpacity;
-                    if (config.mediaBtnSize) document.getElementById('val-media-btn-size').value = config.mediaBtnSize;
-                    if (config.mediaBgColor) document.getElementById('val-media-bg-color').value = config.mediaBgColor;
-                    if (config.mediaBtnColor) document.getElementById('val-media-btn-color').value = config.mediaBtnColor;
-                    if (config.mediaSvgColor) document.getElementById('val-media-svg-color').value = config.mediaSvgColor;
-                    if (config.glassMode !== undefined) document.getElementById('toggle-glass').checked = config.glassMode;
-                    if (config.popupAnim) {
-                        document.getElementById('val-popup-anim').value = config.popupAnim;
-                        drawerEl.className = 'settings-drawer ' + (config.popupAnim !== 'default' ? config.popupAnim : '');
-                    }
-                    if (config.shadowConfig) {
-                        SHADOW_MODES.forEach(mode => {
-                            const item = config.shadowConfig[mode.id];
-                            const checkbox = document.querySelector(`input[name="active_shadow"][value="${mode.id}"]`);
-                            const drawer = document.getElementById(`drawer-${mode.id}`);
-                            if (item && checkbox && drawer) {
-                                checkbox.checked = item.active;
-                                if (item.active) drawer.classList.add('active'); else drawer.classList.remove('active');
-                                drawer.querySelector('.s-x').value = item.x;
-                                drawer.querySelector('.s-y').value = item.y;
-                                drawer.querySelector('.s-b').value = item.b;
-                                drawer.querySelector('.s-s').value = item.s;
-                                drawer.querySelector('.s-c').value = item.c;
-                                drawer.querySelector('.s-o').value = item.o;
-                            }
-                        });
-                    }
-                }
-            } else {
-                // LOGIC ĐỌC CHUỖI NHẸ CHUẨN MỚI
-                const data = decodeURIComponent(encodedStr).split('|');
-                if (data.length < 29) throw 'Mã không hợp lệ';
-                
-                document.getElementById('val-bg-main').value = data[0]; 
-                document.getElementById('val-text-color').value = data[1];
-                setLayoutMode(data[2]);
-                document.getElementById('val-list-bg').value = data[3];
-                document.getElementById('val-list-text').value = data[4];
-                document.getElementById('val-list-svg').value = data[5];
-                document.getElementById('val-theme-frame').value = data[6];
-                syncThemePickerVisuals(data[6]);
-                document.getElementById('val-frame-size').value = data[7];
-                document.getElementById('val-svg-size').value = data[8]; 
-                document.getElementById('val-svg-opacity').value = data[9];
-                document.getElementById('val-frame-radius').value = data[10]; 
-                document.getElementById('val-frame-color').value = data[11]; 
-                document.getElementById('val-svg-color').value = data[12];
-                document.getElementById('toggle-hide-labels').checked = data[13] === '1';
-                document.getElementById('val-title-size').value = data[14];
-                document.getElementById('val-title-spacing').value = data[15];
-                document.getElementById('toggle-list-frame').checked = data[16] === '1';
-                document.getElementById('val-icon-size').value = data[17];
-                document.getElementById('val-icon-spacing').value = data[18];
-                document.getElementById('val-list-bg-opacity').value = data[19];
-                document.getElementById('val-frame-bg-opacity').value = data[20];
-                document.getElementById('val-media-width').value = data[21];
-                document.getElementById('val-media-bg-opacity').value = data[22];
-                document.getElementById('val-media-btn-size').value = data[23];
-                document.getElementById('val-media-bg-color').value = data[24];
-                document.getElementById('val-media-btn-color').value = data[25];
-                document.getElementById('val-media-svg-color').value = data[26];
-                document.getElementById('toggle-glass').checked = data[27] === '1';
-                document.getElementById('val-popup-anim').value = data[28];
-                
-                document.querySelectorAll('.shadow-switch').forEach(c => { c.checked = false; document.getElementById(`drawer-${c.value}`).classList.remove('active'); });
-                if (data[29]) {
-                    const shadows = data[29].split('~');
-                    shadows.forEach(sh => {
-                        const p = sh.split('*');
-                        if(p.length > 1) {
-                            const sId = p[0];
-                            const shadowSwitch = document.querySelector(`input[name="active_shadow"][value="${sId}"]`);
-                            if(shadowSwitch) {
-                                shadowSwitch.checked = true;
-                                const drw = document.getElementById(`drawer-${sId}`); 
-                                if(drw){
-                                    drw.classList.add('active');
-                                    drw.querySelector('.s-x').value = p[1]; drw.querySelector('.s-y').value = p[2];
-                                    drw.querySelector('.s-b').value = p[3]; drw.querySelector('.s-s').value = p[4]; drw.querySelector('.s-c').value = p[5];
-                                    if(p[6]) drw.querySelector('.s-o').value = p[6];
-                                }
-                            }
-                        }
-                    });
-                }
+                });
             }
-            updateLiveVariables();
+
+            updateLiveVariables(true);
         } catch(e) { 
             console.error(e);
-            alert("Mã cấu hình không hợp lệ!"); 
+            alert("Lỗi đọc mã cấu hình! Vui lòng thử lại."); 
         }
     }
 
+    // NÚT XUẤT/NHẬP SỬA LỖI TƯƠNG THÍCH TRÊN WEBCLIP IOS
     const btnExport = document.getElementById('btn-export');
     if (btnExport) {
-        btnExport.onclick = () => { 
-            navigator.clipboard.writeText(packConfig()).then(() => {
-                const msg = window.i18nData?.['msg_copy_success'] || "Đã sao chép mã cấu hình!";
-                alert(msg);
-            }); 
-        };
+        btnExport.addEventListener('click', (e) => { 
+            e.preventDefault();
+            const code = packConfig();
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(code).then(() => {
+                    alert("Đã sao chép mã cấu hình thành công!");
+                }).catch(() => {
+                    prompt("Sao chép mã cấu hình bên dưới:", code);
+                });
+            } else {
+                prompt("Sao chép mã cấu hình bên dưới:", code);
+            }
+        });
     }
 
     const btnImport = document.getElementById('btn-import');
     if (btnImport) {
-        btnImport.onclick = () => { 
-            const promptText = window.i18nData?.['msg_prompt_import'] || "📥 Dán mã cấu hình vào đây:";
-            const code = prompt(promptText); 
+        btnImport.addEventListener('click', (e) => { 
+            e.preventDefault();
+            const code = prompt("📥 Dán mã cấu hình vào đây:"); 
             if (code) {
                 unpackConfig(code);
                 resetPresetToCustom();
             } 
-        };
+        });
     }
 
-    function updateLiveVariables() {
+    function updateLiveVariables(saveNow = false) {
         root.style.setProperty('--bg-main', document.getElementById('val-bg-main').value);
         root.style.setProperty('--text-color', document.getElementById('val-text-color').value);
         root.style.setProperty('--frame-size', document.getElementById('val-frame-size').value + 'px');
@@ -620,7 +530,6 @@ document.addEventListener("DOMContentLoaded", () => {
         root.style.setProperty('--icon-spacing', document.getElementById('val-icon-spacing').value + 'px');
         root.style.setProperty('--label-display', document.getElementById('toggle-hide-labels').checked ? 'none' : 'block');
         
-        // CẬP NHẬT CLASS ĐỂ LIST-MODE CHẠY CHUẨN XÁC
         const currentLayout = localStorage.getItem('sttv_layoutMode') || 'grid';
         const btnList = document.getElementById('btn-layout-list');
         const btnGrid = document.getElementById('btn-layout-grid');
@@ -656,7 +565,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         
         const glassMode = document.getElementById('toggle-glass').checked;
-        if(glassMode) mainContainer.classList.add('glass-active'); else mainContainer.classList.remove('glass-active');
+        if (glassMode) mainContainer.classList.add('glass-active'); else mainContainer.classList.remove('glass-active');
 
         const mediaBgColor = document.getElementById('val-media-bg-color').value;
         root.style.setProperty('--media-bg-rgb', hexToRgb(mediaBgColor));
@@ -669,7 +578,7 @@ document.addEventListener("DOMContentLoaded", () => {
         root.style.setProperty('--media-btn-play', (parseInt(mediaBtnSize) + 15) + 'px');
 
         updateShadow();
-        saveSettingsToLocal();
+        if (saveNow) saveSettingsToLocal();
     }
 
     function loadSettingsFromLocal() {
@@ -686,7 +595,7 @@ document.addEventListener("DOMContentLoaded", () => {
         
         const savedFrame = localStorage.getItem('sttv_themeFrame') || 'none';
         const frameEl = document.getElementById('val-theme-frame');
-        if(frameEl) frameEl.value = savedFrame;
+        if (frameEl) frameEl.value = savedFrame;
         syncThemePickerVisuals(savedFrame);
 
         const savedPreset = localStorage.getItem('sttv_activePreset') || 'none';
@@ -733,7 +642,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         }
                     }
                 });
-            } catch(e) { console.error("Lỗi đọc cấu hình shadow:", e); }
+            } catch(e) { console.error("Lỗi đọc shadow:", e); }
         }
 
         const initLayout = localStorage.getItem('sttv_layoutMode') || 'grid';
@@ -741,14 +650,12 @@ document.addEventListener("DOMContentLoaded", () => {
         else { btnGrid.classList.add('active'); btnList.classList.remove('active'); }
 
         const savedBg = localStorage.getItem('sttv_customBgImage'); 
-        if (savedBg) {
-            root.style.setProperty('--bg-image', `url('${savedBg}')`);
-        }
+        if (savedBg) root.style.setProperty('--bg-image', `url('${savedBg}')`);
     }
 
     loadSettingsFromLocal();
-    updateLiveVariables();
+    updateLiveVariables(true);
 
-    document.addEventListener("visibilitychange", function() { if (document.visibilityState === 'hidden') saveSettingsToLocal(); });
+    document.addEventListener("visibilitychange", () => { if (document.visibilityState === 'hidden') saveSettingsToLocal(); });
     window.addEventListener("beforeunload", saveSettingsToLocal);
 });
