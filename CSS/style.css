@@ -19,9 +19,10 @@
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
 a { text-decoration: none; color: inherit; }
 
-body { color: var(--text-color); min-height: 100vh; overflow-x: hidden; }
+html, body { width: 100%; height: 100%; margin: 0; padding: 0; }
+body { color: var(--text-color); min-height: 100vh; overflow-x: hidden; overscroll-behavior: none; }
 body::before {
-    content: ""; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    content: ""; position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100vw; height: 100vh;
     background-color: var(--bg-main); background-image: var(--bg-image); background-size: cover;
     background-position: center; background-repeat: no-repeat; z-index: -1; transition: background-color 0.3s ease;
 }
@@ -91,8 +92,25 @@ body.standard-mode .dev-only { display: none !important; }
     width: 100% !important; 
 }
 .slider-label { width: 95px; font-size: 12px; opacity: 0.8; flex-shrink: 0; }
-.slider-tooltip { position: absolute; top: -28px; background: #007aff; color: #ffffff; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 8px; opacity: 0; transform: translateY(5px); transition: opacity 0.2s, transform 0.2s, left 0.1s ease-out; pointer-events: none; z-index: 50; white-space: nowrap; box-shadow: 0 2px 6px rgba(0,0,0,0.3); }
-.slider-tooltip.show { opacity: 1; transform: translateY(0); }
+
+/* FIX TOOLTIP BONG BÓNG */
+.slider-tooltip { 
+    position: fixed; 
+    background: #007aff; 
+    color: #ffffff; 
+    font-size: 11px; 
+    font-weight: bold; 
+    padding: 4px 8px; 
+    border-radius: 8px; 
+    opacity: 0; 
+    transform: translateX(-50%) translateY(5px); 
+    transition: opacity 0.2s, transform 0.2s; 
+    pointer-events: none; 
+    z-index: 999999; 
+    white-space: nowrap; 
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3); 
+}
+.slider-tooltip.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
 /* DẤU CHẤM ĐỎ THÔNG BÁO */
 .badge-dot { display: inline-block; width: 8px; height: 8px; background-color: #ff3b30; border-radius: 50%; margin-left: 5px; vertical-align: middle; box-shadow: 0 0 6px #ff3b30; animation: badgePulse 1.5s infinite; }
@@ -142,7 +160,7 @@ body.standard-mode .dev-only { display: none !important; }
 .settings-fab img { width: 100%; height: 100%; object-fit: contain; }
 .settings-fab:active { transform: scale(0.9); }
 
-/* THIẾT LẬP SLIDER THUMB (CHÍNH XÁC PHÂN BIỆT ẢNH NÚM KÉO THEO YÊU CẦU SẾP) */
+/* THIẾT LẬP SLIDER THUMB */
 input[type=range]::-webkit-slider-thumb, .sys-slider::-webkit-slider-thumb {
     -webkit-appearance: none; height: 25px !important; width: 25px !important; 
     background-size: contain !important; background-position: center !important;
@@ -166,30 +184,20 @@ input[type=range]::-webkit-slider-thumb {
     cursor: pointer;
 }
 
-/* 2. Thanh trượt mâm nhạc ngoài Màn Hình Chính (nhận icon-control.png) */
-.sys-slider::-webkit-slider-thumb {
-    -webkit-appearance: none !important;
-    height: 25px !important; 
-    width: 25px !important; 
+/* 2. Thanh trượt mâm nhạc ngoài Màn Hình Chính (nhận icon-control.png) -> Đã fix độ ưu tiên Selectors */
+input[type=range].sys-slider::-webkit-slider-thumb {
     background-image: url('../Theme/icon-control.png') !important;
-    background-size: contain !important;
-    background-position: center !important;
-    background-repeat: no-repeat !important;
-    background-color: transparent !important;
-    border: none !important;
-    margin-top: -8.5px !important;
-    filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.4));
-    cursor: pointer;
 }
+
 input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; background: rgba(255,255,255,0.2); border-radius: 3px; }
 
-/* THEME GRID PICKER: TRONG BẢNG CÀI ĐẶT (2 HÀNG x 5 CỘT) */
+/* THEME GRID PICKER: TRONG BẢNG CÀI ĐẶT */
 .settings-drawer .theme-grid-picker { 
     display: grid; grid-template-columns: repeat(5, 1fr); grid-template-rows: repeat(2, 44px); 
     gap: 12px; margin-top: 10px; justify-items: center; align-items: center; overflow: hidden; 
 }
 
-/* THEME GRID PICKER: TRONG POPUP KHO GIAO DIỆN (HIỂN THỊ HẾT) */
+/* THEME GRID PICKER: TRONG POPUP KHO GIAO DIỆN */
 .macos-window .full-grid {
     display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
     max-height: 280px; overflow-y: auto; padding: 5px; justify-items: center; align-items: center;
