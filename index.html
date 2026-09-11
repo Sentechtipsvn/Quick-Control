@@ -2,20 +2,39 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Control Panel">
     <link rel="apple-touch-icon" href="icon.png">
     <title>Trung tâm điều khiển - Sentechtipvn</title>
-    <link rel="stylesheet" href="CSS/style.css?v=7.1">
+    <link rel="stylesheet" href="CSS/style.css?v=10.4">
 </head>
 <body>
+
+    <div id="intro-screen">
+        <div class="intro-half intro-left"></div>
+        <div class="intro-half intro-right"></div>
+        <div class="intro-content">
+            <div class="apple-logo-wrapper">
+                <svg class="apple-svg" viewBox="0 0 52 64" width="85" height="85">
+                    <path fill="currentColor" d="M41.937 29.513c.07 7.552 6.625 10.065 6.698 10.097c-.056.178-1.047 3.582-3.454 7.098c-2.08 3.04-4.238 6.07-7.64 6.132c-3.34.061-4.415-1.982-8.235-1.982s-5.013 1.92-8.177 2.043c-3.282.125-5.782-3.287-7.88-6.316c-4.285-6.196-7.56-17.508-3.162-25.144c2.184-3.792 6.089-6.193 10.326-6.254c3.223-.062 6.266 2.168 8.236 2.168s5.667-2.682 9.554-2.288c1.627.068 6.194.657 9.127 4.95c-.236.147-5.45 3.182-5.393 9.496m-6.28-18.545C37.4 8.858 38.573 5.922 38.253 3c-2.512.101-5.55 1.674-7.352 3.782c-1.614 1.867-3.029 4.856-2.647 7.72c2.8.216 5.66-1.423 7.403-3.534"/>
+                </svg>
+            </div>
+            <div class="intro-title-wrapper">
+                <div class="intro-title-container" id="intro-text-wrapper">
+                    <span>Q</span><span>u</span><span>i</span><span>c</span><span>k</span>
+                    <span>&nbsp;</span>
+                    <span>C</span><span>o</span><span>n</span><span>t</span><span>r</span><span>o</span><span>l</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="app-container grid-mode" id="main-container">
         <div class="app-header" data-i18n="app_title">Quick Control</div>
         <div class="grid-layout" id="control-panel"></div>
         
-        <!-- MEDIA & SYSTEM WIDGET NEUMORPHISM -->
         <div class="media-player-widget">
             <div class="media-controls">
                 <button class="media-btn" id="btn-media-prev" onclick="location.href='shortcuts://run-shortcut?name=QuickControl&input=text&text=media_prev'">
@@ -40,7 +59,9 @@
             </div>
         </div>
 
-        <button class="settings-fab" id="open-settings">⚙️</button>
+        <button class="settings-fab" id="open-settings">
+            <img src="Theme/icon_setting.png" alt="Settings">
+        </button>
     </div>
 
     <div class="settings-overlay" id="settings-overlay"></div>
@@ -58,16 +79,28 @@
                 <button id="btn-edit-layout" class="action-btn">🔄 <span data-i18n="btn_edit_layout">Sắp xếp</span></button>
             </div>
 
-            <div class="setting-group highlight-box">
-                <label data-i18n="lbl_theme_presets">🪄 Giao diện</label>
+            <div class="setting-group highlight-box" style="position: relative;">
+                <label data-i18n="lbl_theme_presets">🪄 Giao diện <span class="badge-dot" id="badge-preset"></span></label>
                 <select id="val-theme-preset">
                     <option value="none" data-i18n="opt_preset_none">Tự do tùy chỉnh</option>
-                    <option value="WyIjY2MwMDAwIiwiI2ZmZmZmZiIsImdyaWQiLCIjY2MwMDAwIiwiI2ZmZmZmZiIsIiNmZmZmMDAiLCJUaGVtZS9SZWQtQ29sb3VyLnBuZyIsIjYwIiwiMjgiLCIxMDAiLCI1MCIsIiNjYzAwMDAiLCIjZmZmZjAwIixbImdsb3ciLCIwIiwiMCIsIjE1IiwiMCIsIiNmZmZmMDAiLCIxMDAiXSxmYWxzZSwyMiwwLjUsdHJ1ZSwxNCwwLDEwLDEwMF0=" data-i18n="opt_preset_vn">🇻🇳 Cờ Việt Nam</option>
-                    <option value="WyIjMGYwZjEzIiwiIzAwZmZmZiIsImdyaWQiLCIjMWExYTFhIiwiIzAwZmZmZiIsIiMwMGZmZmYiLCJub25lIiwiNjAiLCIyOCIsIjEwMCIsIjIwIiwiIzFhMWExYSIsIiMwMGZmZmYiLFsiZ2xvdyIsIjAiLCIwIiwiMjAiLCIyIiwiIzAwZmZmZiIsIjEwMCJdLGZhbHNlLDIyLDAuNSxmYWxzZSwxNCwwLDEwLDEwMF0=" data-i18n="opt_preset_neon">🤖 Neon</option>
-                    <option value="WyIjMDAwMDAwIiwiI2ZmZmZmZiIsImdyaWQiLCIjMWExYTFhIiwiI2ZmZmZmZiIsIiNmZmZmZmYiLCJub25lIiwiNjAiLCIyOCIsIjEwMCIsIjIyIiwiIzFjMWMxZSIsIiNmZmZmZmYiLFsib3V0ZXIiLCIwIiwiMCIsIjAiLCIwIiwiIzAwMDAwMCIsIjEwMCJdLGZhbHNlLDIyLDAuNSxmYWxzZSwxNCwwLDEwLDEwMF0=" data-i18n="opt_preset_dark">🖤 Dark</option>
-                    <option value="WyIjMTExMTExIiwiI2ZmZDcwMCIsImdyaWQiLCIjMWExYTFhIiwiI2ZmZDcwMCIsIiNmZmQ3MDAiLCJub25lIiwiNjAiLCIzMCIsIjEwMCIsIjUwIiwiIzIyMjIyMiIsIiNmZmQ3MDAiLFsib3V0ZXIiLCIwIiwiNCIsIjEwIiwiMCIsIiMwMDAwMDAiLCI4MCJdLGZhbHNlLDIyLDAuNSx0cnVlLDE0LDAsMTAsMTAwXQ==" data-i18n="opt_preset_gold">👑 Gold</option>
+                    <option value="WyIjY2MwMDAwIiwiI2ZmZmZmZiIsImdyaWQiLCIjY2MwMDAwIiwiI2ZmZmZmZiIsIiNmZmZmMDAiLCJUaGVtZS9SZWQtQ29sb3VyLnBuZyIsIjYwIiwiMjgiLCIxMDAiLCI1MCIsIiNjYzAwMDAiLCIjZmZmZjAwIixbImdsb3ciLCIwIiwiMCIsIjE1IiwiMCIsIiNmZmZmMDAiLCIxMDAiXSxmYWxzZSwiMjIiLCIwLjUiLHRydWUsIjEwIiwiMCIsIjEwIiwiMTAwIiwiOTAiLCIzIiwiNTAiLCIjZmZmZmZmIiwiI2I1MWEwMCIsIiNmZmZmMDAiXQ==" data-i18n="opt_preset_vn">🇻🇳 VietOS</option>
+                    <option value="eyJiZ01haW4iOiIjZmZmZmZmIiwidGV4dENvbG9yIjoiIzAwMDAwMCIsImxheW91dE1vZGUiOiJncmlkIiwibGlzdEJnIjoiI2NjMDAwMCIsImxpc3RUZXh0IjoiI2ZmZmZmZiIsImxpc3RTdmciOiIjZmZmZjAwIiwidGhlbWVGcmFtZSI6IlRoZW1lL05lb25fcmFpbmJvdy5wbmciLCJmcmFtZVNpemUiOiI1NCIsInN2Z1NpemUiOiIyNSIsInN2Z09wYWNpdHkiOiIxMDAiLCJmcmFtZVJhZGl1cyI6IjUwIiwiZnJhbWVDb2xvciI6IiNjYzAwMDAiLCJzdmdDb2xvciI6IiNmZWZiNDEiLCJoaWRlTGFiZWxzIjpmYWxzZSwidGl0bGVTaXplIjoiMzYiLCJ0aXRsZVNwYWNpbmciOiIwLjUiLCJsaXN0RnJhbWUiOnRydWUsImljb25TaXplIjoiMTEiLCJpY29uU3BhY2luZyI6IjAiLCJsaXN0QmdPcGFjaXR5IjoiMTAiLCJmcmFtZUJnT3BhY2l0eSI6IjEwMCIsIm1lZGlhV2lkdGgiOiI5OCIsIm1lZGlhQmdPcGFjaXR5IjoiNDciLCJtZWRpYUJ0blNpemUiOiI1MCIsIm1lZGlhQmdDb2xvciI6IiNmZmZmZmYiLCJtZWRpYUJ0bkNvbG9yIjoiI2Q2ZDZkNiIsIm1lZGlhU3ZnQ29sb3IiOiIjZmVmYjQxIiwiZ2xhc3NNb2RlIjpmYWxzZSwicG9wdXBBbmltIjoiYW5pbS16b29tIiwic2hhZG93Q29uZmlnIjp7Imluc2V0Ijp7ImFjdGl2ZSI6ZmFsc2UsIngiOiIwIiwieSI6IjUiLCJiIjoiMCIsInMiOiItNCIsImMiOiIjZmZmZmZmIiwibyI6IjEwMCJ9LCJvdXRlciI6eyJhY3RpdmUiOnRydWUsIngiOiIwIiwieSI6IjYiLCJiIjoiNSIsInMiOiItMyIsImMiOiIjMDAwMDAwIiwibyI6IjEwMCJ9LCJzb2Z0Ijp7ImFjdGl2ZSI6ZmFsc2UsIngiOiIwIiwieSI6IjAiLCJiIjoiNyIsInMiOiIyIiwiYyI6IiNmZjQwMTUiLCJvIjoiMTAwIn0sImhhcmQiOnsiYWN0aXZlIjp0cnVlLCJ4IjoiMCIsInkiOiI0IiwiYiI6IjEwIiwicyI6IjAiLCJjIjoiIzQ3NDc0NyIsIm8iOiIxMDAifSwiZ2xvdyI6eyJhY3RpdmUiOmZhbHNlLCJ4IjoiMCIsInkiOiIwIiwiYiI6IjEyIiwicyI6IjAiLCJjIjoiI2UyMjQwMCIsIm8iOiI0OCJ9fX0=" data-i18n="opt_preset_Neon_light">Neon sáng</option>
+<option value="eyJiZ01haW4iOiIjMzMzMzMzIiwidGV4dENvbG9yIjoiI2ZmZmZmZiIsImxheW91dE1vZGUiOiJncmlkIiwibGlzdEJnIjoiI2NjMDAwMCIsImxpc3RUZXh0IjoiI2ZmZmZmZiIsImxpc3RTdmciOiIjZmZmZjAwIiwidGhlbWVGcmFtZSI6IlRoZW1lL05lb25fcmFpbmJvdy5wbmciLCJmcmFtZVNpemUiOiI1NCIsInN2Z1NpemUiOiIyNSIsInN2Z09wYWNpdHkiOiIxMDAiLCJmcmFtZVJhZGl1cyI6IjUwIiwiZnJhbWVDb2xvciI6IiNjYzAwMDAiLCJzdmdDb2xvciI6IiNmZWZiNDEiLCJoaWRlTGFiZWxzIjpmYWxzZSwidGl0bGVTaXplIjoiMzYiLCJ0aXRsZVNwYWNpbmciOiIwLjUiLCJsaXN0RnJhbWUiOnRydWUsImljb25TaXplIjoiMTEiLCJpY29uU3BhY2luZyI6IjAiLCJsaXN0QmdPcGFjaXR5IjoiMTAiLCJmcmFtZUJnT3BhY2l0eSI6IjEwMCIsIm1lZGlhV2lkdGgiOiI5OCIsIm1lZGlhQmdPcGFjaXR5IjoiMTAwIiwibWVkaWFCdG5TaXplIjoiNTAiLCJtZWRpYUJnQ29sb3IiOiIjMzMzMzMzIiwibWVkaWFCdG5Db2xvciI6IiMzMzMzMzMiLCJtZWRpYVN2Z0NvbG9yIjoiI2ZlZmI0MSIsImdsYXNzTW9kZSI6ZmFsc2UsInBvcHVwQW5pbSI6ImFuaW0tem9vbSIsInNoYWRvd0NvbmZpZyI6eyJpbnNldCI6eyJhY3RpdmUiOmZhbHNlLCJ4IjoiMCIsInkiOiI1IiwiYiI6IjAiLCJzIjoiLTQiLCJjIjoiI2ZmZmZmZiIsIm8iOiIxMDAifSwib3V0ZXIiOnsiYWN0aXZlIjp0cnVlLCJ4IjoiMCIsInkiOiI2IiwiYiI6IjkiLCJzIjoiLTIiLCJjIjoiIzAwMDAwMCIsIm8iOiIxMDAifSwic29mdCI6eyJhY3RpdmUiOmZhbHNlLCJ4IjoiMCIsInkiOiIwIiwiYiI6IjciLCJzIjoiMiIsImMiOiIjZmY0MDE1IiwibyI6IjEwMCJ9LCJoYXJkIjp7ImFjdGl2ZSI6dHJ1ZSwieCI6IjAiLCJ5IjoiLTgiLCJiIjoiMTIiLCJzIjoiLTIiLCJjIjoiIzk5OTk5OSIsIm8iOiI0NSJ9LCJnbG93Ijp7ImFjdGl2ZSI6ZmFsc2UsIngiOiIwIiwieSI6IjAiLCJiIjoiMTIiLCJzIjoiMCIsImMiOiIjZTIyNDAwIiwibyI6IjQ4In19fQ==" data-i18n="opt_preset_Dark_neon">Neon tối</option>
+<option value="eyJiZ01haW4iOiIjZDZkNmQ2IiwidGV4dENvbG9yIjoiIzAwMDAwMCIsImxheW91dE1vZGUiOiJncmlkIiwibGlzdEJnIjoiIzFhMWExYSIsImxpc3RUZXh0IjoiI2ZmZDcwMCIsImxpc3RTdmciOiIjZmZkNzAwIiwidGhlbWVGcmFtZSI6IlRoZW1lL2ljb24tR2xhc3MucG5nIiwiZnJhbWVTaXplIjoiNjAiLCJzdmdTaXplIjoiMjkiLCJzdmdPcGFjaXR5IjoiMTAwIiwiZnJhbWVSYWRpdXMiOiI1MCIsImZyYW1lQ29sb3IiOiIjMjIyMjIyIiwic3ZnQ29sb3IiOiIjMDAwMDAwIiwiaGlkZUxhYmVscyI6ZmFsc2UsInRpdGxlU2l6ZSI6IjM3IiwidGl0bGVTcGFjaW5nIjoiMSIsImxpc3RGcmFtZSI6dHJ1ZSwiaWNvblNpemUiOiIxMSIsImljb25TcGFjaW5nIjoiMCIsImxpc3RCZ09wYWNpdHkiOiIxMCIsImZyYW1lQmdPcGFjaXR5IjoiMTAwIiwibWVkaWFXaWR0aCI6IjkwIiwibWVkaWFCZ09wYWNpdHkiOiIzIiwibWVkaWFCdG5TaXplIjoiNTAiLCJtZWRpYUJnQ29sb3IiOiIjZmZmZmZmIiwibWVkaWFCdG5Db2xvciI6IiNhZGFkYWQiLCJtZWRpYVN2Z0NvbG9yIjoiIzAwMDAwMCIsImdsYXNzTW9kZSI6ZmFsc2UsInBvcHVwQW5pbSI6ImFuaW0tem9vbSIsInNoYWRvd0NvbmZpZyI6eyJpbnNldCI6eyJhY3RpdmUiOmZhbHNlLCJ4IjoiLTEyIiwieSI6Ii03IiwiYiI6IjQiLCJzIjoiLTEwIiwiYyI6IiMwMDAwMDAiLCJvIjoiMjEifSwib3V0ZXIiOnsiYWN0aXZlIjp0cnVlLCJ4IjoiMyIsInkiOiIzIiwiYiI6IjMiLCJzIjoiLTIiLCJjIjoiIzAwMDAwMCIsIm8iOiI2MCJ9LCJzb2Z0Ijp7ImFjdGl2ZSI6ZmFsc2UsIngiOiIwIiwieSI6IjAiLCJiIjoiNCIsInMiOiIxIiwiYyI6IiMwMDhjYjQiLCJvIjoiNDcifSwiaGFyZCI6eyJhY3RpdmUiOnRydWUsIngiOiItMyIsInkiOiItMyIsImIiOiI3IiwicyI6Ii0xIiwiYyI6IiNmZmZmZmYiLCJvIjoiNzQifSwiZ2xvdyI6eyJhY3RpdmUiOmZhbHNlLCJ4IjoiMCIsInkiOiIwIiwiYiI6IjciLCJzIjoiNSIsImMiOiIjNDc0NzQ3IiwibyI6IjQzIn19fQ==" data-i18n="opt_preset_Glass_button">Nút thuỷ tinh</option>
+<option value="eyJiZ01haW4iOiIjMzMzMzMzIiwidGV4dENvbG9yIjoiIzMyYzc1OSIsImxheW91dE1vZGUiOiJncmlkIiwibGlzdEJnIjoiIzFhMWExYSIsImxpc3RUZXh0IjoiI2ZmZDcwMCIsImxpc3RTdmciOiIjZmZkNzAwIiwidGhlbWVGcmFtZSI6IlRoZW1lL0JsYWNrX2JsdWVfYm9yZGVyLnBuZyIsImZyYW1lU2l6ZSI6IjYwIiwic3ZnU2l6ZSI6IjI5Iiwic3ZnT3BhY2l0eSI6IjEwMCIsImZyYW1lUmFkaXVzIjoiNTAiLCJmcmFtZUNvbG9yIjoiIzIyMjIyMiIsInN2Z0NvbG9yIjoiIzJiZmY0NyIsImhpZGVMYWJlbHMiOmZhbHNlLCJ0aXRsZVNpemUiOiIzNyIsInRpdGxlU3BhY2luZyI6IjEiLCJsaXN0RnJhbWUiOnRydWUsImljb25TaXplIjoiMTEiLCJpY29uU3BhY2luZyI6IjAiLCJsaXN0QmdPcGFjaXR5IjoiMTAiLCJmcmFtZUJnT3BhY2l0eSI6IjEwMCIsIm1lZGlhV2lkdGgiOiI5MSIsIm1lZGlhQmdPcGFjaXR5IjoiMTAwIiwibWVkaWFCdG5TaXplIjoiNTAiLCJtZWRpYUJnQ29sb3IiOiIjMDBlYmY3IiwibWVkaWFCdG5Db2xvciI6IiMzMzMzMzMiLCJtZWRpYVN2Z0NvbG9yIjoiIzMyYzc1OSIsImdsYXNzTW9kZSI6ZmFsc2UsInBvcHVwQW5pbSI6ImFuaW0tem9vbSIsInNoYWRvd0NvbmZpZyI6eyJpbnNldCI6eyJhY3RpdmUiOmZhbHNlLCJ4IjoiLTEyIiwieSI6Ii03IiwiYiI6IjQiLCJzIjoiLTEwIiwiYyI6IiMwMDAwMDAiLCJvIjoiMjEifSwib3V0ZXIiOnsiYWN0aXZlIjp0cnVlLCJ4IjoiLTIiLCJ5IjoiNCIsImIiOiI4IiwicyI6Ii0xIiwiYyI6IiMwMDBiMDgiLCJvIjoiMTAwIn0sInNvZnQiOnsiYWN0aXZlIjpmYWxzZSwieCI6IjAiLCJ5IjoiMCIsImIiOiI0IiwicyI6IjEiLCJjIjoiIzAwOGNiNCIsIm8iOiI0NyJ9LCJoYXJkIjp7ImFjdGl2ZSI6ZmFsc2UsIngiOiItMyIsInkiOiItMyIsImIiOiI3IiwicyI6Ii0xIiwiYyI6IiNmZmZmZmYiLCJvIjoiNzQifSwiZ2xvdyI6eyJhY3RpdmUiOmZhbHNlLCJ4IjoiMCIsInkiOiIwIiwiYiI6IjciLCJzIjoiNSIsImMiOiIjNDc0NzQ3IiwibyI6IjQzIn19fQ==" data-i18n="opt_preset_Dark_blue">Xanh tối</option>
+<option value="eyJiZ01haW4iOiIjMDAwMDAwIiwidGV4dENvbG9yIjoiI2ZmZmZmZiIsImxheW91dE1vZGUiOiJncmlkIiwibGlzdEJnIjoiIzFhMWExYSIsImxpc3RUZXh0IjoiI2ZmZDcwMCIsImxpc3RTdmciOiIjZmZkNzAwIiwidGhlbWVGcmFtZSI6IlRoZW1lL25lb25fYmxhY2sucG5nIiwiZnJhbWVTaXplIjoiNjAiLCJzdmdTaXplIjoiMjkiLCJzdmdPcGFjaXR5IjoiMTAwIiwiZnJhbWVSYWRpdXMiOiI1MCIsImZyYW1lQ29sb3IiOiIjMjIyMjIyIiwic3ZnQ29sb3IiOiIjZmZmZmZmIiwiaGlkZUxhYmVscyI6ZmFsc2UsInRpdGxlU2l6ZSI6IjM3IiwidGl0bGVTcGFjaW5nIjoiMSIsImxpc3RGcmFtZSI6dHJ1ZSwiaWNvblNpemUiOiIxMSIsImljb25TcGFjaW5nIjoiMCIsImxpc3RCZ09wYWNpdHkiOiIxMCIsImZyYW1lQmdPcGFjaXR5IjoiMTAwIiwibWVkaWFXaWR0aCI6IjkxIiwibWVkaWFCZ09wYWNpdHkiOiIxMDAiLCJtZWRpYUJ0blNpemUiOiI1MCIsIm1lZGlhQmdDb2xvciI6IiMwMDAwMDAiLCJtZWRpYUJ0bkNvbG9yIjoiIzAwNDJhOSIsIm1lZGlhU3ZnQ29sb3IiOiIjMzJjNzU5IiwiZ2xhc3NNb2RlIjpmYWxzZSwicG9wdXBBbmltIjoiYW5pbS16b29tIiwic2hhZG93Q29uZmlnIjp7Imluc2V0Ijp7ImFjdGl2ZSI6ZmFsc2UsIngiOiItMTIiLCJ5IjoiLTciLCJiIjoiNCIsInMiOiItMTAiLCJjIjoiIzAwMDAwMCIsIm8iOiIyMSJ9LCJvdXRlciI6eyJhY3RpdmUiOmZhbHNlLCJ4IjoiLTIiLCJ5IjoiNCIsImIiOiI4IiwicyI6Ii0xIiwiYyI6IiMwMDBiMDgiLCJvIjoiMTAwIn0sInNvZnQiOnsiYWN0aXZlIjpmYWxzZSwieCI6IjAiLCJ5IjoiMCIsImIiOiI0IiwicyI6IjEiLCJjIjoiIzAwOGNiNCIsIm8iOiI0NyJ9LCJoYXJkIjp7ImFjdGl2ZSI6ZmFsc2UsIngiOiItMyIsInkiOiItMyIsImIiOiI3IiwicyI6Ii0xIiwiYyI6IiNmZmZmZmYiLCJvIjoiNzQifSwiZ2xvdyI6eyJhY3RpdmUiOnRydWUsIngiOiIwIiwieSI6IjAiLCJiIjoiMTQiLCJzIjoiMCIsImMiOiIjY2JmMGZmIiwibyI6IjEwMCJ9fX0=" data-i18n="opt_preset_Neon_glow">Phát sáng neon</option>
+<option value="eyJiZ01haW4iOiIjZWJlYmViIiwidGV4dENvbG9yIjoiIzAwMDAwMCIsImxheW91dE1vZGUiOiJncmlkIiwibGlzdEJnIjoiI2NjMDAwMCIsImxpc3RUZXh0IjoiI2ZmZmZmZiIsImxpc3RTdmciOiIjZmZmZjAwIiwidGhlbWVGcmFtZSI6IlRoZW1lL0NvbnZleF9nbGFzcy5wbmciLCJmcmFtZVNpemUiOiI1NiIsInN2Z1NpemUiOiIzMCIsInN2Z09wYWNpdHkiOiIxMDAiLCJmcmFtZVJhZGl1cyI6IjUwIiwiZnJhbWVDb2xvciI6IiNjYzAwMDAiLCJzdmdDb2xvciI6IiMwMDAwMDAiLCJoaWRlTGFiZWxzIjpmYWxzZSwidGl0bGVTaXplIjoiMzQiLCJ0aXRsZVNwYWNpbmciOiIwIiwibGlzdEZyYW1lIjp0cnVlLCJpY29uU2l6ZSI6IjEwIiwiaWNvblNwYWNpbmciOiIwIiwibGlzdEJnT3BhY2l0eSI6IjEwIiwiZnJhbWVCZ09wYWNpdHkiOiIxMDAiLCJtZWRpYVdpZHRoIjoiOTgiLCJtZWRpYUJnT3BhY2l0eSI6IjI2IiwibWVkaWFCdG5TaXplIjoiNTciLCJtZWRpYUJnQ29sb3IiOiIjZWJlYmViIiwibWVkaWFCdG5Db2xvciI6IiNlYmViZWIiLCJtZWRpYVN2Z0NvbG9yIjoiIzAwMDAwMCIsImdsYXNzTW9kZSI6ZmFsc2UsInBvcHVwQW5pbSI6ImFuaW0tem9vbSIsInNoYWRvd0NvbmZpZyI6eyJpbnNldCI6eyJhY3RpdmUiOmZhbHNlLCJ4IjoiMCIsInkiOiIwIiwiYiI6IjkiLCJzIjoiLTEiLCJjIjoiI2JlMzhmMyIsIm8iOiIxMDAifSwib3V0ZXIiOnsiYWN0aXZlIjp0cnVlLCJ4IjoiMCIsInkiOiIwIiwiYiI6IjUiLCJzIjoiMCIsImMiOiIjMDAxMDM2IiwibyI6IjEwMCJ9LCJzb2Z0Ijp7ImFjdGl2ZSI6ZmFsc2UsIngiOiIwIiwieSI6IjAiLCJiIjoiNCIsInMiOiIxIiwiYyI6IiMwMDhjYjQiLCJvIjoiNDcifSwiaGFyZCI6eyJhY3RpdmUiOmZhbHNlLCJ4IjoiNCIsInkiOiI1IiwiYiI6IjYiLCJzIjoiLTEiLCJjIjoiIzllNTlmZiIsIm8iOiI3NyJ9LCJnbG93Ijp7ImFjdGl2ZSI6ZmFsc2UsIngiOiIwIiwieSI6IjAiLCJiIjoiMjIiLCJzIjoiLTUiLCJjIjoiI2QzNTdmZSIsIm8iOiIxMDAifX19" data-i18n="opt_preset_Convex_glass">Kính cầu lồi</option>
+<option value="eyJiZ01haW4iOiIjZmZmZmZmIiwidGV4dENvbG9yIjoiIzAwMDAwMCIsImxheW91dE1vZGUiOiJncmlkIiwibGlzdEJnIjoiIzFhMWExYSIsImxpc3RUZXh0IjoiI2ZmZmZmZiIsImxpc3RTdmciOiIjZmZmZmZmIiwidGhlbWVGcmFtZSI6IlRoZW1lL0NvbnZleF9nbGFzcy5wbmciLCJmcmFtZVNpemUiOiI2MCIsInN2Z1NpemUiOiIyOCIsInN2Z09wYWNpdHkiOiIxMDAiLCJmcmFtZVJhZGl1cyI6IjUwIiwiZnJhbWVDb2xvciI6IiMwMDAwMDAiLCJzdmdDb2xvciI6IiMwMDAwMDAiLCJoaWRlTGFiZWxzIjpmYWxzZSwidGl0bGVTaXplIjoiMjIiLCJ0aXRsZVNwYWNpbmciOiIwLjUiLCJsaXN0RnJhbWUiOmZhbHNlLCJpY29uU2l6ZSI6IjEyIiwiaWNvblNwYWNpbmciOiIwIiwibGlzdEJnT3BhY2l0eSI6IjEwIiwiZnJhbWVCZ09wYWNpdHkiOiIxMDAiLCJtZWRpYVdpZHRoIjoiOTAiLCJtZWRpYUJnT3BhY2l0eSI6IjEwMCIsIm1lZGlhQnRuU2l6ZSI6IjQ2IiwibWVkaWFCZ0NvbG9yIjoiI2ZmZmZmZiIsIm1lZGlhQnRuQ29sb3IiOiIjZmZmZmZmIiwibWVkaWFTdmdDb2xvciI6IiMwMDAwMDAiLCJnbGFzc01vZGUiOmZhbHNlLCJwb3B1cEFuaW0iOiJhbmltLWZhZGUiLCJzaGFkb3dDb25maWciOnsiaW5zZXQiOnsiYWN0aXZlIjpmYWxzZSwieCI6IjAiLCJ5IjoiNCIsImIiOiIxMCIsInMiOiIwIiwiYyI6IiMwMDAwMDAiLCJvIjoiMTAwIn0sIm91dGVyIjp7ImFjdGl2ZSI6ZmFsc2UsIngiOiIwIiwieSI6IjQiLCJiIjoiMTAiLCJzIjoiMCIsImMiOiIjMDAwMDAwIiwibyI6IjEwMCJ9LCJzb2Z0Ijp7ImFjdGl2ZSI6ZmFsc2UsIngiOiIwIiwieSI6IjQiLCJiIjoiMTAiLCJzIjoiMCIsImMiOiIjMDAwMDAwIiwibyI6IjEwMCJ9LCJoYXJkIjp7ImFjdGl2ZSI6ZmFsc2UsIngiOiIwIiwieSI6IjQiLCJiIjoiMTAiLCJzIjoiMCIsImMiOiIjMDAwMDAwIiwibyI6IjEwMCJ9LCJnbG93Ijp7ImFjdGl2ZSI6dHJ1ZSwieCI6IjAiLCJ5IjoiLTEiLCJiIjoiNSIsInMiOiIxIiwiYyI6IiNiZTM4ZjMiLCJvIjoiMTAwIn19fQ==" data-i18n="opt_preset_Purple_glass">Thuỷ tinh tím</option>
                 </select>
-                
+
+                <label style="margin-top: 10px;" data-i18n="lbl_popup_anim">✨ Hiệu ứng Popup Cài đặt</label>
+                <select id="val-popup-anim">
+                    <option value="default" data-i18n="opt_popup_default">Trượt từ phải sang (Mặc định)</option>
+                    <option value="anim-zoom" data-i18n="opt_popup_zoom">Thu phóng (macOS)</option>
+                    <option value="anim-slide-top" data-i18n="opt_popup_slide_top">Trượt từ trên xuống</option>
+                    <option value="anim-fade" data-i18n="opt_popup_fade">Làm mờ (Fade)</option>
+                </select>
+
                 <div class="feature-toggles">
                     <label><span data-i18n="lbl_audio_feedback">🎚️ Âm thanh</span><input type="checkbox" id="toggle-audio"></label>
                     <label><span data-i18n="lbl_parallax">🧭 Gia tốc kế 3D</span><input type="checkbox" id="toggle-parallax"></label>
@@ -87,14 +120,17 @@
             <div class="setting-group">
                 <label data-i18n="lbl_bg_image">📱 Hình nền tự chọn</label>
                 <input type="file" id="upload-bg" accept="image/*" style="font-size: 12px;">
-                <button type="button" id="clear-bg" style="margin-top:5px; padding:5px; background:rgba(150,150,150,0.2); border:none; color:inherit; border-radius:5px;">Xóa ảnh nền</button>
+                <button type="button" id="clear-bg" data-i18n="btn_clear_bg" style="margin-top:5px; padding:5px; background:rgba(150,150,150,0.2); border:none; color:inherit; border-radius:5px;">Xóa ảnh nền</button>
             </div>
+            
             <div class="setting-group">
                 <label><input type="checkbox" id="toggle-glass"> <span data-i18n="lbl_glassmorphism">Bật Kính mờ</span></label>
             </div>
 
-            <div class="setting-group">
+            <div class="setting-group dev-only">
                 <label data-i18n="lbl_bg_main">🏳️‍🌈 Màu Nền Chính</label><input type="color" id="val-bg-main" value="#121b22">
+            </div>
+            <div class="setting-group">
                 <label data-i18n="lbl_text_color">🏳️‍🌈 Màu Chữ Hệ Thống</label><input type="color" id="val-text-color" value="#ffffff">
             </div>
 
@@ -106,7 +142,7 @@
                 </div>
             </div>
 
-            <div class="setting-group highlight-box">
+            <div class="setting-group highlight-box dev-only">
                 <label data-i18n="lbl_list_bg">Màu nền Danh sách</label><input type="color" id="val-list-bg" value="#1a1a1a">
                 <label data-i18n="lbl_list_text">Màu chữ Danh sách</label><input type="color" id="val-list-text" value="#ffffff">
                 <label data-i18n="lbl_list_svg">Màu SVG Danh sách</label><input type="color" id="val-list-svg" value="#ffffff">
@@ -117,66 +153,130 @@
                 <label style="margin-top: 10px;"><input type="checkbox" id="toggle-list-frame"> <span data-i18n="lbl_list_frame">Theme cho Danh sách</span></label>
             </div>
             
-            <div class="setting-group">
-                <label data-i18n="lbl_theme_frame">💠 Theme SVG</label>
-                <select id="val-theme-frame">
-                    <option value="none" data-i18n="opt_frame_none">Không khung</option>
-                    <option value="Theme/Black-Colour.png" data-i18n="opt_frame_black">⚫️</option>
-                    <option value="Theme/Red-Colour.png" data-i18n="opt_frame_red">🔴</option>
-                    <option value="Theme/Green-colour.png" data-i18n="opt_frame_green">🟢</option>
-                    <option value="Theme/Orange-colour.png" data-i18n="opt_frame_orange">🟠</option>
-                    <option value="Theme/Purple-colour.png" data-i18n="opt_frame_purple">🟣</option>
-                    <option value="Theme/Moss-green.png" data-i18n="opt_frame_moss">🔵</option>
-                    <option value="Theme/icon-Glass.png" data-i18n="opt_frame_glass">⚪️</option>
-                    <option value="Theme/icon-Glass2.png" data-i18n="opt_frame_glass2">⚪️</option>
-                    <option value="Theme/icon-Glass3.png" data-i18n="opt_frame_glass3">⚪️</option>
-                    <option value="Theme/icon-Siri.png" data-i18n="opt_frame_siri">👩‍💻</option>
-                    <option value="custom" data-i18n="opt_frame_custom">SVG Tùy chỉnh</option>
-                </select>
-                <div id="custom-svg-container" style="display: none;">
-                    <textarea id="custom-svg-code" placeholder="Dán mã SVG..." style="width: 100%; height: 80px; margin-top: 10px; border-radius: 8px; padding: 10px; background: rgba(0,0,0,0.1); color: inherit;"></textarea>
-                    <button type="button" id="apply-custom-svg" style="margin-top: 10px; padding: 8px 15px; border-radius: 8px; background: #007aff; color: white; border: none;">Áp dụng SVG</button>
+            <div class="setting-group" style="position: relative;">
+                <label data-i18n="lbl_theme_frame">💠 Theme SVG <span class="badge-dot" id="badge-theme"></span></label>
+                <div class="theme-grid-picker">
+                    <div class="theme-chip active" data-value="none"><span style="font-size: 18px;">❌</span></div>
+                    <div class="theme-chip" data-value="Theme/Black-Colour.png"><img src="Theme/Black-Colour.png" alt="Black"></div>
+                    <div class="theme-chip" data-value="Theme/Red-Colour.png"><img src="Theme/Red-Colour.png" alt="Red"></div>
+                    <div class="theme-chip" data-value="Theme/Green-colour.png"><img src="Theme/Green-colour.png" alt="Green"></div>
+                    <div class="theme-chip" data-value="Theme/Orange-colour.png"><img src="Theme/Orange-colour.png" alt="Orange"></div>
+                    
+                    <div class="theme-chip" data-value="Theme/Purple-colour.png"><img src="Theme/Purple-colour.png" alt="Purple"></div>
+                    <div class="theme-chip" data-value="Theme/Moss-green.png"><img src="Theme/Moss-green.png" alt="Moss"></div>
+                    <div class="theme-chip" data-value="Theme/icon-Glass.png"><img src="Theme/icon-Glass.png" alt="Glass"></div>
+                    <div class="theme-chip" data-value="Theme/Convex_glass.png"><img src="Theme/Convex_glass.png" alt="Convex glass"></div>
+                    <div class="theme-chip-more" id="btn-more-themes"><span>+</span></div>
                 </div>
+                <input type="hidden" id="val-theme-frame" value="none">
             </div>
             
-            <div class="setting-group">
+            <div class="setting-group dev-only">
                 <label data-i18n="lbl_frame_svg_size">🖼️ Khung Icon & SVG</label>
-                <div class="slider-item"><span class="slider-label">Khung</span><input type="range" id="val-frame-size" min="40" max="100" value="60"></div>
+                <div class="slider-item"><span class="slider-label" data-i18n="lbl_frame_size">Khung</span><input type="range" id="val-frame-size" min="40" max="100" value="60"></div>
                 <div class="slider-item"><span class="slider-label" data-i18n="lbl_frame_radius">Bo góc</span><input type="range" id="val-frame-radius" min="0" max="50" value="22"></div>
-                <div class="slider-item"><span class="slider-label">SVG</span><input type="range" id="val-svg-size" min="16" max="60" value="28"></div>
+                <div class="slider-item"><span class="slider-label" data-i18n="lbl_svg_size">SVG</span><input type="range" id="val-svg-size" min="16" max="60" value="28"></div>
                 <div class="slider-item"><span class="slider-label" data-i18n="lbl_svg_opacity">Độ đậm SVG</span><input type="range" id="val-svg-opacity" min="0" max="100" value="100"></div>
                 <div class="slider-item"><span class="slider-label" data-i18n="lbl_frame_color">Nền khung</span><input type="color" id="val-frame-color" value="#000000"></div>
-                
                 <div class="slider-item" style="margin-top: 5px;">
-                    <span class="slider-label" data-i18n="lbl_frame_bg_opacity">Độ đậm nền</span>
-                    <input type="range" id="val-frame-bg-opacity" min="0" max="100" value="100">
+                    <span class="slider-label" data-i18n="lbl_frame_bg_opacity">Độ đậm nền</span><input type="range" id="val-frame-bg-opacity" min="0" max="100" value="100">
                 </div>
             </div>
             
-            <div class="setting-group"><label data-i18n="lbl_svg_color">Màu SVG</label><input type="color" id="val-svg-color" value="#ffffff"></div>
+            <div class="setting-group">
+                <label data-i18n="lbl_svg_color">Màu SVG</label><input type="color" id="val-svg-color" value="#ffffff">
+            </div>
 
-            <h3 class="section-title" data-i18n="lbl_shadow_section">🔘 Đổ Bóng</h3>
-            <div id="shadow-controls"></div>
+            <div class="setting-group highlight-box dev-only">
+                <label data-i18n="lbl_media_widget">🎵 Trình Phát Nhạc</label>
+                <div class="slider-item"><span class="slider-label" data-i18n="lbl_media_width">Kích thước khung</span><input type="range" id="val-media-width" min="50" max="100" value="90"></div>
+                <div class="slider-item"><span class="slider-label" data-i18n="lbl_media_bg_opacity">Độ mờ khung</span><input type="range" id="val-media-bg-opacity" min="0" max="100" value="3"></div>
+                <div class="slider-item"><span class="slider-label" data-i18n="lbl_media_btn_size">Cỡ nút bấm</span><input type="range" id="val-media-btn-size" min="30" max="70" value="50"></div>
+                <div class="slider-item"><span class="slider-label" data-i18n="lbl_media_bg_color">Màu khung</span><input type="color" id="val-media-bg-color" value="#ffffff"></div>
+                <div class="slider-item"><span class="slider-label" data-i18n="lbl_media_btn_color">Màu nút</span><input type="color" id="val-media-btn-color" value="#ffffff"></div>
+                <div class="slider-item"><span class="slider-label" data-i18n="lbl_media_svg_color">Màu SVG</span><input type="color" id="val-media-svg-color" value="#ffffff"></div>
+            </div>
+
+            <h3 class="section-title dev-only" data-i18n="lbl_shadow_section">🔘 Đổ Bóng</h3>
+            <div id="shadow-controls" class="dev-only"></div>
         </div>
+        <button id="btn-info" class="info-btn">i</button>
+    </div>
 
-        <button id="btn-info" class="info-btn">ℹ️</button>
+    <div class="info-overlay" id="theme-overlay"></div>
+    <div id="theme-modal" class="macos-window" style="max-width: 320px;">
+        <div class="macos-header">
+            <div class="mac-dot close-dot" id="close-theme-modal"></div>
+            <div class="mac-dot min-dot"></div>
+            <div class="mac-dot max-dot"></div>
+            <div style="font-size: 14px; font-weight: bold; margin-left: 10px; color: #333;" data-i18n="modal_theme_title">Kho Giao Diện</div>
+        </div>
+        <div class="macos-body">
+            <div class="theme-grid-picker full-grid">
+                <div class="theme-chip active" data-value="none"><span style="font-size: 18px;">❌</span></div>
+                <div class="theme-chip" data-value="Theme/Black-Colour.png"><img src="Theme/Black-Colour.png" alt="Black"></div>
+                <div class="theme-chip" data-value="Theme/Red-Colour.png"><img src="Theme/Red-Colour.png" alt="Red"></div>
+                <div class="theme-chip" data-value="Theme/Green-colour.png"><img src="Theme/Green-colour.png" alt="Green"></div>
+                <div class="theme-chip" data-value="Theme/Orange-colour.png"><img src="Theme/Orange-colour.png" alt="Orange"></div>
+                <div class="theme-chip" data-value="Theme/Purple-colour.png"><img src="Theme/Purple-colour.png" alt="Purple"></div>
+                <div class="theme-chip" data-value="Theme/Moss-green.png"><img src="Theme/Moss-green.png" alt="Moss"></div>
+                <div class="theme-chip" data-value="Theme/icon-Glass.png"><img src="Theme/icon-Glass.png" alt="Glass"></div>
+                <div class="theme-chip" data-value="Theme/icon-Glass2.png"><img src="Theme/icon-Glass2.png" alt="Glass 2"></div>
+                <div class="theme-chip" data-value="Theme/icon-Glass3.png"><img src="Theme/icon-Glass3.png" alt="Glass 3"></div>
+                <div class="theme-chip" data-value="Theme/Convex_glass.png"><img src="Theme/Convex_glass.png" alt="Convex glass"></div>
+                <div class="theme-chip" data-value="Theme/Black_button.png"><img src="Theme/Black_button.png" alt="Black button"></div>
+                <div class="theme-chip" data-value="Theme/icon-rainbow.png"><img src="Theme/icon-rainbow.png" alt="Rainbow"></div>
+                <div class="theme-chip" data-value="Theme/White_button.png"><img src="Theme/White_button.png" alt="White"></div>
+                <div class="theme-chip" data-value="Theme/Black_blue_border.png"><img src="Theme/Black_blue_border.png" alt="Black blue"></div>
+                <div class="theme-chip" data-value="Theme/Bubble_neon.png"><img src="Theme/Bubble_neon.png" alt="Bubble neon"></div>
+                <div class="theme-chip" data-value="Theme/Neon_rainbow.png"><img src="Theme/Neon_rainbow.png" alt="Neon rainbow"></div>
+                <div class="theme-chip" data-value="Theme/neon_black.png"><img src="Theme/neon_black.png" alt="neon black"></div>
+            </div>
+        </div>
     </div>
 
     <div class="info-overlay" id="info-overlay"></div>
-    <div id="info-modal" class="info-modal macos-window">
+    <div id="info-modal" class="macos-window">
         <div class="macos-header">
-            <img src="Theme/icon-close.png" class="macos-btn close-btn" id="close-info" alt="Close">
-            <img src="Theme/icon-zoom.png" class="macos-btn" alt="Zoom">
-            <img src="Theme/icon-full.png" class="macos-btn" alt="Full">
+            <div class="mac-dot close-dot" id="close-info"></div>
+            <div class="mac-dot min-dot"></div>
+            <div class="mac-dot max-dot"></div>
+            <div style="font-size: 14px; font-weight: bold; margin-left: 10px; color: #333;" data-i18n="modal_info_title">Thông tin ứng dụng</div>
         </div>
         <div class="macos-body">
-            <h3 data-i18n="info_title">Quick Control</h3>
-            <p><span class="dev-text"><span data-i18n="info_dev_prefix">Phát triển bởi</span></span> <a href="https://browse.shortcuty.app/user/Sentechtipsvn" target="_blank">Sentechtipsvn</a></p>
-            <p class="info-desc" data-i18n="info_desc">Webclip điều khiển đa năng, tích hợp giao diện kính mờ và hệ thống Live Knobs tuỳ biến sống động chuyên nghiệp dành riêng cho iOS.</p>
+            <div class="info-desc">
+                <h3 style="font-size: 18px; margin-bottom: 8px;" data-i18n="info_title">Quick Control</h3>
+                <p style="font-size: 13px; color: #666;">
+                    <span data-i18n="info_dev_prefix">Phát triển bởi</span>
+                    <a href="https://www.youtube.com/@Sentechtipvn" target="_blank" rel="noopener" style="color: #007aff; font-weight: 600; text-decoration: none;">Sentechtipvn</a>
+                </p>
+                <p style="margin-top: 14px; text-align: left; line-height: 1.6;" data-i18n="info_desc">
+                    Webclip điều khiển đa năng, tích hợp giao diện kính mờ và hệ thống Live Knobs tuỳ biến sống động chuyên nghiệp dành riêng cho iOS.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="info-overlay" id="config-overlay"></div>
+    <div id="config-modal" class="macos-window">
+        <div class="macos-header">
+            <div class="mac-dot close-dot" id="close-config"></div>
+            <div class="mac-dot min-dot"></div>
+            <div class="mac-dot max-dot"></div>
+            <div id="config-modal-title" style="font-size: 14px; font-weight: bold; margin-left: 10px; color: #333;" data-i18n="modal_config_title">Cấu hình</div>
+        </div>
+        <div class="macos-body">
+            <textarea id="config-textarea" 
+                style="width: 100%; height: 140px; padding: 10px; border-radius: 8px; border: 1px solid #ccc; font-family: ui-monospace, monospace; font-size: 11px; resize: none; box-sizing: border-box; word-break: break-all;"
+                data-i18n-placeholder="config_placeholder" placeholder="Mã cấu hình..."></textarea>
+            <div style="display: flex; gap: 8px; margin-top: 12px;">
+                <button id="btn-config-copy" data-i18n="btn_config_copy" style="flex: 1; padding: 10px; background: #007aff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;">📋 Sao chép</button>
+                <button id="btn-config-apply" data-i18n="btn_config_apply" style="flex: 1; padding: 10px; background: #34c759; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;">✅ Áp dụng</button>
+            </div>
         </div>
     </div>
     
-    <script src="js/theme.js?v=7.1"></script>
-    <script src="js/main.js?v=7.1"></script>
+    <script src="js/theme.js?v=10.5"></script>
+    <script src="js/main.js?v=10.5"></script>
 </body>
 </html>
