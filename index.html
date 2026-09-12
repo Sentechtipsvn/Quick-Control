@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-title" content="Control Panel">
     <link rel="apple-touch-icon" href="icon.png">
     <title>Trung tâm điều khiển - Sentechtipvn</title>
-    <link rel="stylesheet" href="CSS/style.css?v=12.0">
+    <link rel="stylesheet" href="CSS/style.css?v=12.2">
 </head>
 <body>
 
@@ -190,8 +190,6 @@
                 <div class="slider-item"><span class="slider-label" data-i18n="lbl_media_bg_color">Màu khung</span><input type="color" id="val-media-bg-color" value="#ffffff"></div>
                 <div class="slider-item"><span class="slider-label" data-i18n="lbl_media_btn_color">Màu nút</span><input type="color" id="val-media-btn-color" value="#ffffff"></div>
                 <div class="slider-item"><span class="slider-label" data-i18n="lbl_media_svg_color">Màu SVG</span><input type="color" id="val-media-svg-color" value="#ffffff"></div>
-                
-                <!-- BỔ SUNG CHECKBOX ĐỒNG BỘ THEME CHO MEDIA WIDGET -->
                 <label style="margin-top: 10px; display: flex; align-items: center; gap: 5px;">
                     <input type="checkbox" id="toggle-media-theme"> 
                     <span data-i18n="lbl_media_theme_sync">Đồng bộ Theme hệ thống</span>
@@ -208,9 +206,11 @@
     <div class="info-overlay" id="theme-overlay"></div>
     <div id="theme-modal" class="macos-window" style="max-width: 320px;">
         <div class="macos-header">
+            <!-- ĐÃ THÊM 3 NÚT MACOS -->
             <div class="mac-dot close-dot" id="close-theme-modal"></div>
-            <!-- BỔ SUNG KEY NGÔN NGỮ KHO GIAO DIỆN -->
-            <div style="font-size: 14px; font-weight: bold; margin-left: 10px; color: #333;" data-i18n="lbl_theme_store">Kho Giao Diện</div>
+            <div class="mac-dot min-dot"></div>
+            <div class="mac-dot max-dot"></div>
+            <div style="font-size: 14px; font-weight: bold; margin-left: 6px; color: #333;" data-i18n="lbl_theme_store">Kho Giao Diện</div>
         </div>
         <div class="macos-body">
             <div class="theme-grid-picker full-grid">
@@ -239,19 +239,22 @@
     <!-- POPUP INFO GẮN LINK SENTECHTIPVN -->
     <div id="info-modal" class="macos-window" style="max-width: 320px;">
         <div class="macos-header">
+            <!-- ĐÃ THÊM 3 NÚT MACOS -->
             <div class="mac-dot close-dot" id="close-info-modal"></div>
-            <div style="font-size: 14px; font-weight: bold; margin-left: 10px; color: #333;" data-i18n="info_title">Quick Control</div>
+            <div class="mac-dot min-dot"></div>
+            <div class="mac-dot max-dot"></div>
+            <div style="font-size: 14px; font-weight: bold; margin-left: 6px; color: #333;" data-i18n="info_title">Quick Control</div>
         </div>
         <div class="macos-body">
-            <!-- ĐÃ THAY CHỮ QUICK CONTROL BẰNG LINK SENTECHTIPVN XANH DƯƠNG -->
-            <h3 style="margin-top: 0;">
+            <!-- CĂN CHỈNH LẠI KHOẢNG CÁCH CHỮ CỰC KỲ CÂN ĐỐI -->
+            <h3 style="margin-top: 0; margin-bottom: 12px; font-size: 18px;">
                 <a href="https://browse.shortcuty.app/user/Sentechtipsvn" target="_blank" style="color: #007aff; text-decoration: none;">Sentechtipvn</a>
             </h3>
-            <p class="info-desc" data-i18n="info_desc">Webclip điều khiển đa năng, tích hợp giao diện kính mờ và hệ thống Live Knobs tuỳ biến sống động chuyên nghiệp dành riêng cho iOS.</p>
+            <p class="info-desc" data-i18n="info_desc" style="margin: 0; line-height: 1.5; color: #333; font-size: 14px;">Webclip điều khiển đa năng, tích hợp giao diện kính mờ và hệ thống Live Knobs tuỳ biến sống động chuyên nghiệp dành riêng cho iOS.</p>
         </div>
     </div>
     
-    <script src="js/theme.js?v=12.0"></script>
-    <script src="js/main.js?v=12.0"></script>
+    <script src="js/theme.js?v=12.2"></script>
+    <script src="js/main.js?v=12.2"></script>
 </body>
 </html>
