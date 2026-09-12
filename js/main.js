@@ -7,7 +7,10 @@ const SUPPORTED_LANGS = [
 ];
 
 document.addEventListener("DOMContentLoaded", async () => {
-    let userLang = navigator.language || navigator.userLanguage;
+    let userLang = navigator.language || navigator.userLanguage || 'vi-VN';
+    
+    // Chuẩn hóa: Nếu thiết bị trả về 'vi' hoặc 'vi-VN' thì ép thẳng về 'vi-VN'
+    if (userLang.startsWith('vi')) userLang = 'vi-VN';
     if (!SUPPORTED_LANGS.includes(userLang)) userLang = 'en-US';
 
     const RTL_LANGS = ['ar', 'fa-IR', 'he'];
@@ -71,7 +74,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             });
         }
 
-        // CƠ CHẾ SẮP XẾP MỚI VỚI NÚT XÁC NHẬN BÊN NGOÀI
         const btnEditLayout = document.getElementById('btn-edit-layout');
         const btnConfirmSort = document.getElementById('btn-confirm-sort');
         let editMode = false;
@@ -79,16 +81,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         
         if (btnEditLayout) {
             btnEditLayout.addEventListener('click', () => {
-                // Đóng menu cài đặt
                 document.getElementById('settings-drawer').classList.remove('open');
                 document.getElementById('settings-overlay').classList.remove('open');
                 
                 editMode = true;
                 document.body.classList.add('edit-mode');
                 
-                // Hiện nút Xác nhận ở trạng thái xám
                 btnConfirmSort.classList.remove('hidden');
-                btnConfirmSort.classList.remove('active');
+                btnConfirmSort.classList.remove('active'); // Chờ đổi
                 
                 document.querySelectorAll('.glass-btn').forEach(b => {
                     b.onclick = (e) => e.preventDefault();
@@ -121,11 +121,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (!selectedSwapNode) {
                 selectedSwapNode = target;
                 target.classList.add('selected-swap');
-                btnConfirmSort.classList.add('active'); // Chuyển xanh khi đang chọn mục tiêu đổi
+                btnConfirmSort.classList.add('active'); // Đã chọn mục tiêu -> Xanh
             } else if (selectedSwapNode === target) {
                 target.classList.remove('selected-swap');
                 selectedSwapNode = null;
-                btnConfirmSort.classList.remove('active'); // Trở về xám
+                btnConfirmSort.classList.remove('active'); // Hủy chọn -> Về xám
             } else {
                 const temp = document.createElement('div');
                 target.parentNode.insertBefore(temp, target);
@@ -135,7 +135,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 
                 selectedSwapNode.classList.remove('selected-swap');
                 selectedSwapNode = null;
-                btnConfirmSort.classList.remove('active'); // Trở về xám sau khi đổi
+                
+                // GIỮ NÚT XANH ĐỂ BẤM LƯU BẰNG CÁCH KHÔNG GỌI: btnConfirmSort.classList.remove('active');
                 
                 const newOrder = Array.from(container.querySelectorAll('.glass-btn')).map(b => b.dataset.id);
                 localStorage.setItem('sttv_iconOrder', JSON.stringify(newOrder));
