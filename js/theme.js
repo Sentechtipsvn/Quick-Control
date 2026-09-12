@@ -23,7 +23,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     mainContainer.classList.add('intro-zoom');
     
-    // TỐI ƯU INTRO 2.5 GIÂY (Chờ 2000ms + 500ms hiệu ứng = 2500ms)
     window.addEventListener('load', () => {
         setTimeout(() => {
             introScreen.classList.add('dismiss'); 
@@ -129,7 +128,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // XỬ LÝ POPUP THEME
     const themeModal = document.getElementById('theme-modal');
     const themeOverlay = document.getElementById('theme-overlay');
     const btnMoreThemes = document.getElementById('btn-more-themes');
@@ -141,7 +139,6 @@ document.addEventListener("DOMContentLoaded", () => {
         closeThemeModal.onclick = () => { themeModal.classList.remove('show'); themeOverlay.classList.remove('show'); };
     }
 
-    // XỬ LÝ POPUP INFO (VÁ LỖI NÚT KHÔNG ĂN)
     const infoModal = document.getElementById('info-modal');
     const btnInfo = document.getElementById('btn-info');
     if (btnInfo) {
@@ -199,18 +196,24 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     document.addEventListener('click', (e) => { if (e.target.tagName === 'BUTTON' || e.target.type === 'checkbox' || e.target.closest('.theme-chip') || e.target.closest('.theme-chip-more')) playTick(); });
 
-    // BẮT SỰ KIỆN COLOR PICKER ĐỂ ÁP DỤNG NGAY & ĐÓNG BẢNG MÀU
+    // FIX MÀU SẮC LƯU VÀ ĐÓNG NGAY TRONG CÀI ĐẶT
     drawerEl.addEventListener('input', (e) => {
-        if (e.target.type === 'color') {
-            updateLiveVariables(true);
-        }
+        if (e.target.type === 'color') updateLiveVariables(true);
     });
     drawerEl.addEventListener('change', (e) => {
         if (e.target.type === 'color') {
-            e.target.blur(); // Tự động đóng bảng màu trên iOS
+            e.target.blur();
             updateLiveVariables(true);
         }
     });
+
+    // EVENT CHO ĐỒNG BỘ THEME NHẠC
+    const toggleMediaTheme = document.getElementById('toggle-media-theme');
+    if (toggleMediaTheme) {
+        toggleMediaTheme.addEventListener('change', () => {
+            updateLiveVariables(true);
+        });
+    }
 
     document.querySelectorAll('.shadow-switch').forEach(switchBtn => {
         switchBtn.addEventListener('change', (e) => {
@@ -352,6 +355,7 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem('sttv_mediaBgColor', document.getElementById('val-media-bg-color').value);
         localStorage.setItem('sttv_mediaBtnColor', document.getElementById('val-media-btn-color').value);
         localStorage.setItem('sttv_mediaSvgColor', document.getElementById('val-media-svg-color').value);
+        localStorage.setItem('sttv_mediaThemeSync', document.getElementById('toggle-media-theme').checked);
 
         const shadowState = {};
         SHADOW_MODES.forEach(mode => {
@@ -401,7 +405,8 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById('val-media-bg-opacity').value, document.getElementById('val-media-btn-size').value,
             document.getElementById('val-media-bg-color').value, document.getElementById('val-media-btn-color').value,
             document.getElementById('val-media-svg-color').value, document.getElementById('toggle-glass').checked ? 1 : 0,
-            document.getElementById('val-popup-anim').value, shadowArr.join('~')
+            document.getElementById('val-popup-anim').value, shadowArr.join('~'),
+            document.getElementById('toggle-media-theme').checked ? 1 : 0
         ];
         return encodeURIComponent(configValues.join('|'));
     }
@@ -461,6 +466,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                 });
             }
+
+            if (data[30] !== undefined) {
+                document.getElementById('toggle-media-theme').checked = data[30] === '1';
+            }
+
             updateLiveVariables(true);
         } catch(e) { console.error(e); alert("Lỗi đọc mã cấu hình! Vui lòng thử lại."); }
     }
@@ -550,6 +560,17 @@ document.addEventListener("DOMContentLoaded", () => {
         root.style.setProperty('--media-btn-size', mediaBtnSize + 'px');
         root.style.setProperty('--media-btn-play', (parseInt(mediaBtnSize) + 15) + 'px');
 
+        // BẬT/TẮT ĐỒNG BỘ THEME CHO MEDIA WIDGET
+        const toggleMediaTheme = document.getElementById('toggle-media-theme');
+        const mediaWidget = document.querySelector('.media-player-widget');
+        if (toggleMediaTheme && mediaWidget) {
+            if (toggleMediaTheme.checked) {
+                mediaWidget.classList.add('theme-synced');
+            } else {
+                mediaWidget.classList.remove('theme-synced');
+            }
+        }
+
         updateShadow();
         if (saveNow) saveSettingsToLocal();
     }
@@ -593,6 +614,7 @@ document.addEventListener("DOMContentLoaded", () => {
         safeSet('val-media-width', 'mediaWidth', '90'); safeSet('val-media-bg-opacity', 'mediaBgOpacity', '3');
         safeSet('val-media-btn-size', 'mediaBtnSize', '50'); safeSet('val-media-bg-color', 'mediaBgColor', '#ffffff');
         safeSet('val-media-btn-color', 'mediaBtnColor', '#ffffff'); safeSet('val-media-svg-color', 'mediaSvgColor', '#ffffff');
+        safeSet('toggle-media-theme', 'mediaThemeSync', false, true);
 
         const savedShadowConfig = localStorage.getItem('sttv_shadowConfig');
         if (savedShadowConfig) {
