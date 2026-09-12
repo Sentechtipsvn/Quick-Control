@@ -29,7 +29,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         return null;
     }
 
-    // SONG SONG HÓA NĂNG LƯỢNG TẢI TRANG (PROMISE.ALL)
     const [fallbackTranslations, userTranslations, data] = await Promise.all([
         fetchWithCaseFallback(`Language/en-US.json`, `language/en-US.json`),
         fetchWithCaseFallback(`Language/${userLang}.json`, `language/${userLang}.json`),
@@ -72,27 +71,44 @@ document.addEventListener("DOMContentLoaded", async () => {
             });
         }
 
+        // CƠ CHẾ SẮP XẾP MỚI VỚI NÚT XÁC NHẬN BÊN NGOÀI
         const btnEditLayout = document.getElementById('btn-edit-layout');
+        const btnConfirmSort = document.getElementById('btn-confirm-sort');
         let editMode = false;
         let selectedSwapNode = null;
         
         if (btnEditLayout) {
             btnEditLayout.addEventListener('click', () => {
-                editMode = !editMode;
-                document.body.classList.toggle('edit-mode', editMode);
-                btnEditLayout.style.background = editMode ? 'red' : '';
+                // Đóng menu cài đặt
+                document.getElementById('settings-drawer').classList.remove('open');
+                document.getElementById('settings-overlay').classList.remove('open');
                 
-                const txtXong = window.i18nData['btn_done'] || 'Xong';
-                const txtSapXep = window.i18nData['btn_edit_layout'] || 'Sắp xếp';
-                btnEditLayout.innerHTML = editMode ? `✓ ${txtXong}` : `🔄 ${txtSapXep}`;
+                editMode = true;
+                document.body.classList.add('edit-mode');
                 
-                if (!editMode && selectedSwapNode) {
+                // Hiện nút Xác nhận ở trạng thái xám
+                btnConfirmSort.classList.remove('hidden');
+                btnConfirmSort.classList.remove('active');
+                
+                document.querySelectorAll('.glass-btn').forEach(b => {
+                    b.onclick = (e) => e.preventDefault();
+                });
+            });
+        }
+
+        if (btnConfirmSort) {
+            btnConfirmSort.addEventListener('click', () => {
+                editMode = false;
+                document.body.classList.remove('edit-mode');
+                btnConfirmSort.classList.add('hidden');
+                
+                if (selectedSwapNode) {
                     selectedSwapNode.classList.remove('selected-swap');
                     selectedSwapNode = null;
                 }
-
+                
                 document.querySelectorAll('.glass-btn').forEach(b => {
-                    b.onclick = editMode ? (e) => e.preventDefault() : null;
+                    b.onclick = null;
                 });
             });
         }
@@ -105,9 +121,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (!selectedSwapNode) {
                 selectedSwapNode = target;
                 target.classList.add('selected-swap');
+                btnConfirmSort.classList.add('active'); // Chuyển xanh khi đang chọn mục tiêu đổi
             } else if (selectedSwapNode === target) {
                 target.classList.remove('selected-swap');
                 selectedSwapNode = null;
+                btnConfirmSort.classList.remove('active'); // Trở về xám
             } else {
                 const temp = document.createElement('div');
                 target.parentNode.insertBefore(temp, target);
@@ -117,6 +135,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 
                 selectedSwapNode.classList.remove('selected-swap');
                 selectedSwapNode = null;
+                btnConfirmSort.classList.remove('active'); // Trở về xám sau khi đổi
                 
                 const newOrder = Array.from(container.querySelectorAll('.glass-btn')).map(b => b.dataset.id);
                 localStorage.setItem('sttv_iconOrder', JSON.stringify(newOrder));
