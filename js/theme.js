@@ -23,12 +23,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     mainContainer.classList.add('intro-zoom');
     
+    // TỐI ƯU INTRO 2.5 GIÂY (Chờ 2000ms + 500ms hiệu ứng = 2500ms)
     window.addEventListener('load', () => {
         setTimeout(() => {
             introScreen.classList.add('dismiss'); 
             mainContainer.classList.remove('intro-zoom'); 
-            setTimeout(() => { introScreen.style.display = 'none'; }, 1500); 
-        }, 3000); 
+            setTimeout(() => { introScreen.style.display = 'none'; }, 500); 
+        }, 2000); 
     });
 
     if (!DEV_MODE) document.body.classList.add('standard-mode');
@@ -39,7 +40,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (localStorage.getItem('sttv_seen_preset_badge') === 'true') badgePreset?.classList.add('hidden');
     if (localStorage.getItem('sttv_seen_theme_badge') === 'true') badgeTheme?.classList.add('hidden');
 
-    // HIỂN THỊ THÔNG SỐ TRÊN NÚM KÉO
     let globalTooltip = document.createElement('div');
     globalTooltip.className = 'slider-tooltip';
     document.body.appendChild(globalTooltip);
@@ -129,6 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // XỬ LÝ POPUP THEME
     const themeModal = document.getElementById('theme-modal');
     const themeOverlay = document.getElementById('theme-overlay');
     const btnMoreThemes = document.getElementById('btn-more-themes');
@@ -139,8 +140,24 @@ document.addEventListener("DOMContentLoaded", () => {
     if (closeThemeModal) {
         closeThemeModal.onclick = () => { themeModal.classList.remove('show'); themeOverlay.classList.remove('show'); };
     }
+
+    // XỬ LÝ POPUP INFO (VÁ LỖI NÚT KHÔNG ĂN)
+    const infoModal = document.getElementById('info-modal');
+    const btnInfo = document.getElementById('btn-info');
+    if (btnInfo) {
+        btnInfo.onclick = () => { infoModal.classList.add('show'); themeOverlay.classList.add('show'); };
+    }
+    const closeInfoModal = document.getElementById('close-info-modal');
+    if (closeInfoModal) {
+        closeInfoModal.onclick = () => { infoModal.classList.remove('show'); themeOverlay.classList.remove('show'); };
+    }
+
     if (themeOverlay) {
-        themeOverlay.onclick = () => { themeModal.classList.remove('show'); themeOverlay.classList.remove('show'); };
+        themeOverlay.onclick = () => { 
+            if(themeModal) themeModal.classList.remove('show'); 
+            if(infoModal) infoModal.classList.remove('show');
+            themeOverlay.classList.remove('show'); 
+        };
     }
 
     const presetSelect = document.getElementById('val-theme-preset');
@@ -164,7 +181,6 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem('sttv_popupAnim', animClass);
     });
 
-    // REUSE AUDIO CONTEXT
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     let audioCtx = null;
     function playTick() {
@@ -182,6 +198,19 @@ document.addEventListener("DOMContentLoaded", () => {
         osc.start(); osc.stop(audioCtx.currentTime + 0.04);
     }
     document.addEventListener('click', (e) => { if (e.target.tagName === 'BUTTON' || e.target.type === 'checkbox' || e.target.closest('.theme-chip') || e.target.closest('.theme-chip-more')) playTick(); });
+
+    // BẮT SỰ KIỆN COLOR PICKER ĐỂ ÁP DỤNG NGAY & ĐÓNG BẢNG MÀU
+    drawerEl.addEventListener('input', (e) => {
+        if (e.target.type === 'color') {
+            updateLiveVariables(true);
+        }
+    });
+    drawerEl.addEventListener('change', (e) => {
+        if (e.target.type === 'color') {
+            e.target.blur(); // Tự động đóng bảng màu trên iOS
+            updateLiveVariables(true);
+        }
+    });
 
     document.querySelectorAll('.shadow-switch').forEach(switchBtn => {
         switchBtn.addEventListener('change', (e) => {
@@ -243,7 +272,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let adjustTimeout;
     drawerEl.addEventListener('input', (e) => {
-        if (e.target.tagName === 'INPUT') {
+        if (e.target.tagName === 'INPUT' && e.target.type !== 'color') {
             drawerEl.classList.add('adjusting'); clearTimeout(adjustTimeout);
             adjustTimeout = setTimeout(() => drawerEl.classList.remove('adjusting'), 800);
         }
@@ -343,7 +372,6 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem('sttv_shadowConfig', JSON.stringify(shadowState));
     }
 
-    // ĐÓNG GÓI CHUỖI SIÊU NHẸ (KHÔNG CẦN BASE64)
     function packConfig() {
         const shadowArr = [];
         SHADOW_MODES.forEach(mode => {
@@ -351,50 +379,30 @@ document.addEventListener("DOMContentLoaded", () => {
             const checkbox = document.querySelector(`input[name="active_shadow"][value="${mode.id}"]`);
             if (drawer && checkbox && checkbox.checked) {
                 shadowArr.push([
-                    mode.id, 
-                    drawer.querySelector('.s-x').value,
-                    drawer.querySelector('.s-y').value,
-                    drawer.querySelector('.s-b').value,
-                    drawer.querySelector('.s-s').value,
-                    drawer.querySelector('.s-c').value,
-                    drawer.querySelector('.s-o').value
+                    mode.id, drawer.querySelector('.s-x').value, drawer.querySelector('.s-y').value,
+                    drawer.querySelector('.s-b').value, drawer.querySelector('.s-s').value,
+                    drawer.querySelector('.s-c').value, drawer.querySelector('.s-o').value
                 ].join('*'));
             }
         });
 
         const configValues = [
-            document.getElementById('val-bg-main').value, 
-            document.getElementById('val-text-color').value,
-            localStorage.getItem('sttv_layoutMode') || 'grid',
-            document.getElementById('val-list-bg').value,
-            document.getElementById('val-list-text').value,
-            document.getElementById('val-list-svg').value,
-            document.getElementById('val-theme-frame').value,
-            document.getElementById('val-frame-size').value,
-            document.getElementById('val-svg-size').value,
-            document.getElementById('val-svg-opacity').value,
-            document.getElementById('val-frame-radius').value,
-            document.getElementById('val-frame-color').value,
-            document.getElementById('val-svg-color').value,
-            document.getElementById('toggle-hide-labels').checked ? 1 : 0,
-            document.getElementById('val-title-size').value,
-            document.getElementById('val-title-spacing').value,
-            document.getElementById('toggle-list-frame').checked ? 1 : 0,
-            document.getElementById('val-icon-size').value,
-            document.getElementById('val-icon-spacing').value,
-            document.getElementById('val-list-bg-opacity').value,
-            document.getElementById('val-frame-bg-opacity').value,
-            document.getElementById('val-media-width').value,
-            document.getElementById('val-media-bg-opacity').value,
-            document.getElementById('val-media-btn-size').value,
-            document.getElementById('val-media-bg-color').value,
-            document.getElementById('val-media-btn-color').value,
-            document.getElementById('val-media-svg-color').value,
-            document.getElementById('toggle-glass').checked ? 1 : 0,
-            document.getElementById('val-popup-anim').value,
-            shadowArr.join('~')
+            document.getElementById('val-bg-main').value, document.getElementById('val-text-color').value,
+            localStorage.getItem('sttv_layoutMode') || 'grid', document.getElementById('val-list-bg').value,
+            document.getElementById('val-list-text').value, document.getElementById('val-list-svg').value,
+            document.getElementById('val-theme-frame').value, document.getElementById('val-frame-size').value,
+            document.getElementById('val-svg-size').value, document.getElementById('val-svg-opacity').value,
+            document.getElementById('val-frame-radius').value, document.getElementById('val-frame-color').value,
+            document.getElementById('val-svg-color').value, document.getElementById('toggle-hide-labels').checked ? 1 : 0,
+            document.getElementById('val-title-size').value, document.getElementById('val-title-spacing').value,
+            document.getElementById('toggle-list-frame').checked ? 1 : 0, document.getElementById('val-icon-size').value,
+            document.getElementById('val-icon-spacing').value, document.getElementById('val-list-bg-opacity').value,
+            document.getElementById('val-frame-bg-opacity').value, document.getElementById('val-media-width').value,
+            document.getElementById('val-media-bg-opacity').value, document.getElementById('val-media-btn-size').value,
+            document.getElementById('val-media-bg-color').value, document.getElementById('val-media-btn-color').value,
+            document.getElementById('val-media-svg-color').value, document.getElementById('toggle-glass').checked ? 1 : 0,
+            document.getElementById('val-popup-anim').value, shadowArr.join('~')
         ];
-        
         return encodeURIComponent(configValues.join('|'));
     }
 
@@ -409,41 +417,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const decoded = decodeURIComponent(code.trim());
             const data = decoded.split('|');
-            if (data.length < 29) {
-                alert("Mã cấu hình không hợp lệ!");
-                return;
-            }
+            if (data.length < 29) { alert("Mã cấu hình không hợp lệ!"); return; }
             
-            document.getElementById('val-bg-main').value = data[0]; 
-            document.getElementById('val-text-color').value = data[1];
-            setLayoutMode(data[2]);
-            document.getElementById('val-list-bg').value = data[3];
-            document.getElementById('val-list-text').value = data[4];
-            document.getElementById('val-list-svg').value = data[5];
-            document.getElementById('val-theme-frame').value = data[6];
-            syncThemePickerVisuals(data[6]);
-            document.getElementById('val-frame-size').value = data[7];
-            document.getElementById('val-svg-size').value = data[8]; 
-            document.getElementById('val-svg-opacity').value = data[9];
-            document.getElementById('val-frame-radius').value = data[10]; 
-            document.getElementById('val-frame-color').value = data[11]; 
-            document.getElementById('val-svg-color').value = data[12];
-            document.getElementById('toggle-hide-labels').checked = data[13] === '1';
-            document.getElementById('val-title-size').value = data[14];
-            document.getElementById('val-title-spacing').value = data[15];
-            document.getElementById('toggle-list-frame').checked = data[16] === '1';
-            document.getElementById('val-icon-size').value = data[17];
-            document.getElementById('val-icon-spacing').value = data[18];
-            document.getElementById('val-list-bg-opacity').value = data[19];
-            document.getElementById('val-frame-bg-opacity').value = data[20];
-            document.getElementById('val-media-width').value = data[21];
-            document.getElementById('val-media-bg-opacity').value = data[22];
-            document.getElementById('val-media-btn-size').value = data[23];
-            document.getElementById('val-media-bg-color').value = data[24];
-            document.getElementById('val-media-btn-color').value = data[25];
-            document.getElementById('val-media-svg-color').value = data[26];
-            document.getElementById('toggle-glass').checked = data[27] === '1';
-            document.getElementById('val-popup-anim').value = data[28];
+            document.getElementById('val-bg-main').value = data[0]; document.getElementById('val-text-color').value = data[1];
+            setLayoutMode(data[2]); document.getElementById('val-list-bg').value = data[3];
+            document.getElementById('val-list-text').value = data[4]; document.getElementById('val-list-svg').value = data[5];
+            document.getElementById('val-theme-frame').value = data[6]; syncThemePickerVisuals(data[6]);
+            document.getElementById('val-frame-size').value = data[7]; document.getElementById('val-svg-size').value = data[8]; 
+            document.getElementById('val-svg-opacity').value = data[9]; document.getElementById('val-frame-radius').value = data[10]; 
+            document.getElementById('val-frame-color').value = data[11]; document.getElementById('val-svg-color').value = data[12];
+            document.getElementById('toggle-hide-labels').checked = data[13] === '1'; document.getElementById('val-title-size').value = data[14];
+            document.getElementById('val-title-spacing').value = data[15]; document.getElementById('toggle-list-frame').checked = data[16] === '1';
+            document.getElementById('val-icon-size').value = data[17]; document.getElementById('val-icon-spacing').value = data[18];
+            document.getElementById('val-list-bg-opacity').value = data[19]; document.getElementById('val-frame-bg-opacity').value = data[20];
+            document.getElementById('val-media-width').value = data[21]; document.getElementById('val-media-bg-opacity').value = data[22];
+            document.getElementById('val-media-btn-size').value = data[23]; document.getElementById('val-media-bg-color').value = data[24];
+            document.getElementById('val-media-btn-color').value = data[25]; document.getElementById('val-media-svg-color').value = data[26];
+            document.getElementById('toggle-glass').checked = data[27] === '1'; document.getElementById('val-popup-anim').value = data[28];
             
             document.querySelectorAll('.shadow-switch').forEach(c => { 
                 c.checked = false; 
@@ -463,40 +453,26 @@ document.addEventListener("DOMContentLoaded", () => {
                             const drw = document.getElementById(`drawer-${sId}`); 
                             if (drw) {
                                 drw.classList.add('active');
-                                drw.querySelector('.s-x').value = p[1]; 
-                                drw.querySelector('.s-y').value = p[2];
-                                drw.querySelector('.s-b').value = p[3]; 
-                                drw.querySelector('.s-s').value = p[4]; 
-                                drw.querySelector('.s-c').value = p[5];
-                                if (p[6]) drw.querySelector('.s-o').value = p[6];
+                                drw.querySelector('.s-x').value = p[1]; drw.querySelector('.s-y').value = p[2];
+                                drw.querySelector('.s-b').value = p[3]; drw.querySelector('.s-s').value = p[4]; 
+                                drw.querySelector('.s-c').value = p[5]; if (p[6]) drw.querySelector('.s-o').value = p[6];
                             }
                         }
                     }
                 });
             }
-
             updateLiveVariables(true);
-        } catch(e) { 
-            console.error(e);
-            alert("Lỗi đọc mã cấu hình! Vui lòng thử lại."); 
-        }
+        } catch(e) { console.error(e); alert("Lỗi đọc mã cấu hình! Vui lòng thử lại."); }
     }
 
-    // NÚT XUẤT/NHẬP SỬA LỖI TƯƠNG THÍCH TRÊN WEBCLIP IOS
     const btnExport = document.getElementById('btn-export');
     if (btnExport) {
         btnExport.addEventListener('click', (e) => { 
             e.preventDefault();
             const code = packConfig();
             if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(code).then(() => {
-                    alert("Đã sao chép mã cấu hình thành công!");
-                }).catch(() => {
-                    prompt("Sao chép mã cấu hình bên dưới:", code);
-                });
-            } else {
-                prompt("Sao chép mã cấu hình bên dưới:", code);
-            }
+                navigator.clipboard.writeText(code).then(() => { alert("Đã sao chép mã cấu hình thành công!"); }).catch(() => { prompt("Sao chép mã cấu hình bên dưới:", code); });
+            } else { prompt("Sao chép mã cấu hình bên dưới:", code); }
         });
     }
 
@@ -505,10 +481,7 @@ document.addEventListener("DOMContentLoaded", () => {
         btnImport.addEventListener('click', (e) => { 
             e.preventDefault();
             const code = prompt("📥 Dán mã cấu hình vào đây:"); 
-            if (code) {
-                unpackConfig(code);
-                resetPresetToCustom();
-            } 
+            if (code) { unpackConfig(code); resetPresetToCustom(); } 
         });
     }
 
@@ -606,10 +579,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if (popupAnimSelect) popupAnimSelect.value = savedAnim;
         if (savedAnim !== 'default') drawerEl.classList.add(savedAnim);
 
-        safeSet('val-frame-size', 'frameSize', '60');
-        safeSet('val-svg-size', 'svgSize', '28'); safeSet('val-svg-opacity', 'svgOpacity', '100');
-        safeSet('val-svg-color', 'svgColor', '#ffffff'); safeSet('val-frame-radius', 'frameRadius', '22');
-        safeSet('val-frame-color', 'frameColor', '#000000'); safeSet('val-frame-bg-opacity', 'frameBgOpacity', '100');
+        safeSet('val-frame-size', 'frameSize', '60'); safeSet('val-svg-size', 'svgSize', '28'); 
+        safeSet('val-svg-opacity', 'svgOpacity', '100'); safeSet('val-svg-color', 'svgColor', '#ffffff'); 
+        safeSet('val-frame-radius', 'frameRadius', '22'); safeSet('val-frame-color', 'frameColor', '#000000'); 
+        safeSet('val-frame-bg-opacity', 'frameBgOpacity', '100');
         
         safeSet('toggle-hide-labels', 'hideLabels', false, true); safeSet('toggle-list-frame', 'listFrame', false, true);
         safeSet('val-title-size', 'titleSize', '22'); safeSet('val-title-spacing', 'titleSpacing', '0.5');
@@ -633,12 +606,9 @@ document.addEventListener("DOMContentLoaded", () => {
                         if (checkbox && drawer) {
                             checkbox.checked = item.active;
                             if (item.active) drawer.classList.add('active'); else drawer.classList.remove('active');
-                            drawer.querySelector('.s-x').value = item.x;
-                            drawer.querySelector('.s-y').value = item.y;
-                            drawer.querySelector('.s-b').value = item.b;
-                            drawer.querySelector('.s-s').value = item.s;
-                            drawer.querySelector('.s-c').value = item.c;
-                            drawer.querySelector('.s-o').value = item.o;
+                            drawer.querySelector('.s-x').value = item.x; drawer.querySelector('.s-y').value = item.y;
+                            drawer.querySelector('.s-b').value = item.b; drawer.querySelector('.s-s').value = item.s;
+                            drawer.querySelector('.s-c').value = item.c; drawer.querySelector('.s-o').value = item.o;
                         }
                     }
                 });
