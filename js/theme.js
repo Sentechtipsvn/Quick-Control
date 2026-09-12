@@ -196,7 +196,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     document.addEventListener('click', (e) => { if (e.target.tagName === 'BUTTON' || e.target.type === 'checkbox' || e.target.closest('.theme-chip') || e.target.closest('.theme-chip-more')) playTick(); });
 
-    // FIX MÀU SẮC LƯU VÀ ĐÓNG NGAY TRONG CÀI ĐẶT
+    // FIX LỖI CHECKBOX KHÔNG CẬP NHẬT TRỰC TIẾP
     drawerEl.addEventListener('input', (e) => {
         if (e.target.type === 'color') updateLiveVariables(true);
     });
@@ -204,10 +204,11 @@ document.addEventListener("DOMContentLoaded", () => {
         if (e.target.type === 'color') {
             e.target.blur();
             updateLiveVariables(true);
+        } else if (e.target.type === 'checkbox') {
+            updateLiveVariables(true); // Bắt ngay lập tức thao tác Ẩn tên, Bật kính mờ...
         }
     });
 
-    // EVENT CHO ĐỒNG BỘ THEME NHẠC
     const toggleMediaTheme = document.getElementById('toggle-media-theme');
     if (toggleMediaTheme) {
         toggleMediaTheme.addEventListener('change', () => {
@@ -511,6 +512,8 @@ document.addEventListener("DOMContentLoaded", () => {
         root.style.setProperty('--title-spacing', document.getElementById('val-title-spacing').value + 'px');
         root.style.setProperty('--icon-font-size', document.getElementById('val-icon-size').value + 'px');
         root.style.setProperty('--icon-spacing', document.getElementById('val-icon-spacing').value + 'px');
+        
+        // CSS GẮN HIỆU LỰC CHO VIỆC ẨN TÊN
         root.style.setProperty('--label-display', document.getElementById('toggle-hide-labels').checked ? 'none' : 'block');
         
         const currentLayout = localStorage.getItem('sttv_layoutMode') || 'grid';
@@ -560,7 +563,6 @@ document.addEventListener("DOMContentLoaded", () => {
         root.style.setProperty('--media-btn-size', mediaBtnSize + 'px');
         root.style.setProperty('--media-btn-play', (parseInt(mediaBtnSize) + 15) + 'px');
 
-        // BẬT/TẮT ĐỒNG BỘ THEME CHO MEDIA WIDGET
         const toggleMediaTheme = document.getElementById('toggle-media-theme');
         const mediaWidget = document.querySelector('.media-player-widget');
         if (toggleMediaTheme && mediaWidget) {
