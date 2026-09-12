@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-title" content="Control Panel">
     <link rel="apple-touch-icon" href="icon.png">
     <title>Trung tâm điều khiển - Sentechtipvn</title>
-    <link rel="stylesheet" href="CSS/style.css?v=11.5">
+    <link rel="stylesheet" href="CSS/style.css?v=12.0">
 </head>
 <body>
 
@@ -91,15 +91,14 @@
                 
                 <select id="val-theme-preset">
                     <option value="none" data-i18n="opt_preset_none">Tự do tùy chỉnh</option>
-                    <option value="%2376bb40%7C%23ffffff%7Cgrid%7C%2300a1d8%7C%23e22400%7C%2361187c%7CTheme%2FGreen-colour.png%7C63%7C30%7C100%7C50%7C%23f7fadb%7C%23ffffff%7C0%7C28%7C0.5%7C1%7C11%7C0%7C100%7C100%7C90%7C30%7C50%7C%23ffffff%7C%2376bb40%7C%23ffffff%7C0%7Canim-slide-top%7Couter*-2*7*8*1*%23000000*40~soft*0*0*6*0*%2338571a*50" data-i18n="opt_preset_Green_button">Nút xanh lá</option>
                 </select>
 
-                <label style="margin-top: 10px;">✨ Hiệu ứng Popup Cài đặt</label>
+                <label style="margin-top: 10px;" data-i18n="lbl_popup_anim">✨ Hiệu ứng Popup Cài đặt</label>
                 <select id="val-popup-anim">
-                    <option value="default">Trượt từ phải sang</option>
-                    <option value="anim-zoom">Thu phóng</option>
-                    <option value="anim-slide-top">Trượt từ trên xuống</option>
-                    <option value="anim-fade">Làm mờ</option>
+                    <option value="default" data-i18n="opt_anim_default">Trượt từ phải sang (Mặc định)</option>
+                    <option value="anim-zoom" data-i18n="opt_anim_zoom">Thu phóng (macOS)</option>
+                    <option value="anim-slide-top" data-i18n="opt_anim_slide_top">Trượt từ trên xuống</option>
+                    <option value="anim-fade" data-i18n="opt_anim_fade">Làm mờ (Fade)</option>
                 </select>
 
                 <div class="feature-toggles">
@@ -191,6 +190,12 @@
                 <div class="slider-item"><span class="slider-label" data-i18n="lbl_media_bg_color">Màu khung</span><input type="color" id="val-media-bg-color" value="#ffffff"></div>
                 <div class="slider-item"><span class="slider-label" data-i18n="lbl_media_btn_color">Màu nút</span><input type="color" id="val-media-btn-color" value="#ffffff"></div>
                 <div class="slider-item"><span class="slider-label" data-i18n="lbl_media_svg_color">Màu SVG</span><input type="color" id="val-media-svg-color" value="#ffffff"></div>
+                
+                <!-- BỔ SUNG CHECKBOX ĐỒNG BỘ THEME CHO MEDIA WIDGET -->
+                <label style="margin-top: 10px; display: flex; align-items: center; gap: 5px;">
+                    <input type="checkbox" id="toggle-media-theme"> 
+                    <span data-i18n="lbl_media_theme_sync">Đồng bộ Theme hệ thống</span>
+                </label>
             </div>
 
             <h3 class="section-title dev-only" data-i18n="lbl_shadow_section">🔘 Đổ Bóng</h3>
@@ -204,7 +209,8 @@
     <div id="theme-modal" class="macos-window" style="max-width: 320px;">
         <div class="macos-header">
             <div class="mac-dot close-dot" id="close-theme-modal"></div>
-            <div style="font-size: 14px; font-weight: bold; margin-left: 10px; color: #333;">Kho Giao Diện</div>
+            <!-- BỔ SUNG KEY NGÔN NGỮ KHO GIAO DIỆN -->
+            <div style="font-size: 14px; font-weight: bold; margin-left: 10px; color: #333;" data-i18n="lbl_theme_store">Kho Giao Diện</div>
         </div>
         <div class="macos-body">
             <div class="theme-grid-picker full-grid">
@@ -230,22 +236,22 @@
         </div>
     </div>
 
-    <!-- POPUP INFO (ĐÃ VÁ LỖI HIỂN THỊ) -->
+    <!-- POPUP INFO GẮN LINK SENTECHTIPVN -->
     <div id="info-modal" class="macos-window" style="max-width: 320px;">
         <div class="macos-header">
             <div class="mac-dot close-dot" id="close-info-modal"></div>
             <div style="font-size: 14px; font-weight: bold; margin-left: 10px; color: #333;" data-i18n="info_title">Quick Control</div>
         </div>
         <div class="macos-body">
-            <h3 style="margin-top: 0; color: #007aff;" data-i18n="info_title">Quick Control</h3>
+            <!-- ĐÃ THAY CHỮ QUICK CONTROL BẰNG LINK SENTECHTIPVN XANH DƯƠNG -->
+            <h3 style="margin-top: 0;">
+                <a href="https://browse.shortcuty.app/user/Sentechtipsvn" target="_blank" style="color: #007aff; text-decoration: none;">Sentechtipvn</a>
+            </h3>
             <p class="info-desc" data-i18n="info_desc">Webclip điều khiển đa năng, tích hợp giao diện kính mờ và hệ thống Live Knobs tuỳ biến sống động chuyên nghiệp dành riêng cho iOS.</p>
-            <p style="margin-top: 20px; font-size: 12px; color: #888;">
-                <span data-i18n="info_dev_prefix">Phát triển bởi</span> <strong>Sentechtipvn</strong>
-            </p>
         </div>
     </div>
     
-    <script src="js/theme.js?v=11.5"></script>
-    <script src="js/main.js?v=11.5"></script>
+    <script src="js/theme.js?v=12.0"></script>
+    <script src="js/main.js?v=12.0"></script>
 </body>
 </html>
