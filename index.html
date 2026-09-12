@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-title" content="Control Panel">
     <link rel="apple-touch-icon" href="icon.png">
     <title>Trung tâm điều khiển - Sentechtipvn</title>
-    <link rel="stylesheet" href="CSS/style.css?v=12.2">
+    <link rel="stylesheet" href="CSS/style.css?v=12.3">
 </head>
 <body>
 
@@ -91,6 +91,12 @@
                 
                 <select id="val-theme-preset">
                     <option value="none" data-i18n="opt_preset_none">Tự do tùy chỉnh</option>
+                    
+                    <!-- ================================================================= -->
+                    <!-- SẾP CÓ THỂ THÊM CÁC PRESET GIAO DIỆN MỚI CỦA SẾP VÀO ĐÂY          -->
+                    <!-- CÚ PHÁP: <option value="MA_CHUOI_XUAT">Tên Preset</option>        -->
+                    <!-- ================================================================= -->
+
                 </select>
 
                 <label style="margin-top: 10px;" data-i18n="lbl_popup_anim">✨ Hiệu ứng Popup Cài đặt</label>
@@ -206,7 +212,6 @@
     <div class="info-overlay" id="theme-overlay"></div>
     <div id="theme-modal" class="macos-window" style="max-width: 320px;">
         <div class="macos-header">
-            <!-- ĐÃ THÊM 3 NÚT MACOS -->
             <div class="mac-dot close-dot" id="close-theme-modal"></div>
             <div class="mac-dot min-dot"></div>
             <div class="mac-dot max-dot"></div>
@@ -239,14 +244,12 @@
     <!-- POPUP INFO GẮN LINK SENTECHTIPVN -->
     <div id="info-modal" class="macos-window" style="max-width: 320px;">
         <div class="macos-header">
-            <!-- ĐÃ THÊM 3 NÚT MACOS -->
             <div class="mac-dot close-dot" id="close-info-modal"></div>
             <div class="mac-dot min-dot"></div>
             <div class="mac-dot max-dot"></div>
             <div style="font-size: 14px; font-weight: bold; margin-left: 6px; color: #333;" data-i18n="info_title">Quick Control</div>
         </div>
         <div class="macos-body">
-            <!-- CĂN CHỈNH LẠI KHOẢNG CÁCH CHỮ CỰC KỲ CÂN ĐỐI -->
             <h3 style="margin-top: 0; margin-bottom: 12px; font-size: 18px;">
                 <a href="https://browse.shortcuty.app/user/Sentechtipsvn" target="_blank" style="color: #007aff; text-decoration: none;">Sentechtipvn</a>
             </h3>
@@ -254,7 +257,7 @@
         </div>
     </div>
     
-    <script src="js/theme.js?v=12.2"></script>
-    <script src="js/main.js?v=12.2"></script>
+    <script src="js/theme.js?v=12.3"></script>
+    <script src="js/main.js?v=12.3"></script>
 </body>
 </html>
