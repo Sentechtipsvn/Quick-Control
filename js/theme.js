@@ -1,7 +1,7 @@
 const DEV_MODE = true; 
 
 // ⭐ VERSION CONTROL CHO BADGE THÔNG BÁO
-const PRESET_VERSION = 3;   // Tăng số này mỗi khi thêm preset giao diện mới
+const PRESET_VERSION = 4;   // Tăng số này mỗi khi thêm preset giao diện mới
 const THEME_VERSION = 2;    // Tăng số này mỗi khi thêm Theme SVG mới
 
 const SHADOW_MODES = [
