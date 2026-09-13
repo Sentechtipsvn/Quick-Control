@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-title" content="Control Panel">
     <link rel="apple-touch-icon" href="icon.png">
     <title>Trung tâm điều khiển - Sentechtipvn</title>
-    <link rel="stylesheet" href="CSS/style.css?v=12.3">
+    <link rel="stylesheet" href="CSS/style.css?v=13.1">
 </head>
 <body>
 
@@ -65,7 +65,6 @@
             <img src="Theme/icon_setting.png" alt="Settings">
         </button>
 
-        <!-- NÚT HOÀN THÀNH SẮP XẾP BỊ ẨN MẶC ĐỊNH -->
         <button id="btn-confirm-sort" class="sort-fab hidden">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
         </button>
@@ -91,10 +90,14 @@
                 
                 <select id="val-theme-preset">
                     <option value="none" data-i18n="opt_preset_none">Tự do tùy chỉnh</option>
+                    
+                    <!-- 4 PRESET SIÊU ĐỈNH CỦA SẾP -->
                     <option value="%2376bb40%7C%23ffffff%7Cgrid%7C%2300a1d8%7C%23e22400%7C%2361187c%7CTheme%2FGreen-colour.png%7C63%7C30%7C100%7C50%7C%23f7fadb%7C%23ffffff%7C0%7C28%7C0.5%7C1%7C11%7C0%7C100%7C100%7C90%7C30%7C50%7C%23ffffff%7C%2376bb40%7C%23ffffff%7C0%7Canim-slide-top%7Couter*-2*7*8*1*%23000000*40~soft*0*0*6*0*%2338571a*50" data-i18n="opt_preset_Green_button">Nút xanh lá</option>
                     <option value="%23c2c2c2%7C%23000000%7Cgrid%7C%2300a1d8%7C%23e22400%7C%2361187c%7CTheme%2FWhite_button.png%7C100%7C45%7C100%7C50%7C%23f7fadb%7C%23000000%7C0%7C40%7C0.5%7C1%7C15%7C0%7C100%7C100%7C100%7C100%7C63%7C%23c2c2c2%7C%23c2c2c2%7C%23000000%7C0%7Canim-slide-top%7Couter*-2*7*8*2*%23000000*40~hard*0*-1*8*8*%23ffffff*50%7C1" data-i18n="opt_preset_White_button_(iPad)">Nút trắng (iPad)</option>
                     <option value="%23c2c2c2%7C%23000000%7Cgrid%7C%2300a1d8%7C%23e22400%7C%2361187c%7CTheme%2FWhite_button.png%7C65%7C30%7C100%7C50%7C%23f7fadb%7C%23000000%7C0%7C30%7C10%7C1%7C10%7C0%7C100%7C100%7C90%7C100%7C47%7C%23c2c2c2%7C%23c2c2c2%7C%23000000%7C0%7Canim-slide-top%7Couter*-2*7*8*2*%23000000*40~hard*0*-1*8*8*%23ffffff*50%7C1" data-i18n="opt_preset_White_button_(iPhone)">Nút trắng (iPhone)</option>
-                    </select>
+                    <option value="%23474747%7C%23ffffff%7Cgrid%7C%2300a1d8%7C%23e22400%7C%2361187c%7CTheme%2FBlack-Colour.png%7C63%7C30%7C100%7C50%7C%23474747%7C%23ffffff%7C0%7C28%7C6.5%7C1%7C11%7C0%7C100%7C100%7C90%7C100%7C50%7C%23474747%7C%2376bb40%7C%23ffffff%7C0%7Canim-slide-top%7Couter*5*5*5*0*%23000000*55~glow*0*0*9*0*%23ffffff*65%7C1" data-i18n="opt_preset_Dark_Neon">Neon Tối</option>
+
+                </select>
 
                 <label style="margin-top: 10px;" data-i18n="lbl_popup_anim">✨ Hiệu ứng Popup Cài đặt</label>
                 <select id="val-popup-anim">
@@ -197,15 +200,20 @@
                     <input type="checkbox" id="toggle-media-theme"> 
                     <span data-i18n="lbl_media_theme_sync">Đồng bộ Theme hệ thống</span>
                 </label>
+                <!-- THÊM NÚT GẠT THEME DOT Ở ĐÂY -->
+                <label style="margin-top: 10px; display: flex; align-items: center; gap: 5px;">
+                    <input type="checkbox" id="toggle-theme-dot" checked> 
+                    <span data-i18n="lbl_theme_dot">Theme Dot (Bật: Ảnh / Tắt: CSS thuần)</span>
+                </label>
             </div>
 
-            <h3 class="section-title dev-only" data-i18n="lbl_shadow_section">🔘 Đổ Bóng</h3>
+            <h3 class="section-title dev-only" data-i18n="lbl_shadow_section">🔘 ĐỔ BÓNG</h3>
             <div id="shadow-controls" class="dev-only"></div>
         </div>
         <button id="btn-info" class="info-btn">i</button>
     </div>
 
-    <!-- POPUP KHO GIAO DIỆN TỔNG -->
+    <!-- POPUP KHO GIAO DIỆN MACOS -->
     <div class="info-overlay" id="theme-overlay"></div>
     <div id="theme-modal" class="macos-window" style="max-width: 320px;">
         <div class="macos-header">
@@ -238,7 +246,7 @@
         </div>
     </div>
 
-    <!-- POPUP INFO GẮN LINK SENTECHTIPVN -->
+    <!-- POPUP INFO MACOS GẮN LINK SENTECHTIPVN -->
     <div id="info-modal" class="macos-window" style="max-width: 320px;">
         <div class="macos-header">
             <div class="mac-dot close-dot" id="close-info-modal"></div>
@@ -254,7 +262,7 @@
         </div>
     </div>
     
-    <script src="js/theme.js?v=12.3"></script>
-    <script src="js/main.js?v=12.3"></script>
+    <script src="js/theme.js?v=13.1"></script>
+    <script src="js/main.js?v=13.1"></script>
 </body>
 </html>
