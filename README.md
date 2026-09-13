@@ -1,4 +1,4 @@
-# ⚡ Quick Control — Trung Tâm Điều Khiển Đa Năng Đỉnh Cao Cho iOS
+# ⚡ Quick Control — Trung Tâm Điều Khiển Cho iOS
 
 <div align="center">
 
