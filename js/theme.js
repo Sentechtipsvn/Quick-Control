@@ -1,4 +1,4 @@
-const DEV_MODE = true; 
+const DEV_MODE = false; 
 
 const SHADOW_MODES = [
     { id: 'inset', nameKey: 'shadow_inset', name: 'Bóng Chìm', template: 'inset {x}px {y}px {b}px {s}px {c}' },
