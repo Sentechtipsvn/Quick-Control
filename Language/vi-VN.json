@@ -1,7 +1,7 @@
 {
   "app_title": "Quick Control",
   "settings_title": "CÀI ĐẶT",
-  "tab_appearance": "Giao diện",
+  "tab_appearance": "GIAO DIỆN",
   "tab_title": "TIÊU ĐỀ",
   "tab_frame": "KHUNG",
   "tab_media": "NHẠC",
@@ -43,6 +43,9 @@
   "lbl_audio_feedback": "🎚️ Âm thanh",
   "lbl_parallax": "🧭 Hiệu ứng 3D",
   "lbl_bg_image": "📱 Hình nền tự chọn",
+  "btn_choose_file": "Chọn tệp",
+  "file_none_selected": "chưa chọn tệp nào",
+  "file_selected_prefix": "Đã chọn: ",
   "lbl_glassmorphism": "Bật Kính mờ",
   "info_title": "Quick Control",
   "info_dev_prefix": "Phát triển bởi",
