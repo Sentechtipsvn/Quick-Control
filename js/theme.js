@@ -1,68 +1,91 @@
 const DEV_MODE = true; 
 
-// ⭐ VERSION CONTROL CHO BADGE THÔNG BÁO
-const PRESET_VERSION = 4;   // Tăng số này mỗi khi thêm preset giao diện mới
-const THEME_VERSION = 2;    // Tăng số này mỗi khi thêm Theme SVG mới
+const PRESET_VERSION = 5;
+const THEME_VERSION = 2;
 
 const SHADOW_MODES = [
-    { id: 'inset', nameKey: 'shadow_inset', name: 'Bóng Chìm', template: 'inset {x}px {y}px {b}px {s}px {c}' },
-    { id: 'outer', nameKey: 'shadow_outer', name: 'Bóng Ngoài', template: '{x}px {y}px {b}px {s}px {c}' },
-    { id: 'soft', nameKey: 'shadow_soft', name: 'Mờ Diện Rộng', template: '{x}px {y}px {b}px {s}px {c}' },
-    { id: 'hard', nameKey: 'shadow_hard', name: 'Nổi Khối 3D', template: '{x}px {y}px {b}px {s}px {c}' },
-    { id: 'glow', nameKey: 'shadow_glow', name: 'Phát Sáng', template: '0px 0px {b}px {s}px {c}' }
+    { id: 'inset', nameKey: 'shadow_inset', name: 'Bóng Chìm',     template: 'inset {x}px {y}px {b}px {s}px {c}' },
+    { id: 'outer', nameKey: 'shadow_outer', name: 'Bóng Ngoài',    template: '{x}px {y}px {b}px {s}px {c}' },
+    { id: 'soft',  nameKey: 'shadow_soft',  name: 'Mờ Diện Rộng',  template: '{x}px {y}px {b}px {s}px {c}' },
+    { id: 'hard',  nameKey: 'shadow_hard',  name: 'Nổi Khối 3D',   template: '{x}px {y}px 0px {s}px {c}' },
+    { id: 'glow',  nameKey: 'shadow_glow',  name: 'Phát Sáng',     template: '0px 0px {b}px {s}px {c}' },
+    { id: 'bottom',    nameKey: 'shadow_bottom',    name: 'Bóng Dưới (Apple)', template: '0px {y}px {b}px {s}px {c}' },
+    { id: 'floating',  nameKey: 'shadow_floating',  name: 'Nổi Bay',            template: '0px {b}px {b}px calc(-1 * {s}px) {c}' },
+    { id: 'pressed',   nameKey: 'shadow_pressed',   name: 'Ấn Xuống',           template: 'inset 0px {y}px {b}px {s}px {c}' },
+    { id: 'pop',       nameKey: 'shadow_pop',       name: 'Pop Bubble',         template: '0px {y}px 0px 0px {c}' },
+    { id: 'double',    nameKey: 'shadow_double',    name: 'Viền Kép',           template: '{x}px {y}px {b}px {s}px {c}, inset calc(-1 * {x}px) calc(-1 * {y}px) {b}px 0px rgba(255,255,255,0.15)' },
+    { id: 'neumorph',  nameKey: 'shadow_neumorph',  name: 'Neumorphism Nổi',    template: 'calc(-1 * {x}px) calc(-1 * {y}px) {b}px rgba(255,255,255,0.4), {x}px {y}px {b}px {c}' },
+    { id: 'neuro_in',  nameKey: 'shadow_neuro_in',  name: 'Neumorphism Chìm',   template: 'inset calc(-1 * {x}px) calc(-1 * {y}px) {b}px rgba(255,255,255,0.4), inset {x}px {y}px {b}px {c}' },
+    { id: 'neon',      nameKey: 'shadow_neon',      name: 'Neon RGB',           template: '0px 0px {b}px {c}, 0px 0px {b}px {c}, 0px 0px {b}px {c}' },
+    { id: 'long',      nameKey: 'shadow_long',      name: 'Bóng Dài Retro',     template: '{x}px {y}px 0px 0px {c}' },
+    { id: 'crisp',     nameKey: 'shadow_crisp',     name: 'Sắc Nét Nhẹ',        template: '0px 1px 2px 0px {c}' },
+    { id: 'ripple',    nameKey: 'shadow_ripple',    name: 'Sóng Nước',          template: '0px {y}px {b}px {s}px {c}, 0px {y}px {b}px {s}px {c}' },
+    { id: 'clay',      nameKey: 'shadow_clay',      name: 'Đất Sét 3D',         template: 'inset 0px calc(-1 * {y}px) {b}px rgba(255,255,255,0.3), inset 0px {y}px {b}px rgba(0,0,0,0.2), 0px {y}px {b}px {c}' }
 ];
 
 document.addEventListener("DOMContentLoaded", () => {
-    try {
-        const root = document.documentElement;
-        const shadowContainer = document.getElementById('shadow-controls');
-        const mainContainer = document.getElementById('main-container');
-        const introScreen = document.getElementById('intro-screen');
-        const introTextWrapper = document.getElementById('intro-text-wrapper');
+    const root = document.documentElement;
+    const mainContainer = document.getElementById('main-container');
+    const introScreen = document.getElementById('intro-screen');
+    const introTextWrapper = document.getElementById('intro-text-wrapper');
 
-        if (introTextWrapper) {
-            const effects = ['anim-wave', 'anim-bounce', 'anim-flip'];
-            const randomEffect = effects[Math.floor(Math.random() * effects.length)];
-            introTextWrapper.classList.add(randomEffect);
-        }
+    /* ========== GẮN LISTENER NÚT SETTINGS ========== */
+    const drawerEl = document.getElementById('settings-drawer');
+    const overlay = document.getElementById('settings-overlay');
+    const openSettingsBtn = document.getElementById('open-settings');
+    const closeSettingsBtn = document.getElementById('close-settings');
 
-        if (mainContainer) mainContainer.classList.add('intro-zoom');
-        
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                if (window.__dismissIntro) { window.__dismissIntro(); return; }
-                if (introScreen) {
-                    introScreen.classList.add('dismiss'); 
-                    if (mainContainer) mainContainer.classList.remove('intro-zoom'); 
-                    setTimeout(() => { introScreen.style.display = 'none'; }, 500); 
-                }
-            }, 2000); 
+    const closeSettings = () => { 
+        if (drawerEl) drawerEl.classList.remove('open'); 
+        if (overlay) overlay.classList.remove('open'); 
+    };
+
+    if (openSettingsBtn && drawerEl && overlay) {
+        openSettingsBtn.addEventListener('click', (ev) => {
+            ev.preventDefault();
+            drawerEl.classList.add('open');
         });
+    }
+    if (closeSettingsBtn) closeSettingsBtn.addEventListener('click', closeSettings);
+    if (overlay) overlay.addEventListener('click', closeSettings);
 
-        if (!DEV_MODE) document.body.classList.add('standard-mode');
+    /* ========== INTRO LOGIC ========== */
+    if (introTextWrapper) {
+        const effects = ['anim-wave', 'anim-bounce', 'anim-flip'];
+        const randomEffect = effects[Math.floor(Math.random() * effects.length)];
+        introTextWrapper.classList.add(randomEffect);
+    }
 
-        /* ========== ⭐ BADGE VERSION-BASED ========== */
+    if (mainContainer) mainContainer.classList.add('intro-zoom');
+    
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            if (window.__dismissIntro) { window.__dismissIntro(); return; }
+            if (introScreen) {
+                introScreen.classList.add('dismiss'); 
+                if (mainContainer) mainContainer.classList.remove('intro-zoom'); 
+                setTimeout(() => { introScreen.style.display = 'none'; }, 500); 
+            }
+        }, 2000); 
+    });
+
+    if (!DEV_MODE) document.body.classList.add('standard-mode');
+
+    /* ========== TOÀN BỘ LOGIC CÒN LẠI ========== */
+    try {
         const badgePreset = document.getElementById('badge-preset');
         const badgeTheme = document.getElementById('badge-theme');
         
-        // Preset badge: hiện khi bạn tăng PRESET_VERSION
         const seenPresetVersion = parseInt(localStorage.getItem('sttv_presetVersionSeen') || '0');
         if (badgePreset) {
-            if (seenPresetVersion >= PRESET_VERSION) {
-                badgePreset.classList.add('hidden');
-            } else {
-                badgePreset.classList.remove('hidden');
-            }
+            if (seenPresetVersion >= PRESET_VERSION) badgePreset.classList.add('hidden');
+            else badgePreset.classList.remove('hidden');
         }
         
-        // Theme badge: hiện khi bạn tăng THEME_VERSION
         const seenThemeVersion = parseInt(localStorage.getItem('sttv_themeVersionSeen') || '0');
         if (badgeTheme) {
-            if (seenThemeVersion >= THEME_VERSION) {
-                badgeTheme.classList.add('hidden');
-            } else {
-                badgeTheme.classList.remove('hidden');
-            }
+            if (seenThemeVersion >= THEME_VERSION) badgeTheme.classList.add('hidden');
+            else badgeTheme.classList.remove('hidden');
         }
 
         /* ========== TAB SWITCHING ========== */
@@ -138,26 +161,31 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         /* ========== SHADOW CONTROLS ========== */
-        if (shadowContainer) {
-            SHADOW_MODES.forEach(mode => {
-                const div = document.createElement('div');
-                div.className = 'shadow-item dev-only';
-                div.innerHTML = `
-                    <div class="shadow-header">
-                        <span data-i18n="${mode.nameKey}">${mode.name}</span>
-                        <input type="checkbox" name="active_shadow" value="${mode.id}" class="shadow-switch">
-                    </div>
-                    <div class="shadow-drawer" id="drawer-${mode.id}">
-                        <div class="setting-group"><label data-i18n="slider_x">Trục X</label><input type="range" class="s-x" min="-20" max="20" value="0"></div>
-                        <div class="setting-group"><label data-i18n="slider_y">Trục Y</label><input type="range" class="s-y" min="-20" max="20" value="4"></div>
-                        <div class="setting-group"><label data-i18n="slider_blur">Độ mờ</label><input type="range" class="s-b" min="0" max="50" value="10"></div>
-                        <div class="setting-group"><label data-i18n="slider_spread">Lan rộng</label><input type="range" class="s-s" min="-10" max="30" value="0"></div>
-                        <div class="setting-group"><label data-i18n="slider_color">Màu Bóng</label><input type="color" class="s-c" value="#000000"></div>
-                        <div class="setting-group"><label data-i18n="slider_opacity">Độ đậm bóng</label><input type="range" class="s-o" min="0" max="100" value="100"></div>
-                    </div>
-                `;
-                shadowContainer.appendChild(div);
-            });
+        try {
+            const shadowContainer = document.getElementById('shadow-controls');
+            if (shadowContainer) {
+                SHADOW_MODES.forEach(mode => {
+                    const div = document.createElement('div');
+                    div.className = 'shadow-item dev-only';
+                    div.innerHTML = `
+                        <div class="shadow-header">
+                            <span data-i18n="${mode.nameKey}">${mode.name}</span>
+                            <input type="checkbox" name="active_shadow" value="${mode.id}" class="shadow-switch">
+                        </div>
+                        <div class="shadow-drawer" id="drawer-${mode.id}">
+                            <div class="setting-group"><label data-i18n="slider_x">Trục X</label><input type="range" class="s-x" min="-20" max="20" value="0"></div>
+                            <div class="setting-group"><label data-i18n="slider_y">Trục Y</label><input type="range" class="s-y" min="-20" max="20" value="4"></div>
+                            <div class="setting-group"><label data-i18n="slider_blur">Độ mờ</label><input type="range" class="s-b" min="0" max="50" value="10"></div>
+                            <div class="setting-group"><label data-i18n="slider_spread">Lan rộng</label><input type="range" class="s-s" min="-10" max="30" value="0"></div>
+                            <div class="setting-group"><label data-i18n="slider_color">Màu Bóng</label><input type="color" class="s-c" value="#000000"></div>
+                            <div class="setting-group"><label data-i18n="slider_opacity">Độ đậm bóng</label><input type="range" class="s-o" min="0" max="100" value="100"></div>
+                        </div>
+                    `;
+                    shadowContainer.appendChild(div);
+                });
+            }
+        } catch(errShadow) {
+            console.error('Shadow render failed:', errShadow);
         }
 
         let currentThemeTarget = 'frame';
@@ -201,7 +229,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (currentThemeTarget === 'frame') {
                     const vtf = document.getElementById('val-theme-frame');
                     if (vtf) vtf.value = val;
-                    // ⭐ Đánh dấu đã xem Theme version mới
                     if (badgeTheme) { 
                         badgeTheme.classList.add('hidden'); 
                         localStorage.setItem('sttv_themeVersionSeen', String(THEME_VERSION)); 
@@ -247,7 +274,6 @@ document.addEventListener("DOMContentLoaded", () => {
             presetSelect.addEventListener('change', (e) => {
                 const val = e.target.value;
                 localStorage.setItem('sttv_activePreset', val);
-                // ⭐ Đánh dấu đã xem Preset version mới
                 if (badgePreset) { 
                     badgePreset.classList.add('hidden'); 
                     localStorage.setItem('sttv_presetVersionSeen', String(PRESET_VERSION)); 
@@ -263,7 +289,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
-        const drawerEl = document.getElementById('settings-drawer');
         const popupAnimSelect = document.getElementById('val-popup-anim');
         if (popupAnimSelect && drawerEl) {
             popupAnimSelect.addEventListener('change', (e) => {
@@ -296,22 +321,18 @@ document.addEventListener("DOMContentLoaded", () => {
             if (e.target.tagName === 'BUTTON' || e.target.type === 'checkbox' || e.target.closest('.theme-chip') || e.target.closest('.theme-chip-more')) playTick(); 
         });
 
-        /* ========== COLOR PICKER KHÔNG BỊ VĂNG ========== */
+        /* ========== COLOR PICKER ========== */
         let colorPickerLock = false;
 
         if (drawerEl) {
             drawerEl.addEventListener('focusin', (e) => {
-                if (e.target && e.target.type === 'color') {
-                    colorPickerLock = true;
-                }
+                if (e.target && e.target.type === 'color') colorPickerLock = true;
             });
-
             drawerEl.addEventListener('focusout', (e) => {
                 if (e.target && e.target.type === 'color') {
                     setTimeout(() => { colorPickerLock = false; }, 400);
                 }
             });
-
             drawerEl.addEventListener('change', (e) => {
                 if (e.target.type === 'color') {
                     updateLiveVariables(true);
@@ -321,11 +342,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     updateLiveVariables(true); 
                 }
             });
-
             drawerEl.addEventListener('input', (e) => {
-                if (e.target && e.target.type === 'color') {
-                    e.stopPropagation();
-                }
+                if (e.target && e.target.type === 'color') e.stopPropagation();
             }, true);
         }
 
@@ -414,20 +432,6 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
 
-        const overlay = document.getElementById('settings-overlay');
-        const closeSettings = () => { 
-            if (drawerEl) drawerEl.classList.remove('open'); 
-            if (overlay) overlay.classList.remove('open'); 
-        };
-        const openSettingsBtn = document.getElementById('open-settings');
-        const closeSettingsBtn = document.getElementById('close-settings');
-        if (openSettingsBtn) openSettingsBtn.onclick = () => { 
-            if (drawerEl) drawerEl.classList.add('open'); 
-            if (overlay) overlay.classList.add('open'); 
-        };
-        if (closeSettingsBtn) closeSettingsBtn.onclick = closeSettings;
-        if (overlay) overlay.onclick = closeSettings;
-
         let adjustTimeout;
         if (drawerEl) {
             drawerEl.addEventListener('input', (e) => {
@@ -464,16 +468,28 @@ document.addEventListener("DOMContentLoaded", () => {
             const activeShadows = document.querySelectorAll('input[name="active_shadow"]:checked');
             let combinedShadow = '';
             activeShadows.forEach(checkbox => {
-                const drawer = document.getElementById(`drawer-${checkbox.value}`);
-                if (!drawer) return;
-                const mode = SHADOW_MODES.find(m => m.id === checkbox.value);
-                const rgbaColor = hexToRgba(drawer.querySelector('.s-c').value, drawer.querySelector('.s-o').value);
-                let shadowStr = mode.template
-                    .replace('{x}', drawer.querySelector('.s-x').value).replace('{y}', drawer.querySelector('.s-y').value)
-                    .replace('{b}', drawer.querySelector('.s-b').value).replace('{s}', drawer.querySelector('.s-s').value)
-                    .replace('{c}', rgbaColor);
-                if (combinedShadow) combinedShadow += ', '; 
-                combinedShadow += shadowStr;
+                try {
+                    const drawer = document.getElementById(`drawer-${checkbox.value}`);
+                    if (!drawer) return;
+                    const mode = SHADOW_MODES.find(m => m.id === checkbox.value);
+                    if (!mode || !mode.template) return;
+                    
+                    const colorEl = drawer.querySelector('.s-c');
+                    const opacityEl = drawer.querySelector('.s-o');
+                    if (!colorEl || !opacityEl) return;
+                    
+                    const rgbaColor = hexToRgba(colorEl.value, opacityEl.value);
+                    let shadowStr = mode.template
+                        .replace(/{x}/g, drawer.querySelector('.s-x').value)
+                        .replace(/{y}/g, drawer.querySelector('.s-y').value)
+                        .replace(/{b}/g, drawer.querySelector('.s-b').value)
+                        .replace(/{s}/g, drawer.querySelector('.s-s').value)
+                        .replace(/{c}/g, rgbaColor);
+                    if (combinedShadow) combinedShadow += ', '; 
+                    combinedShadow += shadowStr;
+                } catch(err) {
+                    console.warn('Shadow mode error:', err);
+                }
             });
             root.style.setProperty('--btn-shadow', combinedShadow || 'none');
         }
@@ -833,6 +849,7 @@ document.addEventListener("DOMContentLoaded", () => {
             safeSet('toggle-audio', 'audioFeedback', false, true);
             safeSet('toggle-parallax', 'parallax', false, true);
 
+            // ✅ FIX: khôi phục đầy đủ & đúng key cho media
             safeSet('val-media-width', 'mediaWidth', '90'); 
             safeSet('val-media-bg-opacity', 'mediaBgOpacity', '3');
             safeSet('val-media-btn-size', 'mediaBtnSize', '50'); 
@@ -850,6 +867,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const savedShadowConfig = localStorage.getItem('sttv_shadowConfig');
             if (savedShadowConfig) {
                 try {
+                    // ✅ FIX: tách đúng 2 câu lệnh
                     const shadowState = JSON.parse(savedShadowConfig);
                     SHADOW_MODES.forEach(mode => {
                         if (shadowState[mode.id]) {
@@ -869,7 +887,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             }
                         }
                     });
-                } catch(e) {}
+                } catch(e) { console.warn('Shadow parse error:', e); }
             }
 
             const initLayout = localStorage.getItem('sttv_layoutMode') || 'grid';
