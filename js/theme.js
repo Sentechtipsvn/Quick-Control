@@ -1,4 +1,4 @@
-const DEV_MODE = false; 
+const DEV_MODE = true; 
 
 const PRESET_VERSION = 5;
 const THEME_VERSION = 2;
