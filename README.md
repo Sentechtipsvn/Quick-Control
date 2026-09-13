@@ -49,6 +49,7 @@
 ## 📲 Trải Nghiệm Ngay Lập Tức
 
 • Lấy phím tắt **Tại đây**
+
 • Thêm hồ sơ cấu hình [**Tại đây**](https://sentechtipsvn.github.io/Quick-Control/Quick-Control.mobileconfig)
 
 . Tận hưởng ngay trung tâm điều khiển đẳng cấp của riêng bạn!
