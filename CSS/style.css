@@ -65,7 +65,19 @@ body.standard-mode .dev-only { display: none !important; }
    ============================================ */
 .slider-item { position: relative; display: flex; align-items: center; margin-bottom: 8px; width: 100%; transition: opacity 0.3s ease; }
 .slider-item input[type=range] { flex: 1; width: 100% !important; }
-.slider-label { width: 105px; font-size: 12px; opacity: 0.8; flex-shrink: 0; }
+.slider-label { 
+    width: 110px; 
+    font-size: 12px; 
+    opacity: 0.85; 
+    flex-shrink: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-right: 6px;
+}
+@media (max-width: 380px) {
+    .slider-label { width: 95px; font-size: 11px; }
+}
 .slider-tooltip { position: fixed; background: #007aff; color: #ffffff; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 8px; opacity: 0; transform: translateX(-50%) translateY(5px); transition: opacity 0.15s ease, transform 0.15s ease; pointer-events: none; z-index: 999999; white-space: nowrap; box-shadow: 0 2px 8px rgba(0,0,0,0.4); }
 .slider-tooltip.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
@@ -149,17 +161,12 @@ input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; bac
     filter: none !important;
 }
 
-/* ============================================
-   THEME DOT PLUS BUTTON
-   ============================================ */
 .btn-plus-theme {
     width: 26px; height: 26px; border-radius: 50%; background: #007aff; color: white; border: none;
     font-size: 18px; font-weight: 300; display: flex; align-items: center; justify-content: center; cursor: pointer; 
     transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(0, 122, 255, 0.4);
 }
-.btn-plus-theme.disabled {
-    background: #8e8e93; box-shadow: none; opacity: 0.5; pointer-events: none;
-}
+.btn-plus-theme.disabled { background: #8e8e93; box-shadow: none; opacity: 0.5; pointer-events: none; }
 .btn-plus-theme span { margin-top: -2px; }
 
 /* ============================================
@@ -198,29 +205,11 @@ input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; bac
     will-change: right, opacity; display: flex; flex-direction: column; color: white; overflow: hidden; 
 }
 .settings-drawer.open { right: 15px; }
-.settings-drawer.adjusting { background: rgba(30, 30, 30, 0.1) !important; opacity: 0.15 !important; backdrop-filter: blur(0px) !important; -webkit-backdrop-filter: blur(0px) !important; box-shadow: none !important; }
-
-.settings-body { padding: 20px 20px 60px 20px; overflow-y: auto; flex: 1; }
-.setting-group { margin-bottom: 20px; display: flex; flex-direction: column; gap: 8px; }
-.highlight5-box { background: rgba(255,255,255,px0.05); padding: 15px; border-radius:;
- 12px; border: 1px solid rgba(   255,255,255,0 line.1); }
-.feature-toggles { display-height: flex; flex-direction: column; gap: 10px; margin-top: 10px; font-size: 13px; }
-.feature-toggles label { display: flex; justify-content: space-between; align-items: center; }
-.section-title { margin: 20px 0 10px; font-size: 16px; color: var(--accent-color); border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; }
-.slider-item input[type="color"] { height: 28px; padding: 0; border: none; background: none; border-radius: 5px; cursor: pointer; }
-.layout-buttons { display: flex; gap: 10px; }
-.layout-btn { flex: 1; padding: 10px 0; background: rgba(255,255,255,0.1); border: 1px solid transparent; color: white; border-radius: 8px; cursor: pointer; font-weight: 500; transition: all 0.2s; }
-.layout-btn.active { background: var(--accent-color); font-weight: bold; }
-.config-actions { display: flex; gap: 5px; margin-bottom: 20px; }
-.action-btn { flex: 1; padding: 8px; background: rgba(255,255,255,0.15); border: none; color: white; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; font-size: 13px; font-weight: 500; }
-.shadow-item { border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; margin-bottom: 10px; overflow: hidden; }
-.shadow-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; background: rgba(0,0,0,0.2); }
-.shadow-drawer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; padding: 0 15px; background: rgba(0,0,0,0.1); }
-.shadow-drawer.active { max-height: 400px; padding: 15px; }
-select { width: 100%; padding: 10px; border-radius: 8px; background: rgba(0,0,0,0.3); color: white; border: 1px solid rgba(255,255,255,0.2); font-size: 14px; }
+/* ⭐ FIX #6: Panel mờ 0.4 thay vì 0.15 để user vẫn thấy preview */
+.settings-drawer.adjusting { background: rgba(30, 30, 30, 0.35) !important; opacity: 0.4 !important; backdrop-filter: blur(2px) !important; -webkit-backdrop-filter: blur(2px) !important; box-shadow: none !important; }
 
 /* ============================================
-   ⭐ SETTINGS HEADER MỚI - Nút X / Pill CÀI ĐẶT / Nút Info
+   ⭐ SETTINGS HEADER
    ============================================ */
 .settings-header {
     padding: 12px 15px;
@@ -257,9 +246,7 @@ select { width: 100%; padding: 10px; border-radius: 8px; background: rgba(0,0,0,
     font-family: Georgia, serif;
     box-shadow: 0 2px 10px rgba(0, 122, 255, 0.55), inset 0 1px 0 rgba(255,255,255,0.3);
 }
-.settings-header .header-btn.info-header-btn:active {
-    background: linear-gradient(135deg, #0066dd, #0044aa);
-}
+.settings-header .header-btn.info-header-btn:active { background: linear-gradient(135deg, #0066dd, #0044aa); }
 .settings-header .header-title-pill {
     position: absolute;
     left: 50%;
@@ -280,11 +267,98 @@ select { width: 100%; padding: 10px; border-radius: 8px; background: rgba(0,0,0,
 }
 
 /* ============================================
+   ⭐ TAB BAR - NEW
+   ============================================ */
+.settings-tabs-bar {
+    display: flex;
+    gap: 4px;
+    padding: 10px 12px;
+    background: rgba(0,0,0,0.25);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    flex-shrink: 0;
+}
+.settings-tabs-bar::-webkit-scrollbar { display: none; }
+.settings-tab {
+    flex: 1;
+    min-width: 66px;
+    padding: 9px 6px;
+    border: none;
+    background: rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.6);
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    font-family: -apple-system, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+    text-align: center;
+}
+.settings-tab:active { transform: scale(0.96); }
+.settings-tab.active {
+    background: linear-gradient(135deg, #007aff, #0055cc);
+    color: white;
+    box-shadow: 0 3px 10px rgba(0, 122, 255, 0.45);
+    font-weight: 700;
+}
+
+.settings-tab-content { display: none; }
+.settings-tab-content.active { display: block; animation: tabFadeIn 0.25s ease-out; }
+@keyframes tabFadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================
+   SETTINGS BODY & GROUPS
+   ============================================ */
+.settings-body { padding: 16px 18px 60px 18px; overflow-y: auto; flex: 1; }
+.setting-group { margin-bottom: 18px; display: flex; flex-direction: column; gap: 8px; }
+.highlight-box { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); }
+.feature-toggles { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; font-size: 13px; }
+.feature-toggles label { display: flex; justify-content: space-between; align-items: center; }
+.section-title { margin: 20px 0 10px; font-size: 16px; color: var(--accent-color); border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; }
+.slider-item input[type="color"] { height: 28px; padding: 0; border: none; background: none; border-radius: 5px; cursor: pointer; }
+.layout-buttons { display: flex; gap: 10px; }
+.layout-btn { flex: 1; padding: 10px 0; background: rgba(255,255,255,0.1); border: 1px solid transparent; color: white; border-radius: 8px; cursor: pointer; font-weight: 500; transition: all 0.2s; }
+.layout-btn.active { background: var(--accent-color); font-weight: bold; }
+.config-actions { display: flex; gap: 5px; margin-bottom: 8px; }
+.action-btn { flex: 1; padding: 8px; background: rgba(255,255,255,0.15); border: none; color: white; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; font-size: 13px; font-weight: 500; }
+
+/* ============================================
+   ⭐ FIX #5: SHADOW HEADER TO HƠN
+   ============================================ */
+.shadow-item { border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; margin-bottom: 10px; overflow: hidden; }
+.shadow-header { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 16px 18px; 
+    min-height: 52px;
+    background: rgba(0,0,0,0.2); 
+}
+.shadow-header span { font-size: 14px; font-weight: 500; }
+.shadow-header input[type=checkbox] {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    accent-color: #007aff;
+    flex-shrink: 0;
+}
+.shadow-drawer { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; padding: 0 15px; background: rgba(0,0,0,0.1); }
+.shadow-drawer.active { max-height: 500px; padding: 15px; }
+
+select { width: 100%; padding: 10px; border-radius: 8px; background: rgba(0,0,0,0.3); color: white; border: 1px solid rgba(255,255,255,0.2); font-size: 14px; }
+
+/* ============================================
    ⭐ NÚT KHÔI PHỤC MẶC ĐỊNH
    ============================================ */
 .config-actions-secondary {
     display: flex;
-    margin-top: -12px;
     margin-bottom: 20px;
 }
 .config-actions-secondary .action-btn {
@@ -304,6 +378,58 @@ select { width: 100%; padding: 10px; border-radius: 8px; background: rgba(0,0,0,
 .config-actions-secondary .action-btn.danger { width: 100%; }
 
 /* ============================================
+   ⭐ FIX #7: BẢNG MÀU NHANH - 5 SWATCH HÀNG NGANG
+   ============================================ */
+.color-swatch-row {
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+    margin-top: 12px;
+    padding: 4px 2px;
+}
+.color-swatch {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    position: relative;
+}
+.color-swatch input[type=color] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    max-width: 48px;
+    height: 48px;
+    border: 2px solid rgba(255,255,255,0.18);
+    border-radius: 14px;
+    padding: 0;
+    cursor: pointer;
+    background: transparent;
+    overflow: hidden;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.15);
+}
+.color-swatch input[type=color]:active {
+    transform: scale(0.92);
+    border-color: #007aff;
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.35);
+}
+.color-swatch input[type=color]::-webkit-color-swatch-wrapper { padding: 0; }
+.color-swatch input[type=color]::-webkit-color-swatch {
+    border: none;
+    border-radius: 11px;
+}
+.swatch-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.65);
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+    text-align: center;
+}
+
+/* ============================================
    MACOS MODAL WINDOWS
    ============================================ */
 .info-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); opacity: 0; visibility: hidden; transition: opacity 0.45s ease; z-index: 2000; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
@@ -317,20 +443,9 @@ select { width: 100%; padding: 10px; border-radius: 8px; background: rgba(0,0,0,
 .max-dot { background: #27c93f; }
 .macos-body { padding: 25px 20px 30px 20px; text-align: center; }
 
-/* ============================================
-   ⭐ POPUP INFO MỚI - 3 PILL BUTTONS KÍNH MỜ
-   ============================================ */
-.info-body {
-    padding: 18px 16px 24px !important;
-    text-align: center;
-}
-.info-pill-tabs {
-    display: flex;
-    gap: 6px;
-    justify-content: center;
-    margin-bottom: 20px;
-    flex-wrap: nowrap;
-}
+/* INFO MODAL */
+.info-body { padding: 18px 16px 24px !important; text-align: center; }
+.info-pill-tabs { display: flex; gap: 6px; justify-content: center; margin-bottom: 20px; flex-wrap: nowrap; }
 .info-pill {
     padding: 9px 15px;
     border-radius: 22px;
@@ -360,57 +475,26 @@ select { width: 100%; padding: 10px; border-radius: 8px; background: rgba(0,0,0,
 }
 
 .info-content { text-align: center; }
-.info-app-name {
-    font-size: 22px;
-    font-weight: 800;
-    color: #007aff;
-    margin: 0 0 10px;
-    letter-spacing: 0.3px;
-}
+.info-app-name { font-size: 22px; font-weight: 800; color: #007aff; margin: 0 0 10px; letter-spacing: 0.3px; }
 .info-version-row, .info-dev-row {
-    font-size: 13px;
-    color: #666;
-    margin-bottom: 8px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 6px;
-    flex-wrap: wrap;
+    font-size: 13px; color: #666; margin-bottom: 8px;
+    display: flex; justify-content: center; align-items: center; gap: 6px; flex-wrap: wrap;
 }
 .info-version-value {
-    font-weight: 700;
-    color: #000;
-    background: rgba(0,0,0,0.07);
-    padding: 3px 10px;
-    border-radius: 8px;
-    font-size: 12.5px;
+    font-weight: 700; color: #000;
+    background: rgba(0,0,0,0.07); padding: 3px 10px; border-radius: 8px; font-size: 12.5px;
 }
-.info-dev-link {
-    color: #007aff;
-    font-weight: 700;
-    text-decoration: none;
-}
+.info-dev-link { color: #007aff; font-weight: 700; text-decoration: none; }
 .info-dev-link:active { opacity: 0.7; }
 .info-desc-box, .info-guide-box {
-    text-align: left;
-    margin-top: 14px;
-    padding: 12px 14px;
-    background: rgba(0,0,0,0.04);
-    border-radius: 12px;
-    border: 1px solid rgba(0,0,0,0.06);
+    text-align: left; margin-top: 14px; padding: 12px 14px;
+    background: rgba(0,0,0,0.04); border-radius: 12px; border: 1px solid rgba(0,0,0,0.06);
 }
 .info-desc-title, .info-guide-title {
-    font-size: 13px;
-    font-weight: 700;
-    color: #007aff;
-    margin-bottom: 6px;
-    letter-spacing: 0.2px;
+    font-size: 13px; font-weight: 700; color: #007aff; margin-bottom: 6px; letter-spacing: 0.2px;
 }
 .info-desc-box p, .info-guide-box p {
-    font-size: 12.: 1.55;
-    color: #333;
-    margin: 0;
-    white-space: pre-line;
+    font-size: 12.5px; line-height: 1.55; color: #333; margin: 0; white-space: pre-line;
 }
 
 /* ============================================
