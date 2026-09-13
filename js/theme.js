@@ -108,19 +108,9 @@ document.addEventListener("DOMContentLoaded", () => {
         shadowContainer.appendChild(div);
     });
 
-    document.querySelectorAll('.theme-chip').forEach(chip => {
-        chip.addEventListener('click', () => {
-            document.querySelectorAll('.theme-chip').forEach(c => c.classList.remove('active'));
-            const val = chip.dataset.value;
-            document.querySelectorAll(`.theme-chip[data-value="${val}"]`).forEach(c => c.classList.add('active'));
-            document.getElementById('val-theme-frame').value = val;
-            
-            if (badgeTheme) { badgeTheme.classList.add('hidden'); localStorage.setItem('sttv_seen_theme_badge', 'true'); }
-            resetPresetToCustom();
-            updateLiveVariables(true);
-        });
-    });
-
+    // LOGIC DÙNG CHUNG KHO GIAO DIỆN
+    let currentThemeTarget = 'frame'; // Cờ xác định đang chọn Theme cho Frame hay Thumb
+    
     function syncThemePickerVisuals(val) {
         document.querySelectorAll('.theme-chip').forEach(c => {
             if (c.dataset.value === val) c.classList.add('active');
@@ -130,24 +120,49 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const themeModal = document.getElementById('theme-modal');
     const themeOverlay = document.getElementById('theme-overlay');
+    
     const btnMoreThemes = document.getElementById('btn-more-themes');
     if (btnMoreThemes) {
-        btnMoreThemes.onclick = () => { themeModal.classList.add('show'); themeOverlay.classList.add('show'); };
-    }
-    const closeThemeModal = document.getElementById('close-theme-modal');
-    if (closeThemeModal) {
-        closeThemeModal.onclick = () => { themeModal.classList.remove('show'); themeOverlay.classList.remove('show'); };
+        btnMoreThemes.onclick = () => { 
+            currentThemeTarget = 'frame';
+            syncThemePickerVisuals(document.getElementById('val-theme-frame').value);
+            themeModal.classList.add('show'); themeOverlay.classList.add('show'); 
+        };
     }
 
+    const btnThumbTheme = document.getElementById('btn-thumb-theme');
+    if (btnThumbTheme) {
+        btnThumbTheme.onclick = () => {
+            currentThemeTarget = 'thumb';
+            syncThemePickerVisuals(document.getElementById('val-thumb-theme').value);
+            themeModal.classList.add('show'); themeOverlay.classList.add('show'); 
+        };
+    }
+
+    document.querySelectorAll('.theme-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+            const val = chip.dataset.value;
+            syncThemePickerVisuals(val);
+            
+            if (currentThemeTarget === 'frame') {
+                document.getElementById('val-theme-frame').value = val;
+                if (badgeTheme) { badgeTheme.classList.add('hidden'); localStorage.setItem('sttv_seen_theme_badge', 'true'); }
+                resetPresetToCustom();
+            } else if (currentThemeTarget === 'thumb') {
+                document.getElementById('val-thumb-theme').value = val;
+            }
+            updateLiveVariables(true);
+        });
+    });
+
+    const closeThemeModal = document.getElementById('close-theme-modal');
+    if (closeThemeModal) closeThemeModal.onclick = () => { themeModal.classList.remove('show'); themeOverlay.classList.remove('show'); };
+    
     const infoModal = document.getElementById('info-modal');
     const btnInfo = document.getElementById('btn-info');
-    if (btnInfo) {
-        btnInfo.onclick = () => { infoModal.classList.add('show'); themeOverlay.classList.add('show'); };
-    }
+    if (btnInfo) btnInfo.onclick = () => { infoModal.classList.add('show'); themeOverlay.classList.add('show'); };
     const closeInfoModal = document.getElementById('close-info-modal');
-    if (closeInfoModal) {
-        closeInfoModal.onclick = () => { infoModal.classList.remove('show'); themeOverlay.classList.remove('show'); };
-    }
+    if (closeInfoModal) closeInfoModal.onclick = () => { infoModal.classList.remove('show'); themeOverlay.classList.remove('show'); };
 
     if (themeOverlay) {
         themeOverlay.onclick = () => { 
@@ -186,34 +201,23 @@ document.addEventListener("DOMContentLoaded", () => {
         if (audioCtx.state === 'suspended') audioCtx.resume();
         const osc = audioCtx.createOscillator(); 
         const gain = audioCtx.createGain();
-        osc.type = 'sine'; 
-        osc.frequency.setValueAtTime(800, audioCtx.currentTime); 
-        osc.frequency.exponentialRampToValueAtTime(300, audioCtx.currentTime + 0.04);
-        gain.gain.setValueAtTime(0.2, audioCtx.currentTime); 
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.04);
-        osc.connect(gain); gain.connect(audioCtx.destination);
-        osc.start(); osc.stop(audioCtx.currentTime + 0.04);
+        osc.type = 'sine'; osc.frequency.setValueAtTime(800, audioCtx.currentTime); osc.frequency.exponentialRampToValueAtTime(300, audioCtx.currentTime + 0.04);
+        gain.gain.setValueAtTime(0.2, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.04);
+        osc.connect(gain); gain.connect(audioCtx.destination); osc.start(); osc.stop(audioCtx.currentTime + 0.04);
     }
     document.addEventListener('click', (e) => { if (e.target.tagName === 'BUTTON' || e.target.type === 'checkbox' || e.target.closest('.theme-chip') || e.target.closest('.theme-chip-more')) playTick(); });
 
-    drawerEl.addEventListener('input', (e) => {
-        if (e.target.type === 'color') updateLiveVariables(true);
-    });
+    drawerEl.addEventListener('input', (e) => { if (e.target.type === 'color') updateLiveVariables(true); });
     drawerEl.addEventListener('change', (e) => {
-        if (e.target.type === 'color') {
-            e.target.blur();
-            updateLiveVariables(true);
-        } else if (e.target.type === 'checkbox') {
-            updateLiveVariables(true); 
-        }
+        if (e.target.type === 'color') { e.target.blur(); updateLiveVariables(true); } 
+        else if (e.target.type === 'checkbox') updateLiveVariables(true); 
     });
 
     document.querySelectorAll('.shadow-switch').forEach(switchBtn => {
         switchBtn.addEventListener('change', (e) => {
             const drawer = document.getElementById(`drawer-${e.target.value}`);
             if (e.target.checked) drawer.classList.add('active'); else drawer.classList.remove('active');
-            resetPresetToCustom();
-            updateLiveVariables(true);
+            resetPresetToCustom(); updateLiveVariables(true);
         });
     });
 
@@ -222,8 +226,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let x = e.gamma; let y = e.beta; 
         if (x > 45) x = 45; if (x < -45) x = -45;
         if (y > 45) y = 45; if (y < -45) y = -45;
-        root.style.setProperty('--tilt-x', (x / 10) + 'px'); 
-        root.style.setProperty('--tilt-y', (y / 10) + 'px');
+        root.style.setProperty('--tilt-x', (x / 10) + 'px'); root.style.setProperty('--tilt-y', (y / 10) + 'px');
     }
 
     document.getElementById('toggle-parallax').addEventListener('change', (e) => {
@@ -247,17 +250,14 @@ document.addEventListener("DOMContentLoaded", () => {
         if (file) {
             const reader = new FileReader();
             reader.onload = (ev) => {
-                const b64 = ev.target.result; 
-                localStorage.setItem('sttv_customBgImage', b64);
+                const b64 = ev.target.result; localStorage.setItem('sttv_customBgImage', b64);
                 root.style.setProperty('--bg-image', `url('${b64}')`);
             };
             reader.readAsDataURL(file);
         }
     });
     document.getElementById('clear-bg').addEventListener('click', () => { 
-        localStorage.removeItem('sttv_customBgImage'); 
-        root.style.setProperty('--bg-image', 'none'); 
-        uploadBg.value = ""; 
+        localStorage.removeItem('sttv_customBgImage'); root.style.setProperty('--bg-image', 'none'); uploadBg.value = ""; 
     });
 
     const overlay = document.getElementById('settings-overlay');
@@ -274,14 +274,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    const btnList = document.getElementById('btn-layout-list');
-    const btnGrid = document.getElementById('btn-layout-grid');
-    function setLayoutMode(mode) {
-        localStorage.setItem('sttv_layoutMode', mode);
-        updateLiveVariables(true);
-    }
-    btnList.onclick = () => { setLayoutMode('list'); resetPresetToCustom(); }; 
-    btnGrid.onclick = () => { setLayoutMode('grid'); resetPresetToCustom(); };
+    function setLayoutMode(mode) { localStorage.setItem('sttv_layoutMode', mode); updateLiveVariables(true); }
+    document.getElementById('btn-layout-list').onclick = () => { setLayoutMode('list'); resetPresetToCustom(); }; 
+    document.getElementById('btn-layout-grid').onclick = () => { setLayoutMode('grid'); resetPresetToCustom(); };
 
     function hexToRgba(hex, alpha) {
         let r = 0, g = 0, b = 0;
@@ -289,7 +284,6 @@ document.addEventListener("DOMContentLoaded", () => {
         else if (hex.length === 7) { r = parseInt(hex.substring(1, 3), 16); g = parseInt(hex.substring(3, 5), 16); b = parseInt(hex.substring(5, 7), 16); }
         return `rgba(${r}, ${g}, ${b}, ${alpha / 100})`;
     }
-
     function hexToRgb(hex) {
         let r = 0, g = 0, b = 0;
         if (hex.length === 4) { r = parseInt(hex[1] + hex[1], 16); g = parseInt(hex[2] + hex[2], 16); b = parseInt(hex[3] + hex[3], 16); }
@@ -304,10 +298,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const drawer = document.getElementById(`drawer-${checkbox.value}`);
             if (!drawer) return;
             const mode = SHADOW_MODES.find(m => m.id === checkbox.value);
-            const hexColor = drawer.querySelector('.s-c').value;
-            const opacity = drawer.querySelector('.s-o').value;
-            const rgbaColor = hexToRgba(hexColor, opacity);
-
+            const rgbaColor = hexToRgba(drawer.querySelector('.s-c').value, drawer.querySelector('.s-o').value);
             let shadowStr = mode.template
                 .replace('{x}', drawer.querySelector('.s-x').value).replace('{y}', drawer.querySelector('.s-y').value)
                 .replace('{b}', drawer.querySelector('.s-b').value).replace('{s}', drawer.querySelector('.s-s').value)
@@ -350,6 +341,11 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem('sttv_mediaSvgColor', document.getElementById('val-media-svg-color').value);
         localStorage.setItem('sttv_mediaThemeSync', document.getElementById('toggle-media-theme').checked);
         localStorage.setItem('sttv_themeDot', document.getElementById('toggle-theme-dot').checked);
+        
+        // CÁC BIẾN MỚI CHO THUMB
+        localStorage.setItem('sttv_thumbSize', document.getElementById('val-thumb-size').value);
+        localStorage.setItem('sttv_thumbColor', document.getElementById('val-thumb-color').value);
+        localStorage.setItem('sttv_thumbTheme', document.getElementById('val-thumb-theme').value);
 
         const shadowState = {};
         SHADOW_MODES.forEach(mode => {
@@ -357,13 +353,9 @@ document.addEventListener("DOMContentLoaded", () => {
             const checkbox = document.querySelector(`input[name="active_shadow"][value="${mode.id}"]`);
             if (drawer && checkbox) {
                 shadowState[mode.id] = {
-                    active: checkbox.checked,
-                    x: drawer.querySelector('.s-x').value,
-                    y: drawer.querySelector('.s-y').value,
-                    b: drawer.querySelector('.s-b').value,
-                    s: drawer.querySelector('.s-s').value,
-                    c: drawer.querySelector('.s-c').value,
-                    o: drawer.querySelector('.s-o').value
+                    active: checkbox.checked, x: drawer.querySelector('.s-x').value, y: drawer.querySelector('.s-y').value,
+                    b: drawer.querySelector('.s-b').value, s: drawer.querySelector('.s-s').value,
+                    c: drawer.querySelector('.s-c').value, o: drawer.querySelector('.s-o').value
                 };
             }
         });
@@ -401,7 +393,10 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById('val-media-svg-color').value, document.getElementById('toggle-glass').checked ? 1 : 0,
             document.getElementById('val-popup-anim').value, shadowArr.join('~'),
             document.getElementById('toggle-media-theme').checked ? 1 : 0,
-            document.getElementById('toggle-theme-dot').checked ? 1 : 0
+            document.getElementById('toggle-theme-dot').checked ? 1 : 0,
+            document.getElementById('val-thumb-size').value,
+            document.getElementById('val-thumb-color').value,
+            document.getElementById('val-thumb-theme').value
         ];
         return encodeURIComponent(configValues.join('|'));
     }
@@ -409,11 +404,9 @@ document.addEventListener("DOMContentLoaded", () => {
     function unpackConfig(code) {
         if (!code) return;
         try {
-            drawerEl.classList.remove('adjusting');
-            localStorage.removeItem('sttv_customBgImage');
+            drawerEl.classList.remove('adjusting'); localStorage.removeItem('sttv_customBgImage');
             root.style.setProperty('--bg-image', 'none');
-            const uploadBgInput = document.getElementById('upload-bg');
-            if (uploadBgInput) uploadBgInput.value = "";
+            if (document.getElementById('upload-bg')) document.getElementById('upload-bg').value = "";
 
             const decoded = decodeURIComponent(code.trim());
             const data = decoded.split('|');
@@ -422,7 +415,7 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById('val-bg-main').value = data[0]; document.getElementById('val-text-color').value = data[1];
             setLayoutMode(data[2]); document.getElementById('val-list-bg').value = data[3];
             document.getElementById('val-list-text').value = data[4]; document.getElementById('val-list-svg').value = data[5];
-            document.getElementById('val-theme-frame').value = data[6]; syncThemePickerVisuals(data[6]);
+            document.getElementById('val-theme-frame').value = data[6];
             document.getElementById('val-frame-size').value = data[7]; document.getElementById('val-svg-size').value = data[8]; 
             document.getElementById('val-svg-opacity').value = data[9]; document.getElementById('val-frame-radius').value = data[10]; 
             document.getElementById('val-frame-color').value = data[11]; document.getElementById('val-svg-color').value = data[12];
@@ -436,9 +429,7 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById('toggle-glass').checked = data[27] === '1'; document.getElementById('val-popup-anim').value = data[28];
             
             document.querySelectorAll('.shadow-switch').forEach(c => { 
-                c.checked = false; 
-                const drw = document.getElementById(`drawer-${c.value}`);
-                if (drw) drw.classList.remove('active'); 
+                c.checked = false; const drw = document.getElementById(`drawer-${c.value}`); if (drw) drw.classList.remove('active'); 
             });
 
             if (data[29]) {
@@ -446,11 +437,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 shadows.forEach(sh => {
                     const p = sh.split('*');
                     if (p.length > 1) {
-                        const sId = p[0];
-                        const shadowSwitch = document.querySelector(`input[name="active_shadow"][value="${sId}"]`);
+                        const sId = p[0]; const shadowSwitch = document.querySelector(`input[name="active_shadow"][value="${sId}"]`);
                         if (shadowSwitch) {
-                            shadowSwitch.checked = true;
-                            const drw = document.getElementById(`drawer-${sId}`); 
+                            shadowSwitch.checked = true; const drw = document.getElementById(`drawer-${sId}`); 
                             if (drw) {
                                 drw.classList.add('active');
                                 drw.querySelector('.s-x').value = p[1]; drw.querySelector('.s-y').value = p[2];
@@ -462,35 +451,27 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
             }
 
-            if (data[30] !== undefined) {
-                document.getElementById('toggle-media-theme').checked = data[30] === '1';
-            }
-            if (data[31] !== undefined) {
-                document.getElementById('toggle-theme-dot').checked = data[31] === '1';
-            } else {
-                document.getElementById('toggle-theme-dot').checked = true; // Fallback các preset cũ vẫn dùng ảnh dot
-            }
+            if (data[30] !== undefined) document.getElementById('toggle-media-theme').checked = data[30] === '1';
+            if (data[31] !== undefined) document.getElementById('toggle-theme-dot').checked = data[31] === '1'; else document.getElementById('toggle-theme-dot').checked = true;
+            if (data[32] !== undefined) document.getElementById('val-thumb-size').value = data[32];
+            if (data[33] !== undefined) document.getElementById('val-thumb-color').value = data[33];
+            if (data[34] !== undefined) document.getElementById('val-thumb-theme').value = data[34];
 
             updateLiveVariables(true);
         } catch(e) { console.error(e); alert("Lỗi đọc mã cấu hình! Vui lòng thử lại."); }
     }
 
-    const btnExport = document.getElementById('btn-export');
-    if (btnExport) {
-        btnExport.addEventListener('click', (e) => { 
-            e.preventDefault();
-            const code = packConfig();
-            if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(code).then(() => { alert("Đã sao chép mã cấu hình thành công!"); }).catch(() => { prompt("Sao chép mã cấu hình bên dưới:", code); });
-            } else { prompt("Sao chép mã cấu hình bên dưới:", code); }
+    if (document.getElementById('btn-export')) {
+        document.getElementById('btn-export').addEventListener('click', (e) => { 
+            e.preventDefault(); const code = packConfig();
+            if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(code).then(() => { alert("Đã sao chép mã cấu hình thành công!"); }).catch(() => { prompt("Sao chép mã cấu hình bên dưới:", code); });
+            else prompt("Sao chép mã cấu hình bên dưới:", code);
         });
     }
 
-    const btnImport = document.getElementById('btn-import');
-    if (btnImport) {
-        btnImport.addEventListener('click', (e) => { 
-            e.preventDefault();
-            const code = prompt("📥 Dán mã cấu hình vào đây:"); 
+    if (document.getElementById('btn-import')) {
+        document.getElementById('btn-import').addEventListener('click', (e) => { 
+            e.preventDefault(); const code = prompt("📥 Dán mã cấu hình vào đây:"); 
             if (code) { unpackConfig(code); resetPresetToCustom(); } 
         });
     }
@@ -511,19 +492,12 @@ document.addEventListener("DOMContentLoaded", () => {
         root.style.setProperty('--title-spacing', document.getElementById('val-title-spacing').value + 'px');
         root.style.setProperty('--icon-font-size', document.getElementById('val-icon-size').value + 'px');
         root.style.setProperty('--icon-spacing', document.getElementById('val-icon-spacing').value + 'px');
-        
         root.style.setProperty('--label-display', document.getElementById('toggle-hide-labels').checked ? 'none' : 'block');
         
         const currentLayout = localStorage.getItem('sttv_layoutMode') || 'grid';
-        const btnList = document.getElementById('btn-layout-list');
-        const btnGrid = document.getElementById('btn-layout-grid');
-        if (currentLayout === 'list') { 
-            btnList.classList.add('active'); btnGrid.classList.remove('active'); 
-            mainContainer.classList.add('list-mode'); mainContainer.classList.remove('grid-mode');
-        } else { 
-            btnGrid.classList.add('active'); btnList.classList.remove('active'); 
-            mainContainer.classList.add('grid-mode'); mainContainer.classList.remove('list-mode');
-        }
+        const btnList = document.getElementById('btn-layout-list'); const btnGrid = document.getElementById('btn-layout-grid');
+        if (currentLayout === 'list') { btnList.classList.add('active'); btnGrid.classList.remove('active'); mainContainer.classList.add('list-mode'); mainContainer.classList.remove('grid-mode'); } 
+        else { btnGrid.classList.add('active'); btnList.classList.remove('active'); mainContainer.classList.add('grid-mode'); mainContainer.classList.remove('list-mode'); }
 
         const isListFrame = document.getElementById('toggle-list-frame').checked;
         if (isListFrame) mainContainer.classList.add('list-frame-active'); else mainContainer.classList.remove('list-frame-active');
@@ -536,23 +510,13 @@ document.addEventListener("DOMContentLoaded", () => {
         root.style.setProperty('--list-svg-color', document.getElementById('val-list-svg').value);
 
         const frameSelect = document.getElementById('val-theme-frame').value;
-        const frameColorHex = document.getElementById('val-frame-color').value;
-        const frameColorOpacity = document.getElementById('val-frame-bg-opacity').value;
-        const frameColorRgba = hexToRgba(frameColorHex, frameColorOpacity);
+        const frameColorRgba = hexToRgba(document.getElementById('val-frame-color').value, document.getElementById('val-frame-bg-opacity').value);
+        if (frameSelect === 'none') { root.style.setProperty('--frame-bg', 'none'); root.style.setProperty('--frame-bg-color', frameColorRgba); } 
+        else { root.style.setProperty('--frame-bg', `url('../${frameSelect}')`); root.style.setProperty('--frame-bg-color', 'transparent'); }
         
-        if (frameSelect === 'none') { 
-            root.style.setProperty('--frame-bg', 'none'); 
-            root.style.setProperty('--frame-bg-color', frameColorRgba);
-        } else { 
-            root.style.setProperty('--frame-bg', `url('../${frameSelect}')`); 
-            root.style.setProperty('--frame-bg-color', 'transparent'); 
-        }
-        
-        const glassMode = document.getElementById('toggle-glass').checked;
-        if (glassMode) mainContainer.classList.add('glass-active'); else mainContainer.classList.remove('glass-active');
+        if (document.getElementById('toggle-glass').checked) mainContainer.classList.add('glass-active'); else mainContainer.classList.remove('glass-active');
 
-        const mediaBgColor = document.getElementById('val-media-bg-color').value;
-        root.style.setProperty('--media-bg-rgb', hexToRgb(mediaBgColor));
+        root.style.setProperty('--media-bg-rgb', hexToRgb(document.getElementById('val-media-bg-color').value));
         root.style.setProperty('--media-bg-opacity', document.getElementById('val-media-bg-opacity').value / 100);
         root.style.setProperty('--media-width', document.getElementById('val-media-width').value + '%');
         root.style.setProperty('--media-btn-color', document.getElementById('val-media-btn-color').value);
@@ -561,22 +525,31 @@ document.addEventListener("DOMContentLoaded", () => {
         root.style.setProperty('--media-btn-size', mediaBtnSize + 'px');
         root.style.setProperty('--media-btn-play', (parseInt(mediaBtnSize) + 15) + 'px');
 
+        // THUMB LOGIC
+        root.style.setProperty('--thumb-size', document.getElementById('val-thumb-size').value + 'px');
+        root.style.setProperty('--thumb-color', document.getElementById('val-thumb-color').value);
+        const thumbThemeSelect = document.getElementById('val-thumb-theme').value;
+        if (thumbThemeSelect === 'none') root.style.setProperty('--thumb-bg-image', "url('../Theme/icon-dot.png')");
+        else root.style.setProperty('--thumb-bg-image', `url('../${thumbThemeSelect}')`);
+
         const toggleMediaTheme = document.getElementById('toggle-media-theme');
         const toggleThemeDot = document.getElementById('toggle-theme-dot');
+        const btnThumbTheme = document.getElementById('btn-thumb-theme');
+        const thumbColorItem = document.getElementById('val-thumb-color').parentElement;
         const mediaWidget = document.querySelector('.media-player-widget');
         
         if (mediaWidget) {
-            if (toggleMediaTheme && toggleMediaTheme.checked) {
-                mediaWidget.classList.add('theme-synced');
-            } else {
-                mediaWidget.classList.remove('theme-synced');
-            }
+            if (toggleMediaTheme && toggleMediaTheme.checked) mediaWidget.classList.add('theme-synced');
+            else mediaWidget.classList.remove('theme-synced');
 
-            // GÁN CLASS PURE CSS NẾU TẮT THEME DOT
-            if (toggleThemeDot && !toggleThemeDot.checked) {
-                mediaWidget.classList.add('pure-css-dots');
-            } else {
+            if (toggleThemeDot && toggleThemeDot.checked) {
                 mediaWidget.classList.remove('pure-css-dots');
+                if(btnThumbTheme) btnThumbTheme.classList.remove('disabled');
+                if(thumbColorItem) { thumbColorItem.style.opacity = '0.5'; thumbColorItem.style.pointerEvents = 'none'; }
+            } else {
+                mediaWidget.classList.add('pure-css-dots');
+                if(btnThumbTheme) btnThumbTheme.classList.add('disabled');
+                if(thumbColorItem) { thumbColorItem.style.opacity = '1'; thumbColorItem.style.pointerEvents = 'auto'; }
             }
         }
 
@@ -596,17 +569,11 @@ document.addEventListener("DOMContentLoaded", () => {
         safeSet('val-list-bg', 'listBg', '#1a1a1a'); safeSet('val-list-bg-opacity', 'listBgOpacity', '10');
         safeSet('val-list-text', 'listText', '#ffffff'); safeSet('val-list-svg', 'listSvg', '#ffffff');
         
-        const savedFrame = localStorage.getItem('sttv_themeFrame') || 'none';
-        const frameEl = document.getElementById('val-theme-frame');
-        if (frameEl) frameEl.value = savedFrame;
-        syncThemePickerVisuals(savedFrame);
-
-        const savedPreset = localStorage.getItem('sttv_activePreset') || 'none';
-        presetSelect.value = savedPreset;
-
+        if (document.getElementById('val-theme-frame')) document.getElementById('val-theme-frame').value = localStorage.getItem('sttv_themeFrame') || 'none';
+        presetSelect.value = localStorage.getItem('sttv_activePreset') || 'none';
+        
         const savedAnim = localStorage.getItem('sttv_popupAnim') || 'default';
-        const popupAnimSelect = document.getElementById('val-popup-anim');
-        if (popupAnimSelect) popupAnimSelect.value = savedAnim;
+        if (document.getElementById('val-popup-anim')) document.getElementById('val-popup-anim').value = savedAnim;
         if (savedAnim !== 'default') drawerEl.classList.add(savedAnim);
 
         safeSet('val-frame-size', 'frameSize', '60'); safeSet('val-svg-size', 'svgSize', '28'); 
@@ -623,9 +590,12 @@ document.addEventListener("DOMContentLoaded", () => {
         safeSet('val-media-width', 'mediaWidth', '90'); safeSet('val-media-bg-opacity', 'mediaBgOpacity', '3');
         safeSet('val-media-btn-size', 'mediaBtnSize', '50'); safeSet('val-media-bg-color', 'mediaBgColor', '#ffffff');
         safeSet('val-media-btn-color', 'mediaBtnColor', '#ffffff'); safeSet('val-media-svg-color', 'mediaSvgColor', '#ffffff');
-        
         safeSet('toggle-media-theme', 'mediaThemeSync', false, true);
-        safeSet('toggle-theme-dot', 'themeDot', true, true); // Mặc định bật
+        
+        safeSet('toggle-theme-dot', 'themeDot', true, true);
+        safeSet('val-thumb-size', 'thumbSize', '25');
+        safeSet('val-thumb-color', 'thumbColor', '#ffffff');
+        if (document.getElementById('val-thumb-theme')) document.getElementById('val-thumb-theme').value = localStorage.getItem('sttv_thumbTheme') || 'none';
 
         const savedShadowConfig = localStorage.getItem('sttv_shadowConfig');
         if (savedShadowConfig) {
@@ -645,12 +615,12 @@ document.addEventListener("DOMContentLoaded", () => {
                         }
                     }
                 });
-            } catch(e) { console.error("Lỗi đọc shadow:", e); }
+            } catch(e) {}
         }
 
         const initLayout = localStorage.getItem('sttv_layoutMode') || 'grid';
-        if (initLayout === 'list') { btnList.classList.add('active'); btnGrid.classList.remove('active'); } 
-        else { btnGrid.classList.add('active'); btnList.classList.remove('active'); }
+        if (initLayout === 'list') { document.getElementById('btn-layout-list').classList.add('active'); document.getElementById('btn-layout-grid').classList.remove('active'); } 
+        else { document.getElementById('btn-layout-grid').classList.add('active'); document.getElementById('btn-layout-list').classList.remove('active'); }
 
         const savedBg = localStorage.getItem('sttv_customBgImage'); 
         if (savedBg) root.style.setProperty('--bg-image', `url('${savedBg}')`);
