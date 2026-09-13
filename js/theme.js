@@ -1,5 +1,9 @@
 const DEV_MODE = true; 
 
+// ⭐ VERSION CONTROL CHO BADGE THÔNG BÁO
+const PRESET_VERSION = 3;   // Tăng số này mỗi khi thêm preset giao diện mới
+const THEME_VERSION = 2;    // Tăng số này mỗi khi thêm Theme SVG mới
+
 const SHADOW_MODES = [
     { id: 'inset', nameKey: 'shadow_inset', name: 'Bóng Chìm', template: 'inset {x}px {y}px {b}px {s}px {c}' },
     { id: 'outer', nameKey: 'shadow_outer', name: 'Bóng Ngoài', template: '{x}px {y}px {b}px {s}px {c}' },
@@ -25,11 +29,11 @@ document.addEventListener("DOMContentLoaded", () => {
         if (mainContainer) mainContainer.classList.add('intro-zoom');
         
         window.addEventListener('load', () => {
-            setTimeout(() =>tv {
-                if (window.__dismissIntro) {_se window.__dismissIntro(); return;en }
+            setTimeout(() => {
+                if (window.__dismissIntro) { window.__dismissIntro(); return; }
                 if (introScreen) {
-_p                    introScreen.classList.add('dismissreset'); 
-                    if (mainContainer) mainContainer.classList_b.remove('intro-zoom'); 
+                    introScreen.classList.add('dismiss'); 
+                    if (mainContainer) mainContainer.classList.remove('intro-zoom'); 
                     setTimeout(() => { introScreen.style.display = 'none'; }, 500); 
                 }
             }, 2000); 
@@ -37,11 +41,29 @@ _p                    introScreen.classList.add('dismissreset');
 
         if (!DEV_MODE) document.body.classList.add('standard-mode');
 
+        /* ========== ⭐ BADGE VERSION-BASED ========== */
         const badgePreset = document.getElementById('badge-preset');
         const badgeTheme = document.getElementById('badge-theme');
         
-        if (localStorage.getItem('stadge') === 'true' && badgePreset) badgePreset.classList.add('hidden');
-        if (localStorage.getItem('sttv_seen_theme_badge') === 'true' && badgeTheme) badgeTheme.classList.add('hidden');
+        // Preset badge: hiện khi bạn tăng PRESET_VERSION
+        const seenPresetVersion = parseInt(localStorage.getItem('sttv_presetVersionSeen') || '0');
+        if (badgePreset) {
+            if (seenPresetVersion >= PRESET_VERSION) {
+                badgePreset.classList.add('hidden');
+            } else {
+                badgePreset.classList.remove('hidden');
+            }
+        }
+        
+        // Theme badge: hiện khi bạn tăng THEME_VERSION
+        const seenThemeVersion = parseInt(localStorage.getItem('sttv_themeVersionSeen') || '0');
+        if (badgeTheme) {
+            if (seenThemeVersion >= THEME_VERSION) {
+                badgeTheme.classList.add('hidden');
+            } else {
+                badgeTheme.classList.remove('hidden');
+            }
+        }
 
         /* ========== TAB SWITCHING ========== */
         const tabButtons = document.querySelectorAll('.settings-tab');
@@ -179,7 +201,11 @@ _p                    introScreen.classList.add('dismissreset');
                 if (currentThemeTarget === 'frame') {
                     const vtf = document.getElementById('val-theme-frame');
                     if (vtf) vtf.value = val;
-                    if (badgeTheme) { badgeTheme.classList.add('hidden'); localStorage.setItem('sttv_seen_theme_badge', 'true'); }
+                    // ⭐ Đánh dấu đã xem Theme version mới
+                    if (badgeTheme) { 
+                        badgeTheme.classList.add('hidden'); 
+                        localStorage.setItem('sttv_themeVersionSeen', String(THEME_VERSION)); 
+                    }
                     resetPresetToCustom();
                 } else if (currentThemeTarget === 'thumb') {
                     const vtt = document.getElementById('val-thumb-theme');
@@ -215,12 +241,17 @@ _p                    introScreen.classList.add('dismissreset');
             };
         }
 
+        /* ========== PRESET SELECT ========== */
         const presetSelect = document.getElementById('val-theme-preset');
         if (presetSelect) {
             presetSelect.addEventListener('change', (e) => {
                 const val = e.target.value;
                 localStorage.setItem('sttv_activePreset', val);
-                if (badgePreset) { badgePreset.classList.add('hidden'); localStorage.setItem('sttv_seen_preset_badge', 'true'); }
+                // ⭐ Đánh dấu đã xem Preset version mới
+                if (badgePreset) { 
+                    badgePreset.classList.add('hidden'); 
+                    localStorage.setItem('sttv_presetVersionSeen', String(PRESET_VERSION)); 
+                }
                 if (val !== 'none') unpackConfig(val);
             });
         }
@@ -265,25 +296,22 @@ _p                    introScreen.classList.add('dismissreset');
             if (e.target.tagName === 'BUTTON' || e.target.type === 'checkbox' || e.target.closest('.theme-chip') || e.target.closest('.theme-chip-more')) playTick(); 
         });
 
-        /* ========== ⭐ FIX: COLOR PICKER KHÔNG BỊ VĂNG ========== */
+        /* ========== COLOR PICKER KHÔNG BỊ VĂNG ========== */
         let colorPickerLock = false;
 
         if (drawerEl) {
-            // Khi user tap vào ô màu → khóa không cho re-render
             drawerEl.addEventListener('focusin', (e) => {
                 if (e.target && e.target.type === 'color') {
                     colorPickerLock = true;
                 }
             });
 
-            // Khi user đóng picker → mở khóa sau 400ms
             drawerEl.addEventListener('focusout', (e) => {
                 if (e.target && e.target.type === 'color') {
                     setTimeout(() => { colorPickerLock = false; }, 400);
                 }
             });
 
-            // CHỈ nhận màu khi user BUÔNG TAY (change event)
             drawerEl.addEventListener('change', (e) => {
                 if (e.target.type === 'color') {
                     updateLiveVariables(true);
@@ -294,7 +322,6 @@ _p                    introScreen.classList.add('dismissreset');
                 }
             });
 
-            // Block hoàn toàn event 'input' cho color picker để tránh văng
             drawerEl.addEventListener('input', (e) => {
                 if (e.target && e.target.type === 'color') {
                     e.stopPropagation();
@@ -404,7 +431,6 @@ _p                    introScreen.classList.add('dismissreset');
         let adjustTimeout;
         if (drawerEl) {
             drawerEl.addEventListener('input', (e) => {
-                // Chỉ áp dụng cho range, KHÔNG cho color
                 if (e.target.tagName === 'INPUT' && e.target.type === 'range') {
                     drawerEl.classList.add('adjusting'); 
                     clearTimeout(adjustTimeout);
