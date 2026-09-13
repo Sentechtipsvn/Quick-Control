@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-title" content="Control Panel">
     <link rel="apple-touch-icon" href="icon.png">
     <title>Trung tâm điều khiển - Sentechtipvn</title>
-    <link rel="stylesheet" href="CSS/style.css?v=13.3">
+    <link rel="stylesheet" href="CSS/style.css?v=14.0">
 </head>
 <body>
 
@@ -64,145 +64,186 @@
     <div class="settings-overlay" id="settings-overlay"></div>
     <div class="settings-drawer" id="settings-drawer">
         
-        <!-- ✅ HEADER MỚI: Nút X - Pill xanh CÀI ĐẶT - Nút Info -->
         <div class="settings-header">
             <button id="close-settings" class="header-btn" aria-label="Close">✕</button>
             <div class="header-title-pill" data-i18n="settings_title">CÀI ĐẶT</div>
             <button id="btn-info" class="header-btn info-header-btn" aria-label="Info">i</button>
         </div>
+
+        <!-- TAB BAR -->
+        <div class="settings-tabs-bar">
+            <button class="settings-tab active" data-tab="tab-appearance" data-i18n="tab_appearance">🎨 Giao diện</button>
+            <button class="settings-tab" data-tab="tab-title" data-i18n="tab_title">✏️ Tiêu đề</button>
+            <button class="settings-tab" data-tab="tab-frame" data-i18n="tab_frame">🖼️ Khung</button>
+            <button class="settings-tab" data-tab="tab-media" data-i18n="tab_media">🎵 Media</button>
+            <button class="settings-tab" data-tab="tab-shadow" data-i18n="tab_shadow">🌑 Bóng</button>
+        </div>
         
         <div class="settings-body">
-            <div class="config-actions">
-                <button id="btn-export" class="action-btn">📤 <span data-i18n="btn_export">Xuất</span></button>
-                <button id="btn-import" class="action-btn">📥 <span data-i18n="btn_import">Nhập</span></button>
-                <button id="btn-edit-layout" class="action-btn">🔄 <span data-i18n="btn_edit_layout">Sắp xếp</span></button>
-            </div>
 
-            <!-- ✅ NÚT KHÔI PHỤC MẶC ĐỊNH -->
-            <div class="config-actions-secondary">
-                <button id="btn-reset-default" class="action-btn danger">↺ <span data-i18n="btn_reset_default">Khôi phục mặc định</span></button>
-            </div>
-
-            <div class="setting-group highlight-box" style="position: relative;">
-                <label data-i18n="lbl_theme_presets">🪄 Giao diện <span class="badge-dot" id="badge-preset"></span></label>
-                <select id="val-theme-preset">
-                    <option value="none" data-i18n="opt_preset_none">Tự do tùy chỉnh</option>
-                    <option value="%2376bb40%7C%23ffffff%7Cgrid%7C%2300a1d8%7C%23e22400%7C%2361187c%7CTheme%2FGreen-colour.png%7C63%7C30%7C100%7C50%7C%23f7fadb%7C%23ffffff%7C0%7C28%7C0.5%7C1%7C11%7C0%7C100%7C100%7C90%7C30%7C50%7C%23ffffff%7C%2376bb40%7C%23ffffff%7C0%7Canim-slide-top%7Couter*-2*7*8*1*%23000000*40~soft*0*0*6*0*%2338571a*50" data-i18n="opt_preset_Green_button">Nút xanh lá</option>
-                    <option value="%23c2c2c2%7C%23000000%7Cgrid%7C%2300a1d8%7C%23e22400%7C%2361187c%7CTheme%2FWhite_button.png%7C100%7C45%7C100%7C50%7C%23f7fadb%7C%23000000%7C0%7C40%7C0.5%7C1%7C15%7C0%7C100%7C100%7C100%7C100%7C63%7C%23c2c2c2%7C%23c2c2c2%7C%23000000%7C0%7Canim-slide-top%7Couter*-2*7*8*2*%23000000*40~hard*0*-1*8*8*%23ffffff*50%7C1" data-i18n="opt_preset_White_button_(iPad)">Nút trắng (iPad)</option>
-                    <option value="%23c2c2c2%7C%23000000%7Cgrid%7C%2300a1d8%7C%23e22400%7C%2361187c%7CTheme%2FWhite_button.png%7C65%7C30%7C100%7C50%7C%23f7fadb%7C%23000000%7C0%7C30%7C10%7C1%7C10%7C0%7C100%7C100%7C90%7C100%7C47%7C%23c2c2c2%7C%23c2c2c2%7C%23000000%7C0%7Canim-slide-top%7Couter*-2*7*8*2*%23000000*40~hard*0*-1*8*8*%23ffffff*50%7C1" data-i18n="opt_preset_White_button_(iPhone)">Nút trắng (iPhone)</option>
-                    <option value="%23474747%7C%23ffffff%7Cgrid%7C%2300a1d8%7C%23e22400%7C%2361187c%7CTheme%2FBlack-Colour.png%7C63%7C30%7C100%7C50%7C%23474747%7C%23ffffff%7C0%7C28%7C6.5%7C1%7C11%7C0%7C100%7C100%7C90%7C100%7C50%7C%23474747%7C%2376bb40%7C%23ffffff%7C0%7Canim-slide-top%7Couter*5*5*5*0*%23000000*55~glow*0*0*9*0*%23ffffff*65%7C1" data-i18n="opt_preset_Dark_Neon">Neon Tối</option>
-                </select>
-
-                <label style="margin-top: 10px;" data-i18n="lbl_popup_anim">✨ Hiệu ứng Popup Cài đặt</label>
-                <select id="val-popup-anim">
-                    <option value="default" data-i18n="opt_anim_default">Trượt từ phải sang (Mặc định)</option>
-                    <option value="anim-zoom" data-i18n="opt_anim_zoom">Thu phóng (macOS)</option>
-                    <option value="anim-slide-top" data-i18n="opt_anim_slide_top">Trượt từ trên xuống</option>
-                    <option value="anim-fade" data-i18n="opt_anim_fade">Làm mờ (Fade)</option>
-                </select>
-
-                <div class="feature-toggles">
-                    <label><span data-i18n="lbl_audio_feedback">🎚️ Âm thanh</span><input type="checkbox" id="toggle-audio"></label>
-                    <label><span data-i18n="lbl_parallax">🧭 Gia tốc kế 3D</span><input type="checkbox" id="toggle-parallax"></label>
+            <!-- ========== TAB: GIAO DIỆN ========== -->
+            <div class="settings-tab-content active" data-tab="tab-appearance">
+                <div class="config-actions">
+                    <button id="btn-export" class="action-btn">📤 <span data-i18n="btn_export">Xuất</span></button>
+                    <button id="btn-import" class="action-btn">📥 <span data-i18n="btn_import">Nhập</span></button>
+                    <button id="btn-edit-layout" class="action-btn">🔄 <span data-i18n="btn_edit_layout">Sắp xếp</span></button>
                 </div>
-            </div>
 
-            <div class="setting-group highlight-box">
-                <label data-i18n="lbl_title_adjust">Sửa tiêu đề</label>
-                <div class="slider-item"><span class="slider-label" data-i18n="lbl_title_size">💫 Cỡ chữ chính</span><input type="range" id="val-title-size" min="14" max="40" value="22"></div>
-                <div class="slider-item"><span class="slider-label" data-i18n="lbl_title_spacing">📐 Dãn chữ chính</span><input type="range" id="val-title-spacing" min="0" max="10" step="0.5" value="0.5"></div>
-                <hr style="border: 0; border-top: 1px solid rgba(150,150,150,0.2); margin: 10px 0;">
-                <div class="slider-item"><span class="slider-label" data-i18n="lbl_icon_size">💫 Cỡ chữ Icon</span><input type="range" id="val-icon-size" min="10" max="25" value="14"></div>
-                <div class="slider-item"><span class="slider-label" data-i18n="lbl_icon_spacing">📐 Dãn chữ Icon</span><input type="range" id="val-icon-spacing" min="0" max="5" step="0.1" value="0"></div>
-                <label style="margin-top: 10px;"><input type="checkbox" id="toggle-hide-labels"> <span data-i18n="lbl_hide_labels">Ẩn tên</span></label>
-            </div>
-
-            <div class="setting-group">
-                <label data-i18n="lbl_bg_image">📱 Hình nền tự chọn</label>
-                <input type="file" id="upload-bg" accept="image/*" style="font-size: 12px;">
-                <button type="button" id="clear-bg" style="margin-top:5px; padding:5px; background:rgba(150,150,150,0.2); border:none; color:inherit; border-radius:5px;">Xóa ảnh nền</button>
-            </div>
-            
-            <div class="setting-group"><label><input type="checkbox" id="toggle-glass"> <span data-i18n="lbl_glassmorphism">Bật Kính mờ</span></label></div>
-
-            <div class="setting-group dev-only"><label data-i18n="lbl_bg_main">🏳️‍🌈 Màu Nền Chính</label><input type="color" id="val-bg-main" value="#121b22"></div>
-            <div class="setting-group"><label data-i18n="lbl_text_color">🏳️‍🌈 Màu Chữ Hệ Thống</label><input type="color" id="val-text-color" value="#ffffff"></div>
-
-            <div class="setting-group">
-                <label data-i18n="lbl_layout_mode">Danh sách/Lưới</label>
-                <div class="layout-buttons">
-                    <button id="btn-layout-list" class="layout-btn" data-i18n="btn_list">Danh sách</button>
-                    <button id="btn-layout-grid" class="layout-btn active" data-i18n="btn_grid">Lưới</button>
+                <div class="config-actions-secondary">
+                    <button id="btn-reset-default" class="action-btn danger">↺ <span data-i18n="btn_reset_default">Khôi phục mặc định</span></button>
                 </div>
-            </div>
 
-            <div class="setting-group highlight-box dev-only">
-                <label data-i18n="lbl_list_bg">Màu nền Danh sách</label><input type="color" id="val-list-bg" value="#1a1a1a">
-                <label data-i18n="lbl_list_text">Màu chữ Danh sách</label><input type="color" id="val-list-text" value="#ffffff">
-                <label data-i18n="lbl_list_svg">Màu SVG Danh sách</label><input type="color" id="val-list-svg" value="#ffffff">
-                <div class="slider-item" style="margin-top: 10px;"><span class="slider-label" data-i18n="lbl_list_bg_opacity" style="width: 120px;">Đậm nhạt màu nút</span><input type="range" id="val-list-bg-opacity" min="0" max="100" value="10"></div>
-                <label style="margin-top: 10px;"><input type="checkbox" id="toggle-list-frame"> <span data-i18n="lbl_list_frame">Theme cho Danh sách</span></label>
-            </div>
-            
-            <div class="setting-group" style="position: relative;">
-                <label data-i18n="lbl_theme_frame">💠 CHỦ ĐỀ <span class="badge-dot" id="badge-theme"></span></label>
-                <div class="theme-grid-picker">
-                    <div class="theme-chip active" data-value="none"><span style="font-size: 18px;">❌</span></div>
-                    <div class="theme-chip" data-value="Theme/Black-Colour.png"><img src="Theme/Black-Colour.png" alt="Black"></div>
-                    <div class="theme-chip" data-value="Theme/Red-Colour.png"><img src="Theme/Red-Colour.png" alt="Red"></div>
-                    <div class="theme-chip" data-value="Theme/Green-colour.png"><img src="Theme/Green-colour.png" alt="Green"></div>
-                    <div class="theme-chip" data-value="Theme/Orange-colour.png"><img src="Theme/Orange-colour.png" alt="Orange"></div>
-                    <div class="theme-chip-more" id="btn-more-themes"><span>+</span></div>
-                </div>
-                <input type="hidden" id="val-theme-frame" value="none">
-            </div>
-            
-            <div class="setting-group dev-only">
-                <label data-i18n="lbl_frame_svg_size">🖼️ Khung Icon & SVG</label>
-                <div class="slider-item"><span class="slider-label">Khung</span><input type="range" id="val-frame-size" min="40" max="100" value="60"></div>
-                <div class="slider-item"><span class="slider-label" data-i18n="lbl_frame_radius">Bo góc</span><input type="range" id="val-frame-radius" min="0" max="50" value="22"></div>
-                <div class="slider-item"><span class="slider-label">SVG</span><input type="range" id="val-svg-size" min="16" max="60" value="28"></div>
-                <div class="slider-item"><span class="slider-label" data-i18n="lbl_svg_opacity">Độ đậm SVG</span><input type="range" id="val-svg-opacity" min="0" max="100" value="100"></div>
-                <div class="slider-item"><span class="slider-label" data-i18n="lbl_frame_color">Nền khung</span><input type="color" id="val-frame-color" value="#000000"></div>
-                <div class="slider-item" style="margin-top: 5px;"><span class="slider-label" data-i18n="lbl_frame_bg_opacity">Độ đậm nền</span><input type="range" id="val-frame-bg-opacity" min="0" max="100" value="100"></div>
-            </div>
-            
-            <div class="setting-group"><label data-i18n="lbl_svg_color">Màu Icon (SVG)</label><input type="color" id="val-svg-color" value="#ffffff"></div>
+                <div class="setting-group highlight-box" style="position: relative;">
+                    <label data-i18n="lbl_theme_presets">🪄 Giao diện <span class="badge-dot" id="badge-preset"></span></label>
+                    <select id="val-theme-preset">
+                        <option value="none" data-i18n="opt_preset_none">Tự do tùy chỉnh</option>
+                        <option value="%2376bb40%7C%23ffffff%7Cgrid%7C%2300a1d8%7C%23e22400%7C%2361187c%7CTheme%2FGreen-colour.png%7C63%7C30%7C100%7C50%7C%23f7fadb%7C%23ffffff%7C0%7C28%7C0.5%7C1%7C11%7C0%7C100%7C100%7C90%7C30%7C50%7C%23ffffff%7C%2376bb40%7C%23ffffff%7C0%7Canim-slide-top%7Couter*-2*7*8*1*%23000000*40~soft*0*0*6*0*%2338571a*50" data-i18n="opt_preset_Green_button">Nút xanh lá</option>
+                        <option value="%23c2c2c2%7C%23000000%7Cgrid%7C%2300a1d8%7C%23e22400%7C%2361187c%7CTheme%2FWhite_button.png%7C100%7C45%7C100%7C50%7C%23f7fadb%7C%23000000%7C0%7C40%7C0.5%7C1%7C15%7C0%7C100%7C100%7C100%7C100%7C63%7C%23c2c2c2%7C%23c2c2c2%7C%23000000%7C0%7Canim-slide-top%7Couter*-2*7*8*2*%23000000*40~hard*0*-1*8*8*%23ffffff*50%7C1" data-i18n="opt_preset_White_button_(iPad)">Nút trắng (iPad)</option>
+                        <option value="%23c2c2c2%7C%23000000%7Cgrid%7C%2300a1d8%7C%23e22400%7C%2361187c%7CTheme%2FWhite_button.png%7C65%7C30%7C100%7C50%7C%23f7fadb%7C%23000000%7C0%7C30%7C10%7C1%7C10%7C0%7C100%7C100%7C90%7C100%7C47%7C%23c2c2c2%7C%23c2c2c2%7C%23000000%7C0%7Canim-slide-top%7Couter*-2*7*8*2*%23000000*40~hard*0*-1*8*8*%23ffffff*50%7C1" data-i18n="opt_preset_White_button_(iPhone)">Nút trắng (iPhone)</option>
+                        <option value="%23474747%7C%23ffffff%7Cgrid%7C%2300a1d8%7C%23e22400%7C%2361187c%7CTheme%2FBlack-Colour.png%7C63%7C30%7C100%7C50%7C%23474747%7C%23ffffff%7C0%7C28%7C6.5%7C1%7C11%7C0%7C100%7C100%7C90%7C100%7C50%7C%23474747%7C%2376bb40%7C%23ffffff%7C0%7Canim-slide-top%7Couter*5*5*5*0*%23000000*55~glow*0*0*9*0*%23ffffff*65%7C1" data-i18n="opt_preset_Dark_Neon">Neon Tối</option>
+                    </select>
 
-            <div class="setting-group highlight-box dev-only">
-                <label data-i18n="lbl_media_widget">🎵 Trình Phát Nhạc</label>
-                <div class="slider-item"><span class="slider-label" data-i18n="lbl_media_width">Kích thước khung</span><input type="range" id="val-media-width" min="50" max="100" value="90"></div>
-                <div class="slider-item"><span class="slider-label" data-i18n="lbl_media_bg_opacity">Độ mờ khung</span><input type="range" id="val-media-bg-opacity" min="0" max="100" value="3"></div>
-                <div class="slider-item"><span class="slider-label" data-i18n="lbl_media_btn_size">Cỡ nút bấm</span><input type="range" id="val-media-btn-size" min="30" max="70" value="50"></div>
-                
-                <div class="slider-item"><span class="slider-label" data-i18n="lbl_thumb_size">Kích thước núm</span><input type="range" id="val-thumb-size" min="10" max="40" value="25"></div>
-                
-                <div class="slider-item"><span class="slider-label" data-i18n="lbl_media_bg_color">Màu khung</span><input type="color" id="val-media-bg-color" value="#ffffff"></div>
-                <div class="slider-item"><span class="slider-label" data-i18n="lbl_media_btn_color">Màu nút</span><input type="color" id="val-media-btn-color" value="#ffffff"></div>
-                <div class="slider-item"><span class="slider-label" data-i18n="lbl_media_svg_color">Màu SVG</span><input type="color" id="val-media-svg-color" value="#ffffff"></div>
-                
-                <div class="slider-item"><span class="slider-label" data-i18n="lbl_thumb_color">🏳️‍🌈 Màu núm kéo</span><input type="color" id="val-thumb-color" value="#ffffff"></div>
+                    <label style="margin-top: 10px;" data-i18n="lbl_popup_anim">✨ Hiệu ứng Popup Cài đặt</label>
+                    <select id="val-popup-anim">
+                        <option value="default" data-i18n="opt_anim_default">Trượt từ phải sang (Mặc định)</option>
+                        <option value="anim-zoom" data-i18n="opt_anim_zoom">Thu phóng (macOS)</option>
+                        <option value="anim-slide-top" data-i18n="opt_anim_slide_top">Trượt từ trên xuống</option>
+                        <option value="anim-fade" data-i18n="opt_anim_fade">Làm mờ (Fade)</option>
+                    </select>
 
-                <label style="margin-top: 10px; display: flex; align-items: center; gap: 5px;">
-                    <input type="checkbox" id="toggle-media-theme"> <span data-i18n="lbl_media_theme_sync">Đồng bộ Theme hệ thống</span>
-                </label>
-                
-                <label style="margin-top: 10px; display: flex; align-items: center; justify-content: space-between;">
-                    <div style="display: flex; align-items: center; gap: 5px;">
-                        <input type="checkbox" id="toggle-theme-dot" checked> 
-                        <span data-i18n="lbl_theme_dot">Chủ đề núm kéo</span>
+                    <div class="feature-toggles">
+                        <label><span data-i18n="lbl_audio_feedback">🎚️ Âm thanh</span><input type="checkbox" id="toggle-audio"></label>
+                        <label><span data-i18n="lbl_parallax">🧭 Gia tốc kế 3D</span><input type="checkbox" id="toggle-parallax"></label>
                     </div>
-                    <button id="btn-thumb-theme" class="btn-plus-theme" type="button"><span>+</span></button>
-                    <input type="hidden" id="val-thumb-theme" value="none">
-                </label>
+                </div>
+
+                <!-- ⭐ BẢNG MÀU NHANH - 5 SWATCH HÀNG NGANG -->
+                <div class="setting-group highlight-box">
+                    <label data-i18n="lbl_quick_palette">🎨 Bảng màu nhanh</label>
+                    <div class="color-swatch-row">
+                        <div class="color-swatch" data-label="Nền" data-i18n-title="swatch_bg_main">
+                            <input type="color" id="val-bg-main" value="#121b22">
+                            <span class="swatch-label" data-i18n="swatch_bg_main_short">Nền</span>
+                        </div>
+                        <div class="color-swatch" data-label="Chữ" data-i18n-title="swatch_text_color">
+                            <input type="color" id="val-text-color" value="#ffffff">
+                            <span class="swatch-label" data-i18n="swatch_text_color_short">Chữ</span>
+                        </div>
+                        <div class="color-swatch" data-label="Nền DS" data-i18n-title="swatch_list_bg">
+                            <input type="color" id="val-list-bg" value="#1a1a1a">
+                            <span class="swatch-label" data-i18n="swatch_list_bg_short">Nền DS</span>
+                        </div>
+                        <div class="color-swatch" data-label="Chữ DS" data-i18n-title="swatch_list_text">
+                            <input type="color" id="val-list-text" value="#ffffff">
+                            <span class="swatch-label" data-i18n="swatch_list_text_short">Chữ DS</span>
+                        </div>
+                        <div class="color-swatch" data-label="SVG DS" data-i18n-title="swatch_list_svg">
+                            <input type="color" id="val-list-svg" value="#ffffff">
+                            <span class="swatch-label" data-i18n="swatch_list_svg_short">SVG DS</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="setting-group">
+                    <label data-i18n="lbl_bg_image">📱 Hình nền tự chọn</label>
+                    <input type="file" id="upload-bg" accept="image/*" style="font-size: 12px;">
+                    <button type="button" id="clear-bg" style="margin-top:5px; padding:5px; background:rgba(150,150,150,0.2); border:none; color:inherit; border-radius:5px;" data-i18n="btn_clear_bg">Xóa ảnh nền</button>
+                </div>
+                
+                <div class="setting-group"><label><input type="checkbox" id="toggle-glass"> <span data-i18n="lbl_glassmorphism">Bật Kính mờ</span></label></div>
+
+                <div class="setting-group">
+                    <label data-i18n="lbl_layout_mode">Danh sách/Lưới</label>
+                    <div class="layout-buttons">
+                        <button id="btn-layout-list" class="layout-btn" data-i18n="btn_list">Danh sách</button>
+                        <button id="btn-layout-grid" class="layout-btn active" data-i18n="btn_grid">Lưới</button>
+                    </div>
+                </div>
+
+                <div class="setting-group highlight-box dev-only">
+                    <div class="slider-item" style="margin-top: 10px;"><span class="slider-label" data-i18n="lbl_list_bg_opacity" style="width: 120px;">Đậm nhạt màu nút</span><input type="range" id="val-list-bg-opacity" min="0" max="100" value="10"></div>
+                    <label style="margin-top: 10px;"><input type="checkbox" id="toggle-list-frame"> <span data-i18n="lbl_list_frame">Theme cho Danh sách</span></label>
+                </div>
+                
+                <div class="setting-group" style="position: relative;">
+                    <label data-i18n="lbl_theme_frame">💠 CHỦ ĐỀ <span class="badge-dot" id="badge-theme"></span></label>
+                    <div class="theme-grid-picker">
+                        <div class="theme-chip active" data-value="none"><span style="font-size: 18px;">❌</span></div>
+                        <div class="theme-chip" data-value="Theme/Black-Colour.png"><img src="Theme/Black-Colour.png" alt="Black"></div>
+                        <div class="theme-chip" data-value="Theme/Red-Colour.png"><img src="Theme/Red-Colour.png" alt="Red"></div>
+                        <div class="theme-chip" data-value="Theme/Green-colour.png"><img src="Theme/Green-colour.png" alt="Green"></div>
+                        <div class="theme-chip" data-value="Theme/Orange-colour.png"><img src="Theme/Orange-colour.png" alt="Orange"></div>
+                        <div class="theme-chip-more" id="btn-more-themes"><span>+</span></div>
+                    </div>
+                    <input type="hidden" id="val-theme-frame" value="none">
+                </div>
             </div>
 
-            <h3 class="section-title dev-only" data-i18n="lbl_shadow_section">🔘 ĐỔ BÓNG</h3>
-            <div id="shadow-controls" class="dev-only"></div>
+            <!-- ========== TAB: TIÊU ĐỀ ========== -->
+            <div class="settings-tab-content" data-tab="tab-title">
+                <div class="setting-group highlight-box">
+                    <label data-i18n="lbl_title_adjust">Sửa tiêu đề</label>
+                    <div class="slider-item"><span class="slider-label" data-i18n="lbl_title_size">💫 Cỡ chữ chính</span><input type="range" id="val-title-size" min="14" max="40" value="22"></div>
+                    <div class="slider-item"><span class="slider-label" data-i18n="lbl_title_spacing">📐 Dãn chữ chính</span><input type="range" id="val-title-spacing" min="0" max="10" step="0.5" value="0.5"></div>
+                    <hr style="border: 0; border-top: 1px solid rgba(150,150,150,0.2); margin: 10px 0;">
+                    <div class="slider-item"><span class="slider-label" data-i18n="lbl_icon_size">💫 Cỡ chữ Icon</span><input type="range" id="val-icon-size" min="10" max="25" value="14"></div>
+                    <div class="slider-item"><span class="slider-label" data-i18n="lbl_icon_spacing">📐 Dãn chữ Icon</span><input type="range" id="val-icon-spacing" min="0" max="5" step="0.1" value="0"></div>
+                    <label style="margin-top: 10px;"><input type="checkbox" id="toggle-hide-labels"> <span data-i18n="lbl_hide_labels">Ẩn tên</span></label>
+                </div>
+            </div>
+
+            <!-- ========== TAB: KHUNG ========== -->
+            <div class="settings-tab-content" data-tab="tab-frame">
+                <div class="setting-group">
+                    <label data-i18n="lbl_svg_color">🏳️‍🌈 Màu Icon (SVG)</label>
+                    <input type="color" id="val-svg-color" value="#ffffff">
+                </div>
+
+                <div class="setting-group dev-only">
+                    <label data-i18n="lbl_frame_svg_size">🖼️ Khung Icon & SVG</label>
+                    <div class="slider-item"><span class="slider-label" data-i18n="lbl_frame_size">Khung</span><input type="range" id="val-frame-size" min="40" max="100" value="60"></div>
+                    <div class="slider-item"><span class="slider-label" data-i18n="lbl_frame_radius">Bo góc</span><input type="range" id="val-frame-radius" min="0" max="50" value="22"></div>
+                    <div class="slider-item"><span class="slider-label" data-i18n="lbl_svg_size">SVG</span><input type="range" id="val-svg-size" min="16" max="60" value="28"></div>
+                    <div class="slider-item"><span class="slider-label" data-i18n="lbl_svg_opacity">Độ đậm SVG</span><input type="range" id="val-svg-opacity" min="0" max="100" value="100"></div>
+                    <div class="slider-item"><span class="slider-label" data-i18n="lbl_frame_color">Nền khung</span><input type="color" id="val-frame-color" value="#000000"></div>
+                    <div class="slider-item" style="margin-top: 5px;"><span class="slider-label" data-i18n="lbl_frame_bg_opacity">Độ đậm nền</span><input type="range" id="val-frame-bg-opacity" min="0" max="100" value="100"></div>
+                </div>
+            </div>
+
+            <!-- ========== TAB: MEDIA ========== -->
+            <div class="settings-tab-content" data-tab="tab-media">
+                <div class="setting-group highlight-box dev-only">
+                    <label data-i18n="lbl_media_widget">🎵 Trình Phát Nhạc</label>
+                    <div class="slider-item"><span class="slider-label" data-i18n="lbl_media_width">Kích thước khung</span><input type="range" id="val-media-width" min="50" max="100" value="90"></div>
+                    <div class="slider-item"><span class="slider-label" data-i18n="lbl_media_bg_opacity">Độ mờ khung</span><input type="range" id="val-media-bg-opacity" min="0" max="100" value="3"></div>
+                    <div class="slider-item"><span class="slider-label" data-i18n="lbl_media_btn_size">Cỡ nút bấm</span><input type="range" id="val-media-btn-size" min="30" max="70" value="50"></div>
+                    <div class="slider-item"><span class="slider-label" data-i18n="lbl_thumb_size">Kích thước núm</span><input type="range" id="val-thumb-size" min="10" max="40" value="25"></div>
+                    <div class="slider-item"><span class="slider-label" data-i18n="lbl_media_bg_color">Màu khung</span><input type="color" id="val-media-bg-color" value="#ffffff"></div>
+                    <div class="slider-item"><span class="slider-label" data-i18n="lbl_media_btn_color">Màu nút</span><input type="color" id="val-media-btn-color" value="#ffffff"></div>
+                    <div class="slider-item"><span class="slider-label" data-i18n="lbl_media_svg_color">Màu SVG</span><input type="color" id="val-media-svg-color" value="#ffffff"></div>
+                    <div class="slider-item"><span class="slider-label" data-i18n="lbl_thumb_color">🏳️‍🌈 Màu núm kéo</span><input type="color" id="val-thumb-color" value="#ffffff"></div>
+                    <label style="margin-top: 10px; display: flex; align-items: center; gap: 5px;">
+                        <input type="checkbox" id="toggle-media-theme"> <span data-i18n="lbl_media_theme_sync">Đồng bộ Theme hệ thống</span>
+                    </label>
+                    <label style="margin-top: 10px; display: flex; align-items: center; justify-content: space-between;">
+                        <div style="display: flex; align-items: center; gap: 5px;">
+                            <input type="checkbox" id="toggle-theme-dot" checked> 
+                            <span data-i18n="lbl_theme_dot">Chủ đề núm kéo</span>
+                        </div>
+                        <button id="btn-thumb-theme" class="btn-plus-theme" type="button"><span>+</span></button>
+                        <input type="hidden" id="val-thumb-theme" value="none">
+                    </label>
+                </div>
+            </div>
+
+            <!-- ========== TAB: BÓNG ========== -->
+            <div class="settings-tab-content" data-tab="tab-shadow">
+                <div id="shadow-controls" class="dev-only"></div>
+            </div>
+
         </div>
     </div>
 
-    <!-- POPUP KHO GIAO DIỆN -->
     <div class="info-overlay" id="theme-overlay"></div>
     <div id="theme-modal" class="macos-window" style="max-width: 320px;">
         <div class="macos-header">
@@ -235,7 +276,6 @@
         </div>
     </div>
 
-    <!-- ✅ POPUP INFO MỚI - 3 NÚT VIÊN THUỐC KÍNH MỜ -->
     <div id="info-modal" class="macos-window" style="max-width: 340px;">
         <div class="macos-header">
             <div class="mac-dot close-dot" id="close-info-modal"></div>
@@ -244,8 +284,6 @@
             <div style="font-size: 14px; font-weight: bold; margin-left: 6px; color: #333;" data-i18n="info_title">Quick Control</div>
         </div>
         <div class="macos-body info-body">
-            
-            <!-- 3 PILL BUTTONS -->
             <div class="info-pill-tabs">
                 <a href="https://browse.shortcuty.app/user/Sentechtipsvn" target="_blank" rel="noopener" class="info-pill">
                     <span data-i18n="info_pill_follow">Theo dõi</span>
@@ -258,34 +296,51 @@
                 </button>
             </div>
 
-            <!-- NỘI DUNG INFO -->
             <div class="info-content">
                 <h3 class="info-app-name" data-i18n="info_app_name">Quick Control</h3>
-                
                 <div class="info-version-row">
                     <span data-i18n="info_version_label">Phiên bản</span>
                     <span class="info-version-value">1.0</span>
                 </div>
-                
                 <div class="info-dev-row">
                     <span data-i18n="info_dev_label">Phát triển bởi</span>
                     <a href="https://browse.shortcuty.app/user/Sentechtipsvn" target="_blank" rel="noopener" class="info-dev-link">Sentechtipvn</a>
                 </div>
-
                 <div class="info-desc-box">
                     <div class="info-desc-title" data-i18n="info_desc_title">📝 Mô tả chức năng</div>
                     <p data-i18n="info_desc">Webclip điều khiển đa năng, tích hợp giao diện kính mờ và hệ thống Live Knobs tuỳ biến sống động chuyên nghiệp dành riêng cho iOS.</p>
                 </div>
-
                 <div class="info-guide-box">
                     <div class="info-guide-title" data-i18n="info_guide_title">📖 Hướng dẫn sử dụng</div>
-                    <p data-i18n="info_guide_desc">1. Bấm vào nút bất kỳ để kích hoạt tính năng tương ứng (Wi-Fi, Bluetooth, VPN, Đèn pin...).<br><br>2. Nhấn vào biểu tượng ⚙️ ở góc dưới phải để mở bảng Cài đặt tuỳ chỉnh.<br><br>3. Chọn Theme có sẵn trong preset hoặc tự do kéo slider để tùy chỉnh màu sắc, kích thước khung, đổ bóng, kính mờ theo gu của bạn.<br><br>4. Vào mục Giao diện → Xuất để lưu mã cấu hình, Nhập để khôi phục lại khi cần. Nên sao lưu mã trước khi xóa webclip.<br><br>5. Slider âm lượng & độ sáng cần cài Shortcut tên "QuickControl" trong app Shortcuts để hoạt động.</p>
+                    <p data-i18n="info_guide_desc">1. Bấm vào nút bất kỳ để kích hoạt tính năng tương ứng (Wi-Fi, Bluetooth, VPN, Đèn pin...).&#10;&#10;2. Nhấn vào biểu tượng ⚙️ ở góc dưới phải để mở bảng Cài đặt tuỳ chỉnh.&#10;&#10;3. Chọn Theme có sẵn trong preset hoặc tự do kéo slider để tùy chỉnh màu sắc, kích thước khung, đổ bóng, kính mờ theo gu của bạn.&#10;&#10;4. Vào mục Giao diện → Xuất để lưu mã cấu hình, Nhập để khôi phục lại khi cần. Nên sao lưu mã trước khi xóa webclip.&#10;&#10;5. Slider âm lượng &amp; độ sáng cần cài Shortcut tên "QuickControl" trong app Shortcuts để hoạt động.</p>
                 </div>
             </div>
         </div>
     </div>
-    
-    <script src="js/theme.js?v=13.3"></script>
-    <script src="js/main.js?v=13.2"></script>
+
+    <script>
+        (function() {
+            function dismissIntro() {
+                var intro = document.getElementById('intro-screen');
+                var main = document.getElementById('main-container');
+                if (intro && !intro.classList.contains('dismiss')) {
+                    intro.classList.add('dismiss');
+                    if (main) main.classList.remove('intro-zoom');
+                    setTimeout(function() { if (intro) intro.style.display = 'none'; }, 800);
+                }
+            }
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', function() { setTimeout(dismissIntro, 2200); });
+            } else {
+                setTimeout(dismissIntro, 2200);
+            }
+            window.addEventListener('load', function() { setTimeout(dismissIntro, 2400); });
+            setTimeout(dismissIntro, 3500);
+            window.__dismissIntro = dismissIntro;
+        })();
+    </script>
+
+    <script src="js/theme.js?v=14.0"></script>
+    <script src="js/main.js?v=14.0"></script>
 </body>
 </html>
