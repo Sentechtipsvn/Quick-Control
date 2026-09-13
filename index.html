@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-title" content="Control Panel">
     <link rel="apple-touch-icon" href="icon.png">
     <title>Trung tâm điều khiển - Sentechtipvn</title>
-    <link rel="stylesheet" href="CSS/style.css?v=14.1">
+    <link rel="stylesheet" href="CSS/style.css?v=14.2">
 </head>
 <body>
 
@@ -33,26 +33,27 @@
         <div class="app-header" data-i18n="app_title">Quick Control</div>
         <div class="grid-layout" id="control-panel"></div>
         
+        <!-- ⭐ FIX: Media controls dùng <a href> thay vì <button onclick> -->
         <div class="media-player-widget">
             <div class="media-controls">
-                <button class="media-btn" id="btn-media-prev" onclick="location.href='shortcuts://run-shortcut?name=QuickControl&input=text&text=media_prev'">
-                    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
-                </button>
-                <button class=" dangermedia-btn play-main" id="btn-media-play" onclick="location">.href='↺shortcuts:// <run-shspanortcut?name=QuickControl&input=text&text=media_playpause'">
-                    <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-                </button>
-                <button class="media-btn" id="btn-media-next" onclick="location.href='shortcuts://run-shortcut?name=QuickControl&input=text&text=media_next'">
-                    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6z"/></svg>
-                </button>
+                <a class="media-btn" id="btn-media-prev" href="shortcuts://run-shortcut?name=QuickControl&input=text&text=media_prev" aria-label="Previous">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+                </a>
+                <a class="media-btn play-main" id="btn-media-play" href="shortcuts://run-shortcut?name=QuickControl&input=text&text=media_playpause" aria-label="Play">
+                    <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+                </a>
+                <a class="media-btn" id="btn-media-next" href="shortcuts://run-shortcut?name=QuickControl&input=text&text=media_next" aria-label="Next">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6z"/></svg>
+                </a>
             </div>
             <div class="system-sliders">
                 <div class="sys-slider-container">
                     <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
-                    <input type="range" class="sys-slider" id="sys-volume" min="0" max="100" value="50" onchange="location.href='shortcuts://run-shortcut?name=QuickControl&input=text&text=vol_' + this.value">
+                    <input type="range" class="sys-slider" id="sys-volume" min="0" max="100" value="50" data-shortcut-prefix="vol_">
                 </div>
                 <div class="sys-slider-container">
                     <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0 .39-.39.39-1.03 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0 .39-.39.39-1.03 0-1.41l-1.06-1.06zm1.06-10.96c.39-.39.39-1.03 0-1.41-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41.39.39 1.03.39 1.41 0l1.06-1.06zM7.05 18.36c.39-.39.39-1.03 0-1.41-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41.39.39 1.03.39 1.41 0l1.06-1.06z"/></svg>
-                    <input type="range" class="sys-slider" id="sys-brightness" min="0" max="100" value="50" onchange="location.href='shortcuts://run-shortcut?name=QuickControl&input=text&text=bri_' + this.value">
+                    <input type="range" class="sys-slider" id="sys-brightness" min="0" max="100" value="50" data-shortcut-prefix="bri_">
                 </div>
             </div>
         </div>
@@ -88,7 +89,7 @@
                 </div>
 
                 <div class="config-actions-secondary">
-                    <button id="btn-reset-default" class="action-btn data-i18n="btn_reset_default">Khôi phục mặc định</span></button>
+                    <button id="btn-reset-default" class="action-btn danger">↺ <span data-i18n="btn_reset_default">Khôi phục mặc định</span></button>
                 </div>
 
                 <div class="setting-group highlight-box" style="position: relative;">
@@ -163,7 +164,6 @@
                     </div>
                 </div>
 
-                <!-- ⭐ BỎ dev-only: Vẫn hiện ở chế độ User -->
                 <div class="setting-group highlight-box">
                     <div class="slider-item" style="margin-top: 10px;"><span class="slider-label" data-i18n="lbl_list_bg_opacity" style="width: 120px;">Đậm nhạt màu nút</span><input type="range" id="val-list-bg-opacity" min="0" max="100" value="10"></div>
                     <label style="margin-top: 10px;"><input type="checkbox" id="toggle-list-frame"> <span data-i18n="lbl_list_frame">Theme cho Danh sách</span></label>
@@ -201,7 +201,6 @@
                     <input type="color" id="val-svg-color" value="#ffffff">
                 </div>
 
-                <!-- ⭐ BỎ dev-only: Vẫn hiện ở chế độ User -->
                 <div class="setting-group">
                     <label data-i18n="lbl_frame_svg_size">🖼️ Khung Icon & SVG</label>
                     <div class="slider-item"><span class="slider-label" data-i18n="lbl_frame_size">Khung</span><input type="range" id="val-frame-size" min="40" max="100" value="60"></div>
@@ -214,7 +213,6 @@
             </div>
 
             <div class="settings-tab-content" data-tab="tab-media">
-                <!-- ⭐ BỎ dev-only: Vẫn hiện ở chế độ User -->
                 <div class="setting-group highlight-box">
                     <label data-i18n="lbl_media_widget">🎵 Trình Phát Nhạc</label>
                     <div class="slider-item"><span class="slider-label" data-i18n="lbl_media_width">Kích thước khung</span><input type="range" id="val-media-width" min="50" max="100" value="90"></div>
@@ -239,7 +237,6 @@
                 </div>
             </div>
 
-            <!-- ⭐ GIỮ dev-only: CHỈ ẨN PHẦN NÀY Ở CHẾ ĐỘ USER -->
             <div class="settings-tab-content" data-tab="tab-shadow">
                 <div id="shadow-controls" class="dev-only"></div>
             </div>
@@ -341,9 +338,28 @@
             setTimeout(dismissIntro, 3500);
             window.__dismissIntro = dismissIntro;
         })();
+
+        // ⭐ FIX: Gắn sự kiện cho 2 thanh trượt vol/bri bằng JS (bỏ inline onchange)
+        document.addEventListener('DOMContentLoaded', function() {
+            var volumeSlider = document.getElementById('sys-volume');
+            var brightnessSlider = document.getElementById('sys-brightness');
+            
+            if (volumeSlider) {
+                volumeSlider.addEventListener('change', function() {
+                    var prefix = this.dataset.shortcutPrefix || 'vol_';
+                    window.location.href = 'shortcuts://run-shortcut?name=QuickControl&input=text&text=' + prefix + this.value;
+                });
+            }
+            if (brightnessSlider) {
+                brightnessSlider.addEventListener('change', function() {
+                    var prefix = this.dataset.shortcutPrefix || 'bri_';
+                    window.location.href = 'shortcuts://run-shortcut?name=QuickControl&input=text&text=' + prefix + this.value;
+                });
+            }
+        });
     </script>
 
-    <script src="js/theme.js?v=14.1"></script>
-    <script src="js/main.js?v=14.1"></script>
+    <script src="js/theme.js?v=14.2"></script>
+    <script src="js/main.js?v=14.2"></script>
 </body>
 </html>
