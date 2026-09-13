@@ -13,6 +13,7 @@
     --media-bg-rgb: 255, 255, 255; --media-bg-opacity: 0.03;
     --media-width: 90%; --media-btn-size: 50px; --media-btn-play: 65px;
     --media-btn-color: rgba(255, 255, 255, 0.05); --media-svg-color: #ffffff;
+    --thumb-size: 25px; --thumb-color: #ffffff; --thumb-bg-image: url('../Theme/icon-dot.png');
     --bg-image: none;
 }
 
@@ -32,7 +33,7 @@ body.standard-mode .dev-only { display: none !important; }
 .app-header { text-align: center; padding: 60px 0 20px 0; font-size: var(--title-size); font-weight: bold; letter-spacing: var(--title-spacing); text-shadow: none; transition: font-size 0.2s, letter-spacing 0.2s; }
 .label { font-size: var(--icon-font-size, 14px); font-weight: 500; letter-spacing: var(--icon-spacing, 0px); text-align: center; text-shadow: none; display: var(--label-display); transition: font-size 0.2s, letter-spacing 0.2s; }
 
-/* INTRO SCREEN (CHUẨN 2.5 GIÂY) */
+/* INTRO SCREEN */
 #intro-screen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 99999; display: flex; justify-content: center; align-items: center; pointer-events: none; }
 .intro-half { position: absolute; top: 0; width: 50%; height: 100%; background: #000000; transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1); z-index: 1; }
 .intro-left { left: 0; }
@@ -40,19 +41,16 @@ body.standard-mode .dev-only { display: none !important; }
 .intro-content { position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; transition: opacity 0.5s ease, transform 0.5s ease; }
 .apple-logo-wrapper { color: #ffffff; filter: drop-shadow(0 0 12px #007aff) drop-shadow(0 0 25px #007aff); animation: pulseGlow 1.5s infinite alternate; }
 @keyframes pulseGlow { 0% { filter: drop-shadow(0 0 8px #007aff); transform: scale(1); } 100% { filter: drop-shadow(0 0 22px #007aff) drop-shadow(0 0 35px #0051a8); transform: scale(1.05); } }
-
 .intro-title-wrapper { margin-top: 18px; opacity: 0; animation: fadeInDelay 0.5s forwards 0.8s; }
 @keyframes fadeInDelay { to { opacity: 1; } }
 .intro-title-container { font-size: 24px; font-weight: bold; color: #007aff; display: flex; }
 .intro-title-container span { display: inline-block; }
-
 .anim-wave span { animation: waveAnim 1.2s infinite ease-in-out; }
 @keyframes waveAnim { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); color: #66b2ff; } }
 .anim-bounce span { animation: bounceAnim 1s infinite ease-in-out alternate; }
 @keyframes bounceAnim { 0% { transform: translateY(0); } 100% { transform: translateY(-10px) scale(1.1); color: #33ccff; } }
 .anim-flip span { animation: flipAnim 2s infinite ease-in-out; perspective: 1000px; }
 @keyframes flipAnim { 0%, 100% { transform: rotateY(0deg); } 50% { transform: rotateY(180deg) scale(1.1); color: #00f2fe; } }
-
 #intro-screen.dismiss .intro-content { opacity: 0; transform: scale(0.8); transition-duration: 0.5s; }
 #intro-screen.dismiss .intro-left { transform: translateX(-100%); }
 #intro-screen.dismiss .intro-right { transform: translateX(100%); }
@@ -60,9 +58,9 @@ body.standard-mode .dev-only { display: none !important; }
 .app-container { transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.8s ease; }
 .app-container.intro-zoom { transform: scale(0.9); opacity: 0; }
 
-.slider-item { position: relative; display: flex; align-items: center; margin-bottom: 8px; width: 100%; }
+.slider-item { position: relative; display: flex; align-items: center; margin-bottom: 8px; width: 100%; transition: opacity 0.3s ease; }
 .slider-item input[type=range] { flex: 1; width: 100% !important; }
-.slider-label { width: 95px; font-size: 12px; opacity: 0.8; flex-shrink: 0; }
+.slider-label { width: 105px; font-size: 12px; opacity: 0.8; flex-shrink: 0; }
 .slider-tooltip { position: fixed; background: #007aff; color: #ffffff; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 8px; opacity: 0; transform: translateX(-50%) translateY(5px); transition: opacity 0.15s ease, transform 0.15s ease; pointer-events: none; z-index: 999999; white-space: nowrap; box-shadow: 0 2px 8px rgba(0,0,0,0.4); }
 .slider-tooltip.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
@@ -117,28 +115,38 @@ body.standard-mode .dev-only { display: none !important; }
 .sys-slider-container { display: flex; align-items: center; gap: 12px; color: var(--media-svg-color); opacity: 0.8; }
 .sys-slider { -webkit-appearance: none; flex: 1; height: 8px !important; border-radius: 4px; background: rgba(0, 0, 0, 0.3) !important; box-shadow: inset 1px 1px 3px rgba(0,0,0,0.5), inset -1px -1px 3px rgba(255,255,255,0.1) !important; outline: none; }
 
-/* SLIDER THUMBS DEFAULT (IMAGE MODE) */
+/* SLIDER THUMBS DEFAULT (IMAGE MODE & SIZE TÙY CHỈNH) */
 input[type=range]::-webkit-slider-thumb, .sys-slider::-webkit-slider-thumb {
-    -webkit-appearance: none !important; appearance: none !important; height: 25px !important; width: 25px !important; 
-    background-image: url('../Theme/icon-dot.png') !important; background-size: contain !important; background-position: center !important; background-repeat: no-repeat !important;
-    background-color: transparent !important; border: none !important; margin-top: -9.5px !important;
+    -webkit-appearance: none !important; appearance: none !important; 
+    height: var(--thumb-size) !important; width: var(--thumb-size) !important; 
+    background-image: var(--thumb-bg-image) !important; 
+    background-size: contain !important; background-position: center !important; background-repeat: no-repeat !important;
+    background-color: transparent !important; border: none !important; 
+    margin-top: calc((var(--thumb-size) / -2) + 3px) !important;
     box-shadow: none !important; filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.4)); cursor: pointer;
 }
-input[type=range].sys-slider::-webkit-slider-thumb { background-image: url('../Theme/icon-control.png') !important; margin-top: -8.5px !important; }
 input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; background: rgba(255,255,255,0.2); border-radius: 3px; box-shadow: none; }
 
-/* SLIDER THUMBS PURE CSS MODE (ĐỒNG BỘ TOÀN QUYỀN VỚI HỆ THỐNG ICON) */
+/* PURE CSS THUMBS (NHẬN MÀU NÚM KÉO + ĐỔ BÓNG HỆ THỐNG) */
 .media-player-widget.pure-css-dots .sys-slider::-webkit-slider-thumb {
     background-image: none !important;
-    background-color: var(--svg-color) !important;
-    width: var(--svg-size) !important;
-    height: var(--svg-size) !important;
-    margin-top: calc((var(--svg-size) / -2) + 3px) !important;
+    background-color: var(--thumb-color) !important;
     box-shadow: var(--btn-shadow) !important;
     border-radius: 50% !important;
     opacity: var(--svg-opacity) !important;
     filter: none !important;
 }
+
+/* THEME DOT PLUS BUTTON */
+.btn-plus-theme {
+    width: 26px; height: 26px; border-radius: 50%; background: #007aff; color: white; border: none;
+    font-size: 18px; font-weight: 300; display: flex; align-items: center; justify-content: center; cursor: pointer; 
+    transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(0, 122, 255, 0.4);
+}
+.btn-plus-theme.disabled {
+    background: #8e8e93; box-shadow: none; opacity: 0.5; pointer-events: none;
+}
+.btn-plus-theme span { margin-top: -2px; }
 
 /* FLOATING FAB BUTTONS */
 .settings-fab { position: fixed; bottom: 25px; right: 25px; width: 45px; height: 45px; border-radius: 50%; background: transparent; border: none; box-shadow: none; z-index: 100; cursor: pointer; overflow: hidden; padding: 0; transition: transform 0.2s ease; }
@@ -160,7 +168,7 @@ input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; bac
 .theme-chip-more span { margin-top: -2px; }
 .theme-chip-more:active { transform: scale(0.9); }
 
-/* DRAWER & OVERLAY (CHUẨN APPLE TRANSITION 0.45s) */
+/* DRAWER & OVERLAY */
 .settings-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); opacity: 0; visibility: hidden; transition: opacity 0.45s cubic-bezier(0.32, 0.72, 0, 1); z-index: 998; }
 .settings-overlay.open { opacity: 1; visibility: visible; }
 .settings-drawer { 
@@ -190,7 +198,7 @@ input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; bac
 .shadow-drawer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; padding: 0 15px; background: rgba(0,0,0,0.1); }
 .shadow-drawer.active { max-height: 400px; padding: 15px; }
 select { width: 100%; padding: 10px; border-radius: 8px; background: rgba(0,0,0,0.3); color: white; border: 1px solid rgba(255,255,255,0.2); font-size: 14px; }
-.info-btn { position: absolute; bottom: 20px; right: 20px; width: 28px; height: 28px; border-radius: 50%; background: #007aff; color: #ffffff; border: none; font-size: 15px; font-weight: bold; font-family: -apple-system, sans-serif; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10; }
+.info-btn { position: absolute; bottom: 20px; right: 20px; width: 28px; height: 28px; border-radius: 50%; background: #007aff; color: #ffffff; border: none; font-size: 15px; font-weight: bold; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10; }
 
 /* MACOS MODAL WINDOWS */
 .info-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); opacity: 0; visibility: hidden; transition: opacity 0.45s ease; z-index: 2000; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
@@ -202,7 +210,7 @@ select { width: 100%; padding: 10px; border-radius: 8px; background: rgba(0,0,0,
 .close-dot { background: #ff5f56; } .min-dot { background: #ffbd2e; } .max-dot { background: #27c93f; }
 .macos-body { padding: 25px 20px 30px 20px; text-align: center; }
 
-/* ANIMATION POPUP CÀI ĐẶT (EQUALIZED TO 0.45s APPLE STANDARD) */
+/* ANIMATION POPUP */
 .settings-drawer.anim-zoom { right: 15px; transform: scale(0.88); opacity: 0; transition: transform 0.45s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.35s ease-out; pointer-events: none; }
 .settings-drawer.anim-zoom.open { transform: scale(1); opacity: 1; pointer-events: auto; }
 .settings-drawer.anim-slide-top { right: 15px; transform: translateY(-120%); opacity: 0; transition: transform 0.45s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.35s ease-out; pointer-events: none; }
