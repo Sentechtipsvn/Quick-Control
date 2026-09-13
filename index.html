@@ -146,8 +146,14 @@
 
                 <div class="setting-group">
                     <label data-i18n="lbl_bg_image">📱 Hình nền tự chọn</label>
-                    <input type="file" id="upload-bg" accept="image/*" style="font-size: 12px;">
-                    <button type="button" id="clear-bg" style="margin-top:5px; padding:5px; background:rgba(150,150,150,0.2); border:none; color:inherit; border-radius:5px;" data-i18n="btn_clear_bg">Xóa ảnh nền</button>
+    
+                    <label class="file-input-wrapper" for="upload-bg">
+                <input type="file" id="upload-bg" accept="image/*">
+                <span class="file-input-btn" data-i18n="btn_choose_file">Chọn tệp</span>
+                <span class="file-input-name" id="file-name-display" data-i18n="file_none_selected">chưa chọn tệp nào</span>
+                    </label>
+    
+                     <button type="button" id="clear-bg" class="clear-bg-btn" data-i18n="btn_clear_bg">Xóa ảnh nền</button>
                 </div>
                 
                 <div class="setting-group"><label><input type="checkbox" id="toggle-glass"> <span data-i18n="lbl_glassmorphism">Bật Kính mờ</span></label></div>
