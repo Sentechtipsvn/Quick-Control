@@ -25,11 +25,11 @@ document.addEventListener("DOMContentLoaded", () => {
         if (mainContainer) mainContainer.classList.add('intro-zoom');
         
         window.addEventListener('load', () => {
-            setTimeout(() => {
-                if (window.__dismissIntro) { window.__dismissIntro(); return; }
+            setTimeout(() =>tv {
+                if (window.__dismissIntro) {_se window.__dismissIntro(); return;en }
                 if (introScreen) {
-                    introScreen.classList.add('dismiss'); 
-                    if (mainContainer) mainContainer.classList.remove('intro-zoom'); 
+_p                    introScreen.classList.add('dismissreset'); 
+                    if (mainContainer) mainContainer.classList_b.remove('intro-zoom'); 
                     setTimeout(() => { introScreen.style.display = 'none'; }, 500); 
                 }
             }, 2000); 
@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const badgePreset = document.getElementById('badge-preset');
         const badgeTheme = document.getElementById('badge-theme');
         
-        if (localStorage.getItem('sttv_seen_preset_badge') === 'true' && badgePreset) badgePreset.classList.add('hidden');
+        if (localStorage.getItem('stadge') === 'true' && badgePreset) badgePreset.classList.add('hidden');
         if (localStorage.getItem('sttv_seen_theme_badge') === 'true' && badgeTheme) badgeTheme.classList.add('hidden');
 
         /* ========== TAB SWITCHING ========== */
@@ -265,12 +265,41 @@ document.addEventListener("DOMContentLoaded", () => {
             if (e.target.tagName === 'BUTTON' || e.target.type === 'checkbox' || e.target.closest('.theme-chip') || e.target.closest('.theme-chip-more')) playTick(); 
         });
 
+        /* ========== ⭐ FIX: COLOR PICKER KHÔNG BỊ VĂNG ========== */
+        let colorPickerLock = false;
+
         if (drawerEl) {
-            drawerEl.addEventListener('input', (e) => { if (e.target.type === 'color') updateLiveVariables(true); });
-            drawerEl.addEventListener('change', (e) => {
-                if (e.target.type === 'color') { e.target.blur(); updateLiveVariables(true); } 
-                else if (e.target.type === 'checkbox') updateLiveVariables(true); 
+            // Khi user tap vào ô màu → khóa không cho re-render
+            drawerEl.addEventListener('focusin', (e) => {
+                if (e.target && e.target.type === 'color') {
+                    colorPickerLock = true;
+                }
             });
+
+            // Khi user đóng picker → mở khóa sau 400ms
+            drawerEl.addEventListener('focusout', (e) => {
+                if (e.target && e.target.type === 'color') {
+                    setTimeout(() => { colorPickerLock = false; }, 400);
+                }
+            });
+
+            // CHỈ nhận màu khi user BUÔNG TAY (change event)
+            drawerEl.addEventListener('change', (e) => {
+                if (e.target.type === 'color') {
+                    updateLiveVariables(true);
+                    setTimeout(() => { colorPickerLock = false; }, 150);
+                } 
+                else if (e.target.type === 'checkbox') {
+                    updateLiveVariables(true); 
+                }
+            });
+
+            // Block hoàn toàn event 'input' cho color picker để tránh văng
+            drawerEl.addEventListener('input', (e) => {
+                if (e.target && e.target.type === 'color') {
+                    e.stopPropagation();
+                }
+            }, true);
         }
 
         document.querySelectorAll('.shadow-switch').forEach(switchBtn => {
@@ -314,11 +343,29 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
 
+        /* ========== UPLOAD BACKGROUND ========== */
         const uploadBg = document.getElementById('upload-bg');
+        const fileDisplay = document.getElementById('file-name-display');
+        
+        function updateFileNameDisplay(fileName) {
+            if (!fileDisplay) return;
+            const prefix = (window.i18nData && window.i18nData['file_selected_prefix']) || 'Đã chọn: ';
+            const emptyText = (window.i18nData && window.i18nData['file_none_selected']) || 'chưa chọn tệp nào';
+            if (fileName) {
+                fileDisplay.textContent = prefix + fileName;
+                fileDisplay.classList.add('has-file');
+            } else {
+                fileDisplay.textContent = emptyText;
+                fileDisplay.classList.remove('has-file');
+            }
+        }
+        window.__updateFileNameDisplay = updateFileNameDisplay;
+        
         if (uploadBg) {
             uploadBg.addEventListener('change', (e) => {
                 const file = e.target.files[0];
                 if (file) {
+                    updateFileNameDisplay(file.name);
                     const reader = new FileReader();
                     reader.onload = (ev) => {
                         const b64 = ev.target.result; 
@@ -329,12 +376,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             });
         }
+        
         const clearBgBtn = document.getElementById('clear-bg');
         if (clearBgBtn) {
             clearBgBtn.addEventListener('click', () => { 
                 localStorage.removeItem('sttv_customBgImage'); 
                 root.style.setProperty('--bg-image', 'none'); 
                 if (uploadBg) uploadBg.value = ""; 
+                updateFileNameDisplay(null);
             });
         }
 
@@ -355,7 +404,8 @@ document.addEventListener("DOMContentLoaded", () => {
         let adjustTimeout;
         if (drawerEl) {
             drawerEl.addEventListener('input', (e) => {
-                if (e.target.tagName === 'INPUT' && e.target.type !== 'color') {
+                // Chỉ áp dụng cho range, KHÔNG cho color
+                if (e.target.tagName === 'INPUT' && e.target.type === 'range') {
                     drawerEl.classList.add('adjusting'); 
                     clearTimeout(adjustTimeout);
                     adjustTimeout = setTimeout(() => drawerEl.classList.remove('adjusting'), 800);
@@ -371,12 +421,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
         function hexToRgba(hex, alpha) {
             let r = 0, g = 0, b = 0;
+            if (!hex) return `rgba(0,0,0,${alpha / 100})`;
             if (hex.length === 4) { r = parseInt(hex[1] + hex[1], 16); g = parseInt(hex[2] + hex[2], 16); b = parseInt(hex[3] + hex[3], 16); }
             else if (hex.length === 7) { r = parseInt(hex.substring(1, 3), 16); g = parseInt(hex.substring(3, 5), 16); b = parseInt(hex.substring(5, 7), 16); }
             return `rgba(${r}, ${g}, ${b}, ${alpha / 100})`;
         }
         function hexToRgb(hex) {
             let r = 0, g = 0, b = 0;
+            if (!hex) return '0,0,0';
             if (hex.length === 4) { r = parseInt(hex[1] + hex[1], 16); g = parseInt(hex[2] + hex[2], 16); b = parseInt(hex[3] + hex[3], 16); }
             else if (hex.length === 7) { r = parseInt(hex.substring(1, 3), 16); g = parseInt(hex.substring(3, 5), 16); b = parseInt(hex.substring(5, 7), 16); }
             return `${r}, ${g}, ${b}`;
@@ -501,6 +553,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 localStorage.removeItem('sttv_customBgImage');
                 root.style.setProperty('--bg-image', 'none');
                 if (uploadBg) uploadBg.value = "";
+                if (window.__updateFileNameDisplay) window.__updateFileNameDisplay(null);
 
                 const decoded = decodeURIComponent(code.trim());
                 const data = decoded.split('|');
