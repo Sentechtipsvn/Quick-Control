@@ -196,7 +196,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     document.addEventListener('click', (e) => { if (e.target.tagName === 'BUTTON' || e.target.type === 'checkbox' || e.target.closest('.theme-chip') || e.target.closest('.theme-chip-more')) playTick(); });
 
-    // FIX LỖI CHECKBOX KHÔNG CẬP NHẬT TRỰC TIẾP
     drawerEl.addEventListener('input', (e) => {
         if (e.target.type === 'color') updateLiveVariables(true);
     });
@@ -205,16 +204,9 @@ document.addEventListener("DOMContentLoaded", () => {
             e.target.blur();
             updateLiveVariables(true);
         } else if (e.target.type === 'checkbox') {
-            updateLiveVariables(true); // Bắt ngay lập tức thao tác Ẩn tên, Bật kính mờ...
+            updateLiveVariables(true); 
         }
     });
-
-    const toggleMediaTheme = document.getElementById('toggle-media-theme');
-    if (toggleMediaTheme) {
-        toggleMediaTheme.addEventListener('change', () => {
-            updateLiveVariables(true);
-        });
-    }
 
     document.querySelectorAll('.shadow-switch').forEach(switchBtn => {
         switchBtn.addEventListener('change', (e) => {
@@ -357,6 +349,7 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem('sttv_mediaBtnColor', document.getElementById('val-media-btn-color').value);
         localStorage.setItem('sttv_mediaSvgColor', document.getElementById('val-media-svg-color').value);
         localStorage.setItem('sttv_mediaThemeSync', document.getElementById('toggle-media-theme').checked);
+        localStorage.setItem('sttv_themeDot', document.getElementById('toggle-theme-dot').checked);
 
         const shadowState = {};
         SHADOW_MODES.forEach(mode => {
@@ -407,7 +400,8 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById('val-media-bg-color').value, document.getElementById('val-media-btn-color').value,
             document.getElementById('val-media-svg-color').value, document.getElementById('toggle-glass').checked ? 1 : 0,
             document.getElementById('val-popup-anim').value, shadowArr.join('~'),
-            document.getElementById('toggle-media-theme').checked ? 1 : 0
+            document.getElementById('toggle-media-theme').checked ? 1 : 0,
+            document.getElementById('toggle-theme-dot').checked ? 1 : 0
         ];
         return encodeURIComponent(configValues.join('|'));
     }
@@ -471,6 +465,11 @@ document.addEventListener("DOMContentLoaded", () => {
             if (data[30] !== undefined) {
                 document.getElementById('toggle-media-theme').checked = data[30] === '1';
             }
+            if (data[31] !== undefined) {
+                document.getElementById('toggle-theme-dot').checked = data[31] === '1';
+            } else {
+                document.getElementById('toggle-theme-dot').checked = true; // Fallback các preset cũ vẫn dùng ảnh dot
+            }
 
             updateLiveVariables(true);
         } catch(e) { console.error(e); alert("Lỗi đọc mã cấu hình! Vui lòng thử lại."); }
@@ -513,7 +512,6 @@ document.addEventListener("DOMContentLoaded", () => {
         root.style.setProperty('--icon-font-size', document.getElementById('val-icon-size').value + 'px');
         root.style.setProperty('--icon-spacing', document.getElementById('val-icon-spacing').value + 'px');
         
-        // CSS GẮN HIỆU LỰC CHO VIỆC ẨN TÊN
         root.style.setProperty('--label-display', document.getElementById('toggle-hide-labels').checked ? 'none' : 'block');
         
         const currentLayout = localStorage.getItem('sttv_layoutMode') || 'grid';
@@ -564,12 +562,21 @@ document.addEventListener("DOMContentLoaded", () => {
         root.style.setProperty('--media-btn-play', (parseInt(mediaBtnSize) + 15) + 'px');
 
         const toggleMediaTheme = document.getElementById('toggle-media-theme');
+        const toggleThemeDot = document.getElementById('toggle-theme-dot');
         const mediaWidget = document.querySelector('.media-player-widget');
-        if (toggleMediaTheme && mediaWidget) {
-            if (toggleMediaTheme.checked) {
+        
+        if (mediaWidget) {
+            if (toggleMediaTheme && toggleMediaTheme.checked) {
                 mediaWidget.classList.add('theme-synced');
             } else {
                 mediaWidget.classList.remove('theme-synced');
+            }
+
+            // GÁN CLASS PURE CSS NẾU TẮT THEME DOT
+            if (toggleThemeDot && !toggleThemeDot.checked) {
+                mediaWidget.classList.add('pure-css-dots');
+            } else {
+                mediaWidget.classList.remove('pure-css-dots');
             }
         }
 
@@ -616,7 +623,9 @@ document.addEventListener("DOMContentLoaded", () => {
         safeSet('val-media-width', 'mediaWidth', '90'); safeSet('val-media-bg-opacity', 'mediaBgOpacity', '3');
         safeSet('val-media-btn-size', 'mediaBtnSize', '50'); safeSet('val-media-bg-color', 'mediaBgColor', '#ffffff');
         safeSet('val-media-btn-color', 'mediaBtnColor', '#ffffff'); safeSet('val-media-svg-color', 'mediaSvgColor', '#ffffff');
+        
         safeSet('toggle-media-theme', 'mediaThemeSync', false, true);
+        safeSet('toggle-theme-dot', 'themeDot', true, true); // Mặc định bật
 
         const savedShadowConfig = localStorage.getItem('sttv_shadowConfig');
         if (savedShadowConfig) {
