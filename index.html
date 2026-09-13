@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-title" content="Control Panel">
     <link rel="apple-touch-icon" href="icon.png">
     <title>Trung tâm điều khiển - Sentechtipvn</title>
-    <link rel="stylesheet" href="CSS/style.css?v=14.0">
+    <link rel="stylesheet" href="CSS/style.css?v=14.1">
 </head>
 <body>
 
@@ -38,7 +38,7 @@
                 <button class="media-btn" id="btn-media-prev" onclick="location.href='shortcuts://run-shortcut?name=QuickControl&input=text&text=media_prev'">
                     <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
                 </button>
-                <button class="media-btn play-main" id="btn-media-play" onclick="location.href='shortcuts://run-shortcut?name=QuickControl&input=text&text=media_playpause'">
+                <button class=" dangermedia-btn play-main" id="btn-media-play" onclick="location">.href='↺shortcuts:// <run-shspanortcut?name=QuickControl&input=text&text=media_playpause'">
                     <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
                 </button>
                 <button class="media-btn" id="btn-media-next" onclick="location.href='shortcuts://run-shortcut?name=QuickControl&input=text&text=media_next'">
@@ -70,18 +70,16 @@
             <button id="btn-info" class="header-btn info-header-btn" aria-label="Info">i</button>
         </div>
 
-        <!-- TAB BAR -->
         <div class="settings-tabs-bar">
             <button class="settings-tab active" data-tab="tab-appearance" data-i18n="tab_appearance">🎨 Giao diện</button>
             <button class="settings-tab" data-tab="tab-title" data-i18n="tab_title">✏️ Tiêu đề</button>
             <button class="settings-tab" data-tab="tab-frame" data-i18n="tab_frame">🖼️ Khung</button>
             <button class="settings-tab" data-tab="tab-media" data-i18n="tab_media">🎵 Media</button>
-            <button class="settings-tab" data-tab="tab-shadow" data-i18n="tab_shadow">🌑 Bóng</button>
+            <button class="settings-tab dev-only" data-tab="tab-shadow" data-i18n="tab_shadow">🌑 Bóng</button>
         </div>
         
         <div class="settings-body">
 
-            <!-- ========== TAB: GIAO DIỆN ========== -->
             <div class="settings-tab-content active" data-tab="tab-appearance">
                 <div class="config-actions">
                     <button id="btn-export" class="action-btn">📤 <span data-i18n="btn_export">Xuất</span></button>
@@ -90,7 +88,7 @@
                 </div>
 
                 <div class="config-actions-secondary">
-                    <button id="btn-reset-default" class="action-btn danger">↺ <span data-i18n="btn_reset_default">Khôi phục mặc định</span></button>
+                    <button id="btn-reset-default" class="action-btn data-i18n="btn_reset_default">Khôi phục mặc định</span></button>
                 </div>
 
                 <div class="setting-group highlight-box" style="position: relative;">
@@ -117,7 +115,6 @@
                     </div>
                 </div>
 
-                <!-- ⭐ BẢNG MÀU NHANH - 5 SWATCH HÀNG NGANG -->
                 <div class="setting-group highlight-box">
                     <label data-i18n="lbl_quick_palette">🎨 Bảng màu nhanh</label>
                     <div class="color-swatch-row">
@@ -146,14 +143,14 @@
 
                 <div class="setting-group">
                     <label data-i18n="lbl_bg_image">📱 Hình nền tự chọn</label>
-    
+                    
                     <label class="file-input-wrapper" for="upload-bg">
-                <input type="file" id="upload-bg" accept="image/*">
-                <span class="file-input-btn" data-i18n="btn_choose_file">Chọn tệp</span>
-                <span class="file-input-name" id="file-name-display" data-i18n="file_none_selected">chưa chọn tệp nào</span>
+                        <input type="file" id="upload-bg" accept="image/*">
+                        <span class="file-input-btn" data-i18n="btn_choose_file">Chọn tệp</span>
+                        <span class="file-input-name" id="file-name-display" data-i18n="file_none_selected">chưa chọn tệp nào</span>
                     </label>
-    
-                     <button type="button" id="clear-bg" class="clear-bg-btn" data-i18n="btn_clear_bg">Xóa ảnh nền</button>
+                    
+                    <button type="button" id="clear-bg" class="clear-bg-btn" data-i18n="btn_clear_bg">Xóa ảnh nền</button>
                 </div>
                 
                 <div class="setting-group"><label><input type="checkbox" id="toggle-glass"> <span data-i18n="lbl_glassmorphism">Bật Kính mờ</span></label></div>
@@ -166,7 +163,8 @@
                     </div>
                 </div>
 
-                <div class="setting-group highlight-box dev-only">
+                <!-- ⭐ BỎ dev-only: Vẫn hiện ở chế độ User -->
+                <div class="setting-group highlight-box">
                     <div class="slider-item" style="margin-top: 10px;"><span class="slider-label" data-i18n="lbl_list_bg_opacity" style="width: 120px;">Đậm nhạt màu nút</span><input type="range" id="val-list-bg-opacity" min="0" max="100" value="10"></div>
                     <label style="margin-top: 10px;"><input type="checkbox" id="toggle-list-frame"> <span data-i18n="lbl_list_frame">Theme cho Danh sách</span></label>
                 </div>
@@ -185,7 +183,6 @@
                 </div>
             </div>
 
-            <!-- ========== TAB: TIÊU ĐỀ ========== -->
             <div class="settings-tab-content" data-tab="tab-title">
                 <div class="setting-group highlight-box">
                     <label data-i18n="lbl_title_adjust">Sửa tiêu đề</label>
@@ -198,14 +195,14 @@
                 </div>
             </div>
 
-            <!-- ========== TAB: KHUNG ========== -->
             <div class="settings-tab-content" data-tab="tab-frame">
                 <div class="setting-group">
                     <label data-i18n="lbl_svg_color">🏳️‍🌈 Màu Icon (SVG)</label>
                     <input type="color" id="val-svg-color" value="#ffffff">
                 </div>
 
-                <div class="setting-group dev-only">
+                <!-- ⭐ BỎ dev-only: Vẫn hiện ở chế độ User -->
+                <div class="setting-group">
                     <label data-i18n="lbl_frame_svg_size">🖼️ Khung Icon & SVG</label>
                     <div class="slider-item"><span class="slider-label" data-i18n="lbl_frame_size">Khung</span><input type="range" id="val-frame-size" min="40" max="100" value="60"></div>
                     <div class="slider-item"><span class="slider-label" data-i18n="lbl_frame_radius">Bo góc</span><input type="range" id="val-frame-radius" min="0" max="50" value="22"></div>
@@ -216,9 +213,9 @@
                 </div>
             </div>
 
-            <!-- ========== TAB: MEDIA ========== -->
             <div class="settings-tab-content" data-tab="tab-media">
-                <div class="setting-group highlight-box dev-only">
+                <!-- ⭐ BỎ dev-only: Vẫn hiện ở chế độ User -->
+                <div class="setting-group highlight-box">
                     <label data-i18n="lbl_media_widget">🎵 Trình Phát Nhạc</label>
                     <div class="slider-item"><span class="slider-label" data-i18n="lbl_media_width">Kích thước khung</span><input type="range" id="val-media-width" min="50" max="100" value="90"></div>
                     <div class="slider-item"><span class="slider-label" data-i18n="lbl_media_bg_opacity">Độ mờ khung</span><input type="range" id="val-media-bg-opacity" min="0" max="100" value="3"></div>
@@ -242,7 +239,7 @@
                 </div>
             </div>
 
-            <!-- ========== TAB: BÓNG ========== -->
+            <!-- ⭐ GIỮ dev-only: CHỈ ẨN PHẦN NÀY Ở CHẾ ĐỘ USER -->
             <div class="settings-tab-content" data-tab="tab-shadow">
                 <div id="shadow-controls" class="dev-only"></div>
             </div>
@@ -347,6 +344,6 @@
     </script>
 
     <script src="js/theme.js?v=14.1"></script>
-    <script src="js/main.js?v=14.0"></script>
+    <script src="js/main.js?v=14.1"></script>
 </body>
 </html>
