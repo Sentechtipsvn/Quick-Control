@@ -125,14 +125,81 @@ body.standard-mode .dev-only { display: none !important; }
 .app-container.list-mode.list-frame-active .icon-box svg { fill: var(--svg-color); color: var(--svg-color); width: var(--svg-size); height: var(--svg-size); opacity: var(--svg-opacity); }
 
 /* ============================================
-   MEDIA WIDGET
+   MEDIA WIDGET - FIX DISPLAY
    ============================================ */
-.media-player-widget { margin: 10px auto 30px auto; width: var(--media-width); max-width: 400px; padding: 20px; border-radius: 24px; display: flex; flex-direction: column; gap: 22px; background: rgba(var(--media-bg-rgb), var(--media-bg-opacity)); box-shadow: var(--btn-shadow); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
-.media-controls { display: flex; align-items: center; justify-content: center; gap: 30px; }
-.media-btn { border: none; background: var(--media-btn-color); color: var(--media-svg-color); border-radius: 50%; width: var(--media-btn-size); height: var(--media-btn-size); display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: var(--btn-shadow); transition: all 0.15s ease; }
-.media-btn.play-main { width: var(--media-btn-play); height: var(--media-btn-play); }
-.media-btn:active { box-shadow: inset 0 0 10px rgba(0,0,0,0.3); transform: scale(0.95); }
-.media-player-widget.theme-synced .media-btn { background-image: var(--frame-bg) !important; background-color: var(--frame-bg-color) !important; background-size: cover; background-position: center; box-shadow: var(--btn-shadow) !important; }
+.media-player-widget { 
+    margin: 10px auto 30px auto; 
+    width: var(--media-width); 
+    max-width: 400px; 
+    padding: 20px; 
+    border-radius: 24px; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 22px; 
+    background: rgba(var(--media-bg-rgb), var(--media-bg-opacity)); 
+    box-shadow: var(--btn-shadow); 
+    backdrop-filter: blur(10px); 
+    -webkit-backdrop-filter: blur(10px); 
+    border: 1px solid rgba(255,255,255,0.1); 
+}
+
+.media-controls { 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    gap: 30px; 
+}
+
+/* ⭐ FIX: Media buttons dùng thẻ <a> thay vì <button> */
+.media-btn { 
+    display: inline-flex;
+    align-items: center; 
+    justify-content: center; 
+    text-decoration: none !important;
+    border: none; 
+    background: var(--media-btn-color); 
+    color: var(--media-svg-color); 
+    border-radius: 50%; 
+    width: var(--media-btn-size); 
+    height: var(--media-btn-size); 
+    cursor: pointer; 
+    box-shadow: var(--btn-shadow); 
+    transition: all 0.15s ease; 
+    padding: 0;
+    margin: 0;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
+    user-select: none;
+    line-height: 0;
+    font-size: 0;
+    vertical-align: middle;
+    box-sizing: border-box;
+    flex-shrink: 0;
+    appearance: none;
+    -webkit-appearance: none;
+}
+.media-btn svg { 
+    display: block; 
+    width: auto;
+    height: auto;
+    pointer-events: none;
+    flex-shrink: 0;
+}
+.media-btn.play-main { 
+    width: var(--media-btn-play); 
+    height: var(--media-btn-play); 
+}
+.media-btn:active { 
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.3); 
+    transform: scale(0.95); 
+}
+.media-player-widget.theme-synced .media-btn { 
+    background-image: var(--frame-bg) !important; 
+    background-color: var(--frame-bg-color) !important; 
+    background-size: cover; 
+    background-position: center; 
+    box-shadow: var(--btn-shadow) !important; 
+}
 
 .system-sliders { display: flex; flex-direction: column; gap: 15px; width: 100%; }
 .sys-slider-container { display: flex; align-items: center; gap: 12px; color: var(--media-svg-color); opacity: 0.8; }
@@ -161,12 +228,17 @@ input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; bac
     filter: none !important;
 }
 
+/* ============================================
+   THEME DOT PLUS BUTTON
+   ============================================ */
 .btn-plus-theme {
     width: 26px; height: 26px; border-radius: 50%; background: #007aff; color: white; border: none;
     font-size: 18px; font-weight: 300; display: flex; align-items: center; justify-content: center; cursor: pointer; 
     transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(0, 122, 255, 0.4);
 }
-.btn-plus-theme.disabled { background: #8e8e93; box-shadow: none; opacity: 0.5; pointer-events: none; }
+.btn-plus-theme.disabled {
+    background: #8e8e93; box-shadow: none; opacity: 0.5; pointer-events: none;
+}
 .btn-plus-theme span { margin-top: -2px; }
 
 /* ============================================
@@ -205,11 +277,10 @@ input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; bac
     will-change: right, opacity; display: flex; flex-direction: column; color: white; overflow: hidden; 
 }
 .settings-drawer.open { right: 15px; }
-/* ⭐ FIX #6: Panel mờ 0.4 thay vì 0.15 để user vẫn thấy preview */
 .settings-drawer.adjusting { background: rgba(30, 30, 30, 0.35) !important; opacity: 0.4 !important; backdrop-filter: blur(2px) !important; -webkit-backdrop-filter: blur(2px) !important; box-shadow: none !important; }
 
 /* ============================================
-   ⭐ SETTINGS HEADER
+   SETTINGS HEADER
    ============================================ */
 .settings-header {
     padding: 12px 15px;
@@ -267,7 +338,7 @@ input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; bac
 }
 
 /* ============================================
-   ⭐ TAB BAR - NEW
+   TAB BAR
    ============================================ */
 .settings-tabs-bar {
     display: flex;
@@ -330,7 +401,7 @@ input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; bac
 .action-btn { flex: 1; padding: 8px; background: rgba(255,255,255,0.15); border: none; color: white; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; font-size: 13px; font-weight: 500; }
 
 /* ============================================
-   ⭐ FIX #5: SHADOW HEADER TO HƠN
+   SHADOW HEADER
    ============================================ */
 .shadow-item { border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; margin-bottom: 10px; overflow: hidden; }
 .shadow-header { 
@@ -355,7 +426,7 @@ input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; bac
 select { width: 100%; padding: 10px; border-radius: 8px; background: rgba(0,0,0,0.3); color: white; border: 1px solid rgba(255,255,255,0.2); font-size: 14px; }
 
 /* ============================================
-   ⭐ NÚT KHÔI PHỤC MẶC ĐỊNH
+   NÚT KHÔI PHỤC MẶC ĐỊNH
    ============================================ */
 .config-actions-secondary {
     display: flex;
@@ -378,7 +449,7 @@ select { width: 100%; padding: 10px; border-radius: 8px; background: rgba(0,0,0,
 .config-actions-secondary .action-btn.danger { width: 100%; }
 
 /* ============================================
-   ⭐ FIX #7: BẢNG MÀU NHANH - 5 SWATCH HÀNG NGANG
+   BẢNG MÀU NHANH
    ============================================ */
 .color-swatch-row {
     display: flex;
@@ -430,6 +501,69 @@ select { width: 100%; padding: 10px; border-radius: 8px; background: rgba(0,0,0,
 }
 
 /* ============================================
+   CUSTOM FILE INPUT
+   ============================================ */
+.file-input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    padding: 4px 0;
+    -webkit-tap-highlight-color: transparent;
+}
+.file-input-wrapper input[type=file] {
+    display: none;
+}
+.file-input-btn {
+    background: linear-gradient(135deg, #007aff, #0055cc);
+    color: #ffffff;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(0, 122, 255, 0.35);
+    transition: transform 0.15s ease, box-shadow 0.2s ease;
+    letter-spacing: 0.2px;
+}
+.file-input-wrapper:active .file-input-btn {
+    transform: scale(0.94);
+    box-shadow: 0 1px 4px rgba(0, 122, 255, 0.5);
+}
+.file-input-name {
+    font-size: 12.5px;
+    color: rgba(255,255,255,0.7);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+    min-width: 0;
+}
+.file-input-name.has-file {
+    color: #34c759;
+    font-weight: 600;
+}
+.clear-bg-btn {
+    margin-top: 8px;
+    padding: 8px 12px;
+    background: rgba(255, 59, 48, 0.1);
+    border: 1px solid rgba(255, 59, 48, 0.25);
+    color: #ff6b60;
+    border-radius: 8px;
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.2s ease;
+    font-family: -apple-system, sans-serif;
+}
+.clear-bg-btn:active {
+    background: rgba(255, 59, 48, 0.25);
+    transform: scale(0.97);
+}
+
+/* ============================================
    MACOS MODAL WINDOWS
    ============================================ */
 .info-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); opacity: 0; visibility: hidden; transition: opacity 0.45s ease; z-index: 2000; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
@@ -443,7 +577,9 @@ select { width: 100%; padding: 10px; border-radius: 8px; background: rgba(0,0,0,
 .max-dot { background: #27c93f; }
 .macos-body { padding: 25px 20px 30px 20px; text-align: center; }
 
-/* INFO MODAL */
+/* ============================================
+   INFO MODAL
+   ============================================ */
 .info-body { padding: 18px 16px 24px !important; text-align: center; }
 .info-pill-tabs { display: flex; gap: 6px; justify-content: center; margin-bottom: 20px; flex-wrap: nowrap; }
 .info-pill {
