@@ -1,6 +1,6 @@
 const DEV_MODE = false; 
 
-const PRESET_VERSION = 1;
+const PRESET_VERSION = 1.1;
 const THEME_VERSION = 1;
 
 const SHADOW_MODES = [
