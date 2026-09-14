@@ -1,7 +1,4 @@
-const DEV_MODE = true; 
-
-// QUY TẮC VERSION ĐỂ HIỆN CHẤM ĐỎ (Badge): 
-// Sếp có thể dùng số nguyên (2, 3...) hoặc số thập phân (1.1, 1.2...) 
+const DEV_MODE = false; 
 const PRESET_VERSION = 1.0; 
 const THEME_VERSION = 1.0;
 
@@ -26,10 +23,6 @@ const SHADOW_MODES = [
 ];
 
 document.addEventListener("DOMContentLoaded", () => {
-    // ⚠️ XÓA/COMMENT 2 DÒNG DƯỚI NÀY SAU KHI SẾP MỞ LÊN 1 LẦN (ĐỂ RESET LỊCH SỬ CHẤM ĐỎ VỀ 0)
-    // localStorage.removeItem('sttv_presetVersionSeen');
-    // localStorage.removeItem('sttv_themeVersionSeen');
-
     const root = document.documentElement;
     const mainContainer = document.getElementById('main-container');
     const introScreen = document.getElementById('intro-screen');
@@ -116,7 +109,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 try { playTick(); } catch(e) {}
                 
                 if (e.target.id !== 'val-theme-preset' && e.target.id !== 'val-popup-anim') {
-                    // Nếu sửa trực tiếp thông số Đổ Bóng -> Chuyển sang "Tự chỉnh" nhưng KHÔNG huỷ bóng
                     const isShadowSlider = e.target.classList.contains('s-x') || e.target.classList.contains('s-y') || 
                                            e.target.classList.contains('s-b') || e.target.classList.contains('s-s') || 
                                            e.target.classList.contains('s-o');
@@ -208,7 +200,6 @@ document.addEventListener("DOMContentLoaded", () => {
                         badgeTheme.classList.add('hidden'); 
                         localStorage.setItem('sttv_themeVersionSeen', String(THEME_VERSION)); 
                     }
-                    // Người dùng bấm đổi Chủ đề hệ thống -> Huỷ bóng preset
                     resetPresetToCustom(false);
                 } else if (currentThemeTarget === 'thumb') {
                     const vtt = document.getElementById('val-thumb-theme');
@@ -259,7 +250,6 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
 
-        // HÀM RESET BÓNG & CHUYỂN SANG CUSTOM
         function clearAllShadows() {
             document.querySelectorAll('.shadow-switch').forEach(chk => {
                 chk.checked = false;
@@ -270,12 +260,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         function resetPresetToCustom(excludeShadowReset = false) {
             const presetSel = document.getElementById('val-theme-preset');
-            // Chỉ huỷ bóng nếu người dùng ĐANG SỬ DỤNG một preset (tức không phải trạng thái 'none')
             if (presetSel && presetSel.value !== 'none') {
                 presetSel.value = 'none';
                 localStorage.setItem('sttv_activePreset', 'none');
-                
-                // Nếu thay đổi không liên quan đến thao tác chỉnh bóng thủ công -> Xoá toàn bộ bóng
                 if (!excludeShadowReset) {
                     clearAllShadows();
                     updateShadow();
@@ -660,7 +647,6 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
 
-        // TÍCH HỢP NÚT ĐẶT LẠI MẶC ĐỊNH
         const btnResetDefault = document.getElementById('btn-reset-default');
         if (btnResetDefault) {
             btnResetDefault.addEventListener('click', (e) => {
@@ -764,16 +750,17 @@ document.addEventListener("DOMContentLoaded", () => {
             if (mediaWidget) {
                 if (toggleMediaTheme && toggleMediaTheme.checked) mediaWidget.classList.add('theme-synced');
                 else mediaWidget.classList.remove('theme-synced');
+            }
 
-                if (toggleThemeDot && toggleThemeDot.checked) {
-                    mediaWidget.classList.remove('pure-css-dots');
-                    if (btnThumbThemeEl) btnThumbThemeEl.classList.remove('disabled');
-                    if (thumbColorItem) { thumbColorItem.style.opacity = '0.5'; thumbColorItem.style.pointerEvents = 'none'; }
-                } else {
-                    mediaWidget.classList.add('pure-css-dots');
-                    if (btnThumbThemeEl) btnThumbThemeEl.classList.add('disabled');
-                    if (thumbColorItem) { thumbColorItem.style.opacity = '1'; thumbColorItem.style.pointerEvents = 'auto'; }
-                }
+            // XỬ LÝ CHỦ ĐỀ NÚM KÉO - ĐỒNG BỘ TOÀN BỘ SYSTEM (Settings & Media)
+            if (toggleThemeDot && toggleThemeDot.checked) {
+                document.body.classList.remove('pure-css-dots');
+                if (btnThumbThemeEl) btnThumbThemeEl.classList.remove('disabled');
+                if (thumbColorItem) { thumbColorItem.style.opacity = '0.5'; thumbColorItem.style.pointerEvents = 'none'; }
+            } else {
+                document.body.classList.add('pure-css-dots');
+                if (btnThumbThemeEl) btnThumbThemeEl.classList.add('disabled');
+                if (thumbColorItem) { thumbColorItem.style.opacity = '1'; thumbColorItem.style.pointerEvents = 'auto'; }
             }
 
             updateShadow();
