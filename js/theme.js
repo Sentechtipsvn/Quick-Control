@@ -1,6 +1,6 @@
 const DEV_MODE = false; 
 
-const PRESET_VERSION = 1.0; // Đặt phiên bản ban đầu khi ra mắt
+const PRESET_VERSION = 1.2; // Đặt phiên bản ban đầu khi ra mắt
 const THEME_VERSION = 1.0;
 //...
 const SHADOW_MODES = [
