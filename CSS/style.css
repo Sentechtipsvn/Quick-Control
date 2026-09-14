@@ -81,9 +81,41 @@ body.standard-mode .dev-only { display: none !important; }
 .app-container { transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.8s ease; }
 .app-container.intro-zoom { transform: scale(0.9); opacity: 0; }
 
-.slider-item { position: relative; display: flex; align-items: center; margin-bottom: 8px; width: 100%; transition: opacity 0.3s ease; }
-.slider-item input[type=range] { flex: 1; width: 100% !important; }
-.slider-label { width: 105px; font-size: 12px; opacity: 0.8; flex-shrink: 0; }
+/* LÀM MỚI SLIDER-ITEM ĐỂ ĐỒNG BỘ LAYOUT XẾP CHỒNG VỚI KHU VỰC ĐỔ BÓNG */
+.slider-item { 
+    position: relative; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: flex-start; 
+    margin-bottom: 15px; 
+    width: 100%; 
+    gap: 8px; 
+    transition: opacity 0.3s ease; 
+}
+.slider-item input[type=range] { 
+    width: 100% !important; 
+    margin: 0; 
+}
+.slider-label { 
+    width: 100%; 
+    font-size: 13.5px; 
+    opacity: 0.9; 
+    flex-shrink: 0; 
+    text-align: left; 
+    display: block; 
+}
+/* Tuỳ biến cho nút chọn màu khi nó nằm cùng layout flex-column */
+.slider-item input[type="color"] { 
+    height: 28px; 
+    width: 100%; 
+    max-width: 60px; 
+    padding: 0; 
+    border: none; 
+    background: none; 
+    border-radius: 5px; 
+    cursor: pointer; 
+}
+
 .slider-tooltip { position: fixed; background: #007aff; color: #ffffff; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 8px; opacity: 0; transform: translateX(-50%) translateY(5px); transition: opacity 0.15s ease, transform 0.15s ease; pointer-events: none; z-index: 999999; white-space: nowrap; box-shadow: 0 2px 8px rgba(0,0,0,0.4); }
 .slider-tooltip.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
@@ -213,7 +245,7 @@ input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; bac
 .feature-toggles { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; font-size: 13px; }
 .feature-toggles label { display: flex; justify-content: space-between; align-items: center; }
 .section-title { margin: 20px 0 10px; font-size: 16px; color: var(--accent-color); border-bottom: 1px solid var(--border-color); padding-bottom: 5px; }
-.slider-item input[type="color"] { height: 28px; padding: 0; border: none; background: none; border-radius: 5px; cursor: pointer; }
+
 .layout-buttons { display: flex; gap: 10px; }
 .layout-btn { flex: 1; padding: 10px 0; background: var(--pill-bg); border: 1px solid transparent; color: var(--drawer-text); border-radius: 8px; cursor: pointer; font-weight: 500; transition: all 0.2s; }
 .layout-btn.active { background: var(--accent-color); color: #fff; font-weight: bold; }
