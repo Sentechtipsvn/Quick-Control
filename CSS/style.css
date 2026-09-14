@@ -168,8 +168,8 @@ body.standard-mode .dev-only { display: none !important; }
 .sys-slider-container { display: flex; align-items: center; gap: 12px; color: var(--media-svg-color); opacity: 0.8; }
 .sys-slider { -webkit-appearance: none; flex: 1; height: 8px !important; border-radius: 4px; background: rgba(0, 0, 0, 0.3) !important; box-shadow: inset 1px 1px 3px rgba(0,0,0,0.5), inset -1px -1px 3px rgba(255,255,255,0.1) !important; outline: none; }
 
-/* SLIDER THUMBS */
-input[type=range]::-webkit-slider-thumb, .sys-slider::-webkit-slider-thumb {
+/* SLIDER THUMBS (ÁP DỤNG ĐỒNG BỘ TOÀN HỆ THỐNG) */
+input[type=range]::-webkit-slider-thumb {
     -webkit-appearance: none !important; appearance: none !important; 
     height: var(--thumb-size) !important; width: var(--thumb-size) !important; 
     background-image: var(--thumb-bg-image) !important; 
@@ -180,7 +180,7 @@ input[type=range]::-webkit-slider-thumb, .sys-slider::-webkit-slider-thumb {
 }
 input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; background: rgba(255,255,255,0.2); border-radius: 3px; box-shadow: none; }
 
-.media-player-widget.pure-css-dots .sys-slider::-webkit-slider-thumb {
+body.pure-css-dots input[type=range]::-webkit-slider-thumb {
     background-image: none !important;
     background-color: var(--thumb-color) !important;
     box-shadow: var(--btn-shadow) !important;
@@ -247,8 +247,6 @@ input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; bac
 .layout-buttons { display: flex; gap: 10px; }
 .layout-btn { flex: 1; padding: 10px 0; background: var(--pill-bg); border: 1px solid transparent; color: var(--drawer-text); border-radius: 8px; cursor: pointer; font-weight: 500; transition: all 0.2s; }
 .layout-btn.active { background: var(--accent-color); color: #fff; font-weight: bold; }
-
-/* 4 NÚT CÔNG CỤ CHUYỂN SANG GRID ĐỂ CHUẨN ĐẸP */
 .config-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px; }
 .action-btn { padding: 8px; background: var(--pill-bg); border: none; color: var(--drawer-text); border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; font-size: 13px; font-weight: 500; }
 
@@ -267,10 +265,19 @@ select { width: 100%; padding: 10px; border-radius: 8px; background: var(--input
 .macos-header { background: var(--highlight-bg); padding: 12px 15px; display: flex; gap: 8px; align-items: center; justify-content: flex-start; border-bottom: 1px solid var(--border-color); }
 .macos-body { padding: 25px 20px 30px 20px; text-align: center; }
 
-/* NÚT PILL TRONG INFO POPUP */
-.info-pills { display: flex; gap: 8px; margin-bottom: 20px; justify-content: center; }
-.pill-btn { flex: 1; padding: 10px 0; border-radius: 20px; background: var(--pill-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid var(--border-color); color: var(--modal-text); font-size: 13px; font-weight: bold; text-align: center; text-decoration: none; cursor: pointer; transition: 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-.pill-btn.active, .pill-btn:active { background: var(--accent-color); color: white; border-color: var(--accent-color); box-shadow: 0 4px 12px rgba(0,122,255,0.4); }
+/* NÚT INFO DẠNG HÀNG DỌC CHÍNH GIỮA - NỀN KÍNH VIÊN THUỐC */
+.info-pills { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-bottom: 20px; }
+.pill-btn { 
+    width: 80%; padding: 12px 0; border-radius: 50px; 
+    background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.2); 
+    color: #32c759 !important; font-size: 14px; font-weight: bold; text-align: center; text-decoration: none; cursor: pointer; 
+    transition: all 0.2s; box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+}
+.pill-btn.active, .pill-btn:active { background: rgba(255, 255, 255, 0.25); transform: scale(0.96); }
+@media (prefers-color-scheme: light) {
+    .pill-btn { background: rgba(0, 0, 0, 0.05); border: 1px solid rgba(0, 0, 0, 0.1); color: #28a745 !important; }
+    .pill-btn.active, .pill-btn:active { background: rgba(0, 0, 0, 0.1); }
+}
 .info-content-box { background: var(--pill-bg); padding: 18px; border-radius: 14px; font-size: 14px; line-height: 1.6; border: 1px solid var(--border-color); text-align: left; }
 
 /* ANIMATION POPUP */
