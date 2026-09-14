@@ -1,8 +1,8 @@
 const DEV_MODE = false; 
 
-const PRESET_VERSION = 1.1;
-const THEME_VERSION = 1;
-
+const PRESET_VERSION = 1.0; // Đặt phiên bản ban đầu khi ra mắt
+const THEME_VERSION = 1.0;
+//...
 const SHADOW_MODES = [
     { id: 'inset', nameKey: 'shadow_inset', name: 'Bóng Chìm',     template: 'inset {x}px {y}px {b}px {s}px {c}' },
     { id: 'outer', nameKey: 'shadow_outer', name: 'Bóng Ngoài',    template: '{x}px {y}px {b}px {s}px {c}' },
@@ -73,13 +73,13 @@ document.addEventListener("DOMContentLoaded", () => {
         const badgePreset = document.getElementById('badge-preset');
         const badgeTheme = document.getElementById('badge-theme');
         
-        const seenPresetVersion = parseInt(localStorage.getItem('sttv_presetVersionSeen') || '0');
+        const seenPresetVersion = parseFloat(localStorage.getItem('sttv_presetVersionSeen') || '0');
         if (badgePreset) {
             if (seenPresetVersion >= PRESET_VERSION) badgePreset.classList.add('hidden');
             else badgePreset.classList.remove('hidden');
         }
         
-        const seenThemeVersion = parseInt(localStorage.getItem('sttv_themeVersionSeen') || '0');
+        const seenThemeVersion = parseFloat(localStorage.getItem('sttv_themeVersionSeen') || '0');
         if (badgeTheme) {
             if (seenThemeVersion >= THEME_VERSION) badgeTheme.classList.add('hidden');
             else badgeTheme.classList.remove('hidden');
