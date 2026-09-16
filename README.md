@@ -1,4 +1,7 @@
-# ⚡ Quick Control — Trung Tâm Điều Khiển Đa Năng Đỉnh Cao Cho iOS
+<p align="center">
+  <img src="https://capsule-render.vercel.app/api?type=waving&height=300&color=gradient&text=Quick%20Control%20&animation=fadeIn&textBg=false" alt="Banner Sentechtipsvn" />
+</p>
+
 
 <div align="center">
 
