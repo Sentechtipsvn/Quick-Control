@@ -1,4 +1,4 @@
-const DEV_MODE = false; 
+const DEV_MODE = true; 
 
 const PRESET_VERSION = 1.2; // Đặt phiên bản ban đầu khi ra mắt
 const THEME_VERSION = 1.0;
