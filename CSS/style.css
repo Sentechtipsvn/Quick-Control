@@ -81,7 +81,6 @@ body.standard-mode .dev-only { display: none !important; }
 .app-container { transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.8s ease; }
 .app-container.intro-zoom { transform: scale(0.9); opacity: 0; }
 
-/* LÀM MỚI SLIDER-ITEM ĐỂ ĐỒNG BỘ LAYOUT XẾP CHỒNG VỚI KHU VỰC ĐỔ BÓNG */
 .slider-item { 
     position: relative; 
     display: flex; 
@@ -104,7 +103,6 @@ body.standard-mode .dev-only { display: none !important; }
     text-align: left; 
     display: block; 
 }
-/* Tuỳ biến cho nút chọn màu khi nó nằm cùng layout flex-column */
 .slider-item input[type="color"] { 
     height: 28px; 
     width: 100%; 
@@ -215,7 +213,7 @@ input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; bac
 .theme-chip-more span { margin-top: -2px; }
 .theme-chip-more:active { transform: scale(0.9); }
 
-/* DRAWER & OVERLAY (HỖ TRỢ ĐỔI MÀU SÁNG TỐI) */
+/* DRAWER & OVERLAY */
 .settings-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); opacity: 0; visibility: hidden; transition: opacity 0.45s cubic-bezier(0.32, 0.72, 0, 1); z-index: 998; }
 .settings-overlay.open { opacity: 1; visibility: visible; }
 .settings-drawer { 
