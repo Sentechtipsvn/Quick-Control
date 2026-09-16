@@ -1,8 +1,11 @@
 const DEV_MODE = false; 
 
-const PRESET_VERSION = 1.2; // Đặt phiên bản ban đầu khi ra mắt
+const PRESET_VERSION = 1.2;
 const THEME_VERSION = 1.0;
-//...
+
+// Hàm hỗ trợ lấy chuỗi dịch thuật động
+const t = (key, fallback) => (window.i18nData && window.i18nData[key]) ? window.i18nData[key] : fallback;
+
 const SHADOW_MODES = [
     { id: 'inset', nameKey: 'shadow_inset', name: 'Bóng Chìm',     template: 'inset {x}px {y}px {b}px {s}px {c}' },
     { id: 'outer', nameKey: 'shadow_outer', name: 'Bóng Ngoài',    template: '{x}px {y}px {b}px {s}px {c}' },
@@ -212,7 +215,6 @@ document.addEventListener("DOMContentLoaded", () => {
             if (themeOverlay) themeOverlay.classList.remove('show'); 
         };
         
-        // HOOK NÚT INFO Ở HEADER
         const infoModal = document.getElementById('info-modal');
         const btnInfoHeader = document.getElementById('btn-info-header');
         if (btnInfoHeader && infoModal) {
@@ -340,7 +342,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
                         DeviceOrientationEvent.requestPermission().then(state => {
                             if (state === 'granted') window.addEventListener('deviceorientation', handleOrientation);
-                            else { e.target.checked = false; alert('Vui lòng cấp quyền cảm biến!'); }
+                            else { 
+                                e.target.checked = false; 
+                                alert(t('msg_sensor_permission', 'Vui lòng cấp quyền cảm biến!')); 
+                            }
                         }).catch(console.error);
                     } else { window.addEventListener('deviceorientation', handleOrientation); }
                 } else {
@@ -541,7 +546,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 const decoded = decodeURIComponent(code.trim());
                 const data = decoded.split('|');
-                if (data.length < 29) { alert("Mã cấu hình không hợp lệ!"); return; }
+                if (data.length < 29) { 
+                    alert(t('msg_invalid_config', "Mã cấu hình không hợp lệ!")); 
+                    return; 
+                }
                 
                 const setV = (id, v) => { const el = document.getElementById(id); if (el) el.value = v; };
                 const setC = (id, v) => { const el = document.getElementById(id); if (el) el.checked = v; };
@@ -601,7 +609,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 updateLiveVariables(true);
             } catch(e) { 
-                alert("Lỗi đọc mã cấu hình! Vui lòng thử lại."); 
+                alert(t('msg_config_error', "Lỗi đọc mã cấu hình! Vui lòng thử lại.")); 
             }
         }
 
@@ -612,10 +620,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 const code = packConfig();
                 if (navigator.clipboard && window.isSecureContext) {
                     navigator.clipboard.writeText(code).then(() => { 
-                        alert("Đã sao chép mã cấu hình thành công!"); 
-                    }).catch(() => { prompt("Sao chép mã cấu hình bên dưới:", code); });
+                        alert(t('msg_copy_success', "📄 Đã sao chép mã cấu hình thành công!")); 
+                    }).catch(() => { prompt(t('msg_prompt_copy', "Sao chép mã cấu hình bên dưới:"), code); });
                 } else {
-                    prompt("Sao chép mã cấu hình bên dưới:", code);
+                    prompt(t('msg_prompt_copy', "Sao chép mã cấu hình bên dưới:"), code);
                 }
             });
         }
@@ -624,7 +632,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (btnImport) {
             btnImport.addEventListener('click', (e) => { 
                 e.preventDefault(); 
-                const code = prompt("📥 Dán mã cấu hình vào đây:"); 
+                const code = prompt(t('msg_prompt_import', "📥 Dán mã cấu hình vào đây:")); 
                 if (code) { unpackConfig(code); resetPresetToCustom(); } 
             });
         }
