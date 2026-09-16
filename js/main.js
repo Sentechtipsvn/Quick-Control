@@ -6,13 +6,37 @@ const SUPPORTED_LANGS = [
     'tr-TR', 'uk-UA', 'vi-VN', 'zh-CN', 'zh-TW'
 ];
 
-document.addEventListener("DOMContentLoaded", async () => {
-    let userLang = navigator.language || navigator.userLanguage || 'vi-VN';
-    
-    // Chuẩn hóa: Nếu thiết bị trả về 'vi' hoặc 'vi-VN' thì ép thẳng về 'vi-VN'
-    if (userLang.startsWith('vi')) userLang = 'vi-VN';
-    if (!SUPPORTED_LANGS.includes(userLang)) userLang = 'en-US';
+// Bản đồ ngôn ngữ ưu tiên (tránh lỗi khi thiết bị chỉ trả về mã 2 chữ cái)
+const DEFAULT_LANG_MAP = {
+    'en': 'en-US',
+    'es': 'es-ES',
+    'fr': 'fr-FR',
+    'pt': 'pt-PT',
+    'zh': 'zh-CN'
+};
 
+document.addEventListener("DOMContentLoaded", async () => {
+    let rawLang = navigator.language || navigator.userLanguage || 'vi-VN';
+    let userLang = 'en-US'; // Fallback an toàn
+
+    // Thuật toán phát hiện và khớp ngôn ngữ tự động
+    if (SUPPORTED_LANGS.includes(rawLang)) {
+        userLang = rawLang;
+    } else {
+        const shortLang = rawLang.split('-')[0].toLowerCase();
+        if (DEFAULT_LANG_MAP[shortLang]) {
+            userLang = DEFAULT_LANG_MAP[shortLang];
+        } else {
+            const match = SUPPORTED_LANGS.find(lang => lang.toLowerCase().startsWith(shortLang));
+            if (match) userLang = match;
+        }
+    }
+    
+    // Đảm bảo chuẩn hóa tiếng Việt
+    if (userLang.startsWith('vi')) userLang = 'vi-VN';
+
+    // Cập nhật thẻ HTML lang và hướng đọc (RTL/LTR)
+    document.documentElement.lang = userLang;
     const RTL_LANGS = ['ar', 'fa-IR', 'he'];
     if (RTL_LANGS.includes(userLang.split('-')[0]) || RTL_LANGS.includes(userLang)) {
         document.documentElement.setAttribute('dir', 'rtl');
@@ -24,11 +48,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         try {
             let res = await fetch(url1);
             if (res.ok) return await res.json();
-        } catch (e) {}
+        } catch (e) {
+            // Bỏ qua lỗi fetch, tiếp tục thử fallback
+        }
         try {
             let res2 = await fetch(url2);
             if (res2.ok) return await res2.json();
-        } catch (e) {}
+        } catch (e) {
+            // Bỏ qua lỗi fetch
+        }
         return null;
     }
 
@@ -52,24 +80,31 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         const container = document.getElementById('control-panel');
+        if (!container) return; // Fallback an toàn nếu DOM không tồn tại
+
         let renderArray = data.buttons;
         const savedOrder = localStorage.getItem('sttv_iconOrder');
         
         if (savedOrder) {
-            const orderIds = JSON.parse(savedOrder);
-            renderArray = orderIds.map(id => data.buttons.find(b => b.id === id)).filter(b => b !== undefined);
-            data.buttons.forEach(b => { if (!renderArray.includes(b)) renderArray.push(b); });
+            try {
+                const orderIds = JSON.parse(savedOrder);
+                renderArray = orderIds.map(id => data.buttons.find(b => b.id === id)).filter(b => b !== undefined);
+                data.buttons.forEach(b => { if (!renderArray.includes(b)) renderArray.push(b); });
+            } catch (e) {
+                // Fallback nếu JSON bị lỗi cấu trúc
+                renderArray = data.buttons;
+            }
         }
 
         if (renderArray && renderArray.length > 0) {
             renderArray.forEach(item => {
                 const btn = document.createElement('a');
                 btn.className = 'glass-btn';
-                btn.href = item.action;
+                btn.href = item.action || '#';
                 btn.dataset.id = item.id;
                 
                 const localizedTitle = window.i18nData[item.title_key] || item.title || 'Phím tắt';
-                btn.innerHTML = `<div class="icon-box">${item.svg}</div><span class="label">${localizedTitle}</span>`;
+                btn.innerHTML = `<div class="icon-box">${item.svg || ''}</div><span class="label">${localizedTitle}</span>`;
                 container.appendChild(btn);
             });
         }
@@ -81,14 +116,18 @@ document.addEventListener("DOMContentLoaded", async () => {
         
         if (btnEditLayout) {
             btnEditLayout.addEventListener('click', () => {
-                document.getElementById('settings-drawer').classList.remove('open');
-                document.getElementById('settings-overlay').classList.remove('open');
+                const drawer = document.getElementById('settings-drawer');
+                const overlay = document.getElementById('settings-overlay');
+                if (drawer) drawer.classList.remove('open');
+                if (overlay) overlay.classList.remove('open');
                 
                 editMode = true;
                 document.body.classList.add('edit-mode');
                 
-                btnConfirmSort.classList.remove('hidden');
-                btnConfirmSort.classList.remove('active'); // Chờ đổi
+                if (btnConfirmSort) {
+                    btnConfirmSort.classList.remove('hidden');
+                    btnConfirmSort.classList.remove('active'); // Chờ đổi
+                }
                 
                 document.querySelectorAll('.glass-btn').forEach(b => {
                     b.onclick = (e) => e.preventDefault();
@@ -121,11 +160,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (!selectedSwapNode) {
                 selectedSwapNode = target;
                 target.classList.add('selected-swap');
-                btnConfirmSort.classList.add('active'); // Đã chọn mục tiêu -> Xanh
+                if (btnConfirmSort) btnConfirmSort.classList.add('active'); // Đã chọn mục tiêu -> Xanh
             } else if (selectedSwapNode === target) {
                 target.classList.remove('selected-swap');
                 selectedSwapNode = null;
-                btnConfirmSort.classList.remove('active'); // Hủy chọn -> Về xám
+                if (btnConfirmSort) btnConfirmSort.classList.remove('active'); // Hủy chọn -> Về xám
             } else {
                 const temp = document.createElement('div');
                 target.parentNode.insertBefore(temp, target);
@@ -136,12 +175,14 @@ document.addEventListener("DOMContentLoaded", async () => {
                 selectedSwapNode.classList.remove('selected-swap');
                 selectedSwapNode = null;
                 
-                // GIỮ NÚT XANH ĐỂ BẤM LƯU BẰNG CÁCH KHÔNG GỌI: btnConfirmSort.classList.remove('active');
+                // GIỮ NÚT XANH ĐỂ BẤM LƯU
                 
                 const newOrder = Array.from(container.querySelectorAll('.glass-btn')).map(b => b.dataset.id);
                 localStorage.setItem('sttv_iconOrder', JSON.stringify(newOrder));
             }
         });
 
-    } catch (e) { console.error("Lỗi khởi tạo danh sách nút:", e); }
+    } catch (e) { 
+        console.error("Lỗi khởi tạo danh sách nút:", e); 
+    }
 });
